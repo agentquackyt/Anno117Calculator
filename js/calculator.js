@@ -9,10 +9,35 @@ let config = {
 }
 
 /**
+ * Register Service Worker for caching and offline support
+ */
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('[SW] Registered successfully:', registration.scope);
+                    
+                    // Check for updates periodically
+                    setInterval(() => {
+                        registration.update();
+                    }, 60000); // Check every minute
+                })
+                .catch((error) => {
+                    console.log('[SW] Registration failed:', error);
+                });
+        });
+    }
+}
+
+/**
  * Initialize the calculator
  */
 async function init() {
     console.log('[Calculator] Initializing calculator...');
+    
+    // Register service worker for caching
+    registerServiceWorker();
     
     // Initialize settings
     initSettings();
@@ -115,7 +140,7 @@ function renderGoodsRows(goods) {
         
         card.innerHTML = `
             <div class="goods-card-icon">
-                <img src="icons/${good.icon}.png" alt="${good.displayName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <img src="icons/${good.icon}.png" alt="${good.displayName}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
                 <div class="icon-placeholder" style="display:none;">
                     ${good.icon.substring(0, 2).toUpperCase()}
                 </div>
@@ -1024,6 +1049,10 @@ function setupSVGDrag(svg) {
     let startX = 0;
     let startY = 0;
     let viewBox = { x: 0, y: 0, width: 400, height: 400 };
+    // Touch state
+    let activeTouches = new Map(); // id -> {x,y}
+    let initialPinchDistance = null;
+    let initialViewBox = null;
     
     // Parse initial viewBox
     const vb = svg.getAttribute('viewBox').split(' ').map(Number);
@@ -1098,6 +1127,125 @@ function setupSVGDrag(svg) {
         
         // Apply new viewBox
         svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+    });
+
+    // --- Touch support: single-finger pan, two-finger pinch zoom ---
+    function getTouchPoint(touch) {
+        const rect = svg.getBoundingClientRect();
+        return {
+            x: (touch.clientX - rect.left),
+            y: (touch.clientY - rect.top)
+        };
+    }
+
+    function distance(p1, p2) {
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        return Math.hypot(dx, dy);
+    }
+
+    function clientToSvgCoords(clientX, clientY) {
+        return {
+            x: viewBox.x + (clientX / svg.clientWidth) * viewBox.width,
+            y: viewBox.y + (clientY / svg.clientHeight) * viewBox.height
+        };
+    }
+
+    svg.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+            e.preventDefault();
+        }
+        for (const t of e.changedTouches) {
+            const pt = getTouchPoint(t);
+            activeTouches.set(t.identifier, pt);
+        }
+        if (activeTouches.size === 1) {
+            // Start pan
+            const first = [...activeTouches.values()][0];
+            isDragging = true;
+            startX = first.x;
+            startY = first.y;
+            svg.style.cursor = 'grabbing';
+        } else if (activeTouches.size === 2) {
+            // Start pinch
+            const [p1, p2] = [...activeTouches.values()];
+            initialPinchDistance = distance(p1, p2);
+            initialViewBox = { ...viewBox };
+            isDragging = false; // switch from pan to pinch
+        }
+    }, { passive: false });
+
+    svg.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            e.preventDefault();
+        }
+        // Update active touch positions
+        for (const t of e.changedTouches) {
+            activeTouches.set(t.identifier, getTouchPoint(t));
+        }
+
+        if (activeTouches.size === 1 && isDragging) {
+            // Pan
+            const current = [...activeTouches.values()][0];
+            const dx = (current.x - startX) * (viewBox.width / svg.clientWidth);
+            const dy = (current.y - startY) * (viewBox.height / svg.clientHeight);
+            viewBox.x -= dx;
+            viewBox.y -= dy;
+            svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+            startX = current.x;
+            startY = current.y;
+        } else if (activeTouches.size === 2 && initialPinchDistance && initialViewBox) {
+            // Pinch zoom
+            const [p1, p2] = [...activeTouches.values()];
+            const currentDistance = distance(p1, p2);
+            if (currentDistance <= 0) return;
+            const scale = initialPinchDistance / currentDistance; // >1 zoom out, <1 zoom in
+
+            // Midpoint (in client coordinates)
+            const midClient = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+            // Convert to SVG coords based on initial viewBox to keep focus
+            const focusSvgX = initialViewBox.x + (midClient.x / svg.clientWidth) * initialViewBox.width;
+            const focusSvgY = initialViewBox.y + (midClient.y / svg.clientHeight) * initialViewBox.height;
+
+            const newWidth = initialViewBox.width * scale;
+            const newHeight = initialViewBox.height * scale;
+
+            // Keep the midpoint under the same screen position
+            viewBox.x = focusSvgX - (midClient.x / svg.clientWidth) * newWidth;
+            viewBox.y = focusSvgY - (midClient.y / svg.clientHeight) * newHeight;
+            viewBox.width = newWidth;
+            viewBox.height = newHeight;
+
+            svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        }
+    }, { passive: false });
+
+    svg.addEventListener('touchend', (e) => {
+        for (const t of e.changedTouches) {
+            activeTouches.delete(t.identifier);
+        }
+        if (activeTouches.size < 2) {
+            initialPinchDistance = null;
+            initialViewBox = null;
+        }
+        if (activeTouches.size === 0) {
+            isDragging = false;
+            svg.style.cursor = 'default';
+        } else if (activeTouches.size === 1) {
+            // Switch back to pan on remaining finger
+            const remaining = [...activeTouches.values()][0];
+            isDragging = true;
+            startX = remaining.x;
+            startY = remaining.y;
+        }
+    });
+
+    svg.addEventListener('touchcancel', () => {
+        activeTouches.clear();
+        initialPinchDistance = null;
+        initialViewBox = null;
+        isDragging = false;
+        svg.style.cursor = 'default';
     });
 }
 

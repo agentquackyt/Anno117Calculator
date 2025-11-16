@@ -1,0 +1,20 @@
+{
+  "name": "Anno 117 Production Calculator",
+  "short_name": "Anno 117 Calc",
+  "description": "Production chain calculator and planner for Anno 117: Pax Romana",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#8b4513",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "style/anno_icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "productivity", "utilities"],
+  "screenshots": []
+}
