@@ -1,27 +1,27 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of tile",
+    "README": "This file contains the Anno 117 Production Chain of sail",
     "type": "production_building",
-    "id": "tile",
-    "icon": "tile",
+    "id": "sail",
+    "icon": "sail",
     "input": [
         {
-            "type": "river_slot",
+            "type": "animal_farm",
             "start_of_chain": true,
-            "id": "clay",
+            "id": "sheep",
             "time": 30,
             "building_cost": {
                 "money": 0,
-                "timber": 2,
+                "timber": 5,
                 "tile": 0,
                 "concrete": 0,
                 "marble": 0,
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 8,
-                "liberti": 0,
+                "money": 4,
+                "liberti": 3,
                 "waders": 0,
-                "plebejer": 3,
+                "plebejer": 0,
                 "equites": 0,
                 "patricians": 0,
                 "smiths": 0,
@@ -31,19 +31,11 @@
             }
         }
     ],
-    "time": 60,
-    "fuel": [
-        {
-            "type": "wood_cutter",
-            "id": "charcoal",
-            "start_of_chain": true,
-            "burning_time": 120
-        }
-    ],
+    "time": 90,
     "building_cost": {
         "money": 0,
-        "timber": 3,
-        "tile": 0,
+        "timber": 2,
+        "tile": 4,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
@@ -52,7 +44,7 @@
         "money": 12,
         "liberti": 0,
         "waders": 0,
-        "plebejer": 4,
+        "plebejer": 6,
         "equites": 0,
         "patricians": 0,
         "smiths": 0,

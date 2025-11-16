@@ -1,35 +1,9 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Concrete.",
-    "type": "production_building",
-    "id": "concrete",
-    "icon": "concrete",
+    "README": "This file contains the Anno 117 Production Chain of glass",
+    "type": "river_slot",
+    "id": "glass",
+    "icon": "glass",
     "input": [
-        {
-            "type": "mountain_slot",
-            "start_of_chain": true,
-            "id": "limestone",
-            "time": 30,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 1,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 12,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 5,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        },
         {
             "type": "ocean_slot",
             "start_of_chain": true,
@@ -58,16 +32,24 @@
         }
     ],
     "time": 90,
+    "fuel": [
+        {
+            "type": "wood_cutter",
+            "id": "charcoal",
+            "start_of_chain": true,
+            "burning_time": 120
+        }
+    ],
     "building_cost": {
         "money": 0,
-        "timber": 1,
-        "tile": 4,
-        "concrete": 0,
+        "timber": 2,
+        "tile": 2,
+        "concrete": 1,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 16,
+        "money": 12,
         "liberti": 0,
         "waders": 0,
         "plebejer": 0,

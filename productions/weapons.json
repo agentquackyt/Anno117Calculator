@@ -1,18 +1,18 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of tile",
+    "README": "This file contains the Anno 117 Production Chain of weapons",
     "type": "production_building",
-    "id": "tile",
-    "icon": "tile",
+    "id": "weapons",
+    "icon": "weapons",
     "input": [
         {
-            "type": "river_slot",
-            "start_of_chain": true,
-            "id": "clay",
-            "time": 30,
+            "type": "production_building",
+            "start_of_chain": false,
+            "id": "iron",
+            "time": 60,
             "building_cost": {
                 "money": 0,
-                "timber": 2,
-                "tile": 0,
+                "timber": 1,
+                "tile": 4,
                 "concrete": 0,
                 "marble": 0,
                 "mosaics": 0
@@ -31,7 +31,7 @@
             }
         }
     ],
-    "time": 60,
+    "time": 90,
     "fuel": [
         {
             "type": "wood_cutter",
@@ -42,17 +42,17 @@
     ],
     "building_cost": {
         "money": 0,
-        "timber": 3,
-        "tile": 0,
+        "timber": 1,
+        "tile": 3,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 12,
+        "money": 16,
         "liberti": 0,
         "waders": 0,
-        "plebejer": 4,
+        "plebejer": 5,
         "equites": 0,
         "patricians": 0,
         "smiths": 0,

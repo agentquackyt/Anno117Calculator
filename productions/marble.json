@@ -1,27 +1,27 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of tile",
+    "README": "This file contains the Anno 117 Production Chain of marble",
     "type": "production_building",
-    "id": "tile",
-    "icon": "tile",
+    "id": "marble",
+    "icon": "marble",
     "input": [
         {
-            "type": "river_slot",
+            "type": "mountain_slot",
             "start_of_chain": true,
-            "id": "clay",
-            "time": 30,
+            "id": "raw_marble",
+            "time": 60,
             "building_cost": {
                 "money": 0,
                 "timber": 2,
-                "tile": 0,
-                "concrete": 0,
+                "tile": 1,
+                "concrete": 2,
                 "marble": 0,
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 8,
+                "money": 16,
                 "liberti": 0,
                 "waders": 0,
-                "plebejer": 3,
+                "plebejer": 5,
                 "equites": 0,
                 "patricians": 0,
                 "smiths": 0,
@@ -31,29 +31,21 @@
             }
         }
     ],
-    "time": 60,
-    "fuel": [
-        {
-            "type": "wood_cutter",
-            "id": "charcoal",
-            "start_of_chain": true,
-            "burning_time": 120
-        }
-    ],
+    "time": 90,
     "building_cost": {
         "money": 0,
-        "timber": 3,
-        "tile": 0,
-        "concrete": 0,
+        "timber": 2,
+        "tile": 3,
+        "concrete": 2,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 12,
+        "money": 24,
         "liberti": 0,
         "waders": 0,
-        "plebejer": 4,
-        "equites": 0,
+        "plebejer": 0,
+        "equites": 5,
         "patricians": 0,
         "smiths": 0,
         "mercators": 0,

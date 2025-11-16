@@ -1,8 +1,22 @@
 {
   "README": "This file contains all goods from Anno 1117 production chains",
-  "generated": "2025-11-16T10:42:48.766Z",
-  "count": 20,
+  "generated": "2025-11-16T14:42:42.088Z",
+  "count": 50,
   "goods": [
+    {
+      "displayName": "Amphorae",
+      "id": "amphorae",
+      "icon": "amphorae",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Bread",
+      "id": "bread",
+      "icon": "bread",
+      "startOfChain": false,
+      "type": "production_building"
+    },
     {
       "displayName": "Charcoal",
       "id": "charcoal",
@@ -32,11 +46,53 @@
       "type": "production_building"
     },
     {
+      "displayName": "Dye",
+      "id": "dye",
+      "icon": "dye",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Farm Hat",
+      "id": "farm_hat",
+      "icon": "farm_hat",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Fine Glass",
+      "id": "fine_glass",
+      "icon": "fine_glass",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
       "displayName": "Flax",
       "id": "flax",
       "icon": "flax",
       "startOfChain": true,
       "type": "farm"
+    },
+    {
+      "displayName": "Flour",
+      "id": "flour",
+      "icon": "flour",
+      "startOfChain": false,
+      "type": "river_slot"
+    },
+    {
+      "displayName": "Garum",
+      "id": "garum",
+      "icon": "garum",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Glass",
+      "id": "glass",
+      "icon": "glass",
+      "startOfChain": false,
+      "type": "river_slot"
     },
     {
       "displayName": "Grapes",
@@ -60,6 +116,27 @@
       "type": "wood_cutter"
     },
     {
+      "displayName": "Iron",
+      "id": "iron",
+      "icon": "iron",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Iron Ore",
+      "id": "iron_ore",
+      "icon": "iron_ore",
+      "startOfChain": true,
+      "type": "mountain_slot"
+    },
+    {
+      "displayName": "Lavender",
+      "id": "lavender",
+      "icon": "lavender",
+      "startOfChain": true,
+      "type": "farm"
+    },
+    {
       "displayName": "Leather",
       "id": "leather",
       "icon": "leather",
@@ -74,6 +151,48 @@
       "type": "mountain_slot"
     },
     {
+      "displayName": "Mackerels",
+      "id": "mackerels",
+      "icon": "mackerels",
+      "startOfChain": true,
+      "type": "ocean_slot"
+    },
+    {
+      "displayName": "Marble",
+      "id": "marble",
+      "icon": "marble",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Mineral Dye",
+      "id": "mineral_dye",
+      "icon": "mineral_dye",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Minerals",
+      "id": "minerals",
+      "icon": "minerals",
+      "startOfChain": true,
+      "type": "mountain_slot"
+    },
+    {
+      "displayName": "Olive Oil",
+      "id": "olive_oil",
+      "icon": "olive_oil",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Olives",
+      "id": "olives",
+      "icon": "olives",
+      "startOfChain": true,
+      "type": "plantation"
+    },
+    {
       "displayName": "Pig",
       "id": "pig",
       "icon": "pig",
@@ -81,9 +200,44 @@
       "type": "animal_farm"
     },
     {
+      "displayName": "Pig Lard",
+      "id": "pig_lard",
+      "icon": "pig_lard",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
       "displayName": "Porridge",
       "id": "porridge",
       "icon": "porridge",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Raw Marble",
+      "id": "raw_marble",
+      "icon": "raw_marble",
+      "startOfChain": true,
+      "type": "mountain_slot"
+    },
+    {
+      "displayName": "Resin",
+      "id": "resin",
+      "icon": "resin",
+      "startOfChain": true,
+      "type": "wood_cutter"
+    },
+    {
+      "displayName": "Rope",
+      "id": "rope",
+      "icon": "rope",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Sail",
+      "id": "sail",
+      "icon": "sail",
       "startOfChain": false,
       "type": "production_building"
     },
@@ -102,11 +256,39 @@
       "type": "production_building"
     },
     {
+      "displayName": "Sandarak Wood",
+      "id": "sandarak_wood",
+      "icon": "sandarak_wood",
+      "startOfChain": true,
+      "type": "wood_cutter"
+    },
+    {
+      "displayName": "Sheep",
+      "id": "sheep",
+      "icon": "sheep",
+      "startOfChain": true,
+      "type": "animal_farm"
+    },
+    {
       "displayName": "Silica",
       "id": "silica",
       "icon": "silica",
       "startOfChain": true,
       "type": "ocean_slot"
+    },
+    {
+      "displayName": "Snail",
+      "id": "snail",
+      "icon": "snail",
+      "startOfChain": true,
+      "type": "ocean_slot"
+    },
+    {
+      "displayName": "Soap",
+      "id": "soap",
+      "icon": "soap",
+      "startOfChain": false,
+      "type": "production_building"
     },
     {
       "displayName": "Tile",
@@ -128,6 +310,34 @@
       "icon": "toga",
       "startOfChain": false,
       "type": "production_building"
+    },
+    {
+      "displayName": "Tunics",
+      "id": "tunics",
+      "icon": "tunics",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Wax Tablet",
+      "id": "wax_tablet",
+      "icon": "wax_tablet",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Weapons",
+      "id": "weapons",
+      "icon": "weapons",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Wheat",
+      "id": "wheat",
+      "icon": "wheat",
+      "startOfChain": true,
+      "type": "farm"
     },
     {
       "displayName": "Wine",

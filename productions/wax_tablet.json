@@ -1,51 +1,25 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Concrete.",
+    "README": "This file contains the Anno 117 Production Chain of wax_tablet",
     "type": "production_building",
-    "id": "concrete",
-    "icon": "concrete",
+    "id": "wax_tablet",
+    "icon": "wax_tablet",
     "input": [
         {
-            "type": "mountain_slot",
+            "type": "wood_cutter",
             "start_of_chain": true,
-            "id": "limestone",
-            "time": 30,
+            "id": "sandarak_wood",
+            "time": 90,
             "building_cost": {
                 "money": 0,
                 "timber": 2,
-                "tile": 1,
-                "concrete": 0,
+                "tile": 3,
+                "concrete": 1,
                 "marble": 0,
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 12,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 5,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        },
-        {
-            "type": "ocean_slot",
-            "start_of_chain": true,
-            "id": "silica",
-            "time": 45,
-            "building_cost": {
-                "money": 0,
-                "timber": 3,
-                "tile": 2,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 10,
-                "liberti": 5,
+                "money": 8,
+                "liberti": 3,
                 "waders": 0,
                 "plebejer": 0,
                 "equites": 0,
@@ -55,23 +29,42 @@
                 "aldermen": 0,
                 "nobles": 0
             }
+        },
+        {
+            "type": "wood_cutter",
+            "start_of_chain": true,
+            "id": "honeycombs",
+            "time": 45,
+            "faith": [
+                "ceres"
+            ],
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tile": 2,
+                "concrete": 2
+            },
+            "maintanance_cost": {
+                "money": 14,
+                "liberti": 3
+            }
         }
     ],
-    "time": 90,
+    "time": 120,
     "building_cost": {
         "money": 0,
-        "timber": 1,
-        "tile": 4,
-        "concrete": 0,
-        "marble": 0,
+        "timber": 2,
+        "tile": 0,
+        "concrete": 1,
+        "marble": 1,
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 16,
+        "money": 22,
         "liberti": 0,
         "waders": 0,
         "plebejer": 0,
-        "equites": 8,
+        "equites": 10,
         "patricians": 0,
         "smiths": 0,
         "mercators": 0,

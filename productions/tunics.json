@@ -1,14 +1,14 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of tile",
+    "README": "This file contains the Anno 117 Production Chain of tunics",
     "type": "production_building",
-    "id": "tile",
-    "icon": "tile",
+    "id": "tunics",
+    "icon": "tunics",
     "input": [
         {
-            "type": "river_slot",
+            "type": "farm",
             "start_of_chain": true,
-            "id": "clay",
-            "time": 30,
+            "id": "hemp",
+            "time": 60,
             "building_cost": {
                 "money": 0,
                 "timber": 2,
@@ -18,10 +18,10 @@
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 8,
-                "liberti": 0,
+                "money": 4,
+                "liberti": 3,
                 "waders": 0,
-                "plebejer": 3,
+                "plebejer": 0,
                 "equites": 0,
                 "patricians": 0,
                 "smiths": 0,
@@ -32,27 +32,19 @@
         }
     ],
     "time": 60,
-    "fuel": [
-        {
-            "type": "wood_cutter",
-            "id": "charcoal",
-            "start_of_chain": true,
-            "burning_time": 120
-        }
-    ],
     "building_cost": {
         "money": 0,
-        "timber": 3,
+        "timber": 2,
         "tile": 0,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 12,
-        "liberti": 0,
+        "money": 8,
+        "liberti": 3,
         "waders": 0,
-        "plebejer": 4,
+        "plebejer": 3,
         "equites": 0,
         "patricians": 0,
         "smiths": 0,

@@ -1,27 +1,27 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Concrete.",
+    "README": "This file contains the Anno 117 Production Chain of amphorae",
     "type": "production_building",
-    "id": "concrete",
-    "icon": "concrete",
+    "id": "amphorae",
+    "icon": "amphorae",
     "input": [
         {
-            "type": "mountain_slot",
+            "type": "wood_cutter",
             "start_of_chain": true,
-            "id": "limestone",
-            "time": 30,
+            "id": "resin",
+            "time": 60,
             "building_cost": {
                 "money": 0,
                 "timber": 2,
-                "tile": 1,
+                "tile": 2,
                 "concrete": 0,
                 "marble": 0,
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 12,
+                "money": 8,
                 "liberti": 0,
                 "waders": 0,
-                "plebejer": 5,
+                "plebejer": 4,
                 "equites": 0,
                 "patricians": 0,
                 "smiths": 0,
@@ -31,23 +31,23 @@
             }
         },
         {
-            "type": "ocean_slot",
+            "type": "river_slot",
             "start_of_chain": true,
-            "id": "silica",
-            "time": 45,
+            "id": "clay",
+            "time": 30,
             "building_cost": {
                 "money": 0,
-                "timber": 3,
-                "tile": 2,
+                "timber": 2,
+                "tile": 0,
                 "concrete": 0,
                 "marble": 0,
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 10,
-                "liberti": 5,
+                "money": 8,
+                "liberti": 0,
                 "waders": 0,
-                "plebejer": 0,
+                "plebejer": 3,
                 "equites": 0,
                 "patricians": 0,
                 "smiths": 0,
@@ -57,21 +57,29 @@
             }
         }
     ],
-    "time": 90,
+    "time": 60,
+    "fuel": [
+        {
+            "type": "wood_cutter",
+            "id": "charcoal",
+            "start_of_chain": true,
+            "burning_time": 120
+        }
+    ],
     "building_cost": {
         "money": 0,
-        "timber": 1,
-        "tile": 4,
+        "timber": 2,
+        "tile": 2,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 16,
+        "money": 14,
         "liberti": 0,
         "waders": 0,
-        "plebejer": 0,
-        "equites": 8,
+        "plebejer": 4,
+        "equites": 0,
         "patricians": 0,
         "smiths": 0,
         "mercators": 0,

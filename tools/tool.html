@@ -330,6 +330,14 @@
         </div>
 
         <div class="row">
+          <label>
+            <input type="checkbox" id="has-fuel" style="width:auto;margin-right:0.5rem" />
+            Requires Fuel (charcoal)
+          </label>
+          <div class="muted" style="margin-top:0.25rem">Adds charcoal fuel requirement to the building</div>
+        </div>
+
+        <div class="row">
           <label>building_cost (main)</label>
           <div class="two">
             <div>
@@ -338,11 +346,11 @@
             </div>
             <div>
               <label class="mini">timber</label>
-              <input type="number" id="cost-timber" value="2" />
+              <input type="number" id="cost-timber" value="0" />
             </div>
             <div>
               <label class="mini">tile</label>
-              <input type="number" id="cost-tile" value="1" />
+              <input type="number" id="cost-tile" value="0" />
             </div>
             <div>
               <label class="mini">concrete</label>
@@ -364,7 +372,7 @@
           <div class="two">
             <div>
               <label class="mini">money</label>
-              <input type="number" id="m-money" value="10" />
+              <input type="number" id="m-money" value="0" />
             </div>
             <div>
               <label class="mini">liberti</label>
@@ -376,7 +384,7 @@
             </div>
             <div>
               <label class="mini">plebejer</label>
-              <input type="number" id="m-plebejer" value="3" />
+              <input type="number" id="m-plebejer" value="0" />
             </div>
             <div>
               <label class="mini">equites</label>
@@ -484,7 +492,7 @@
           </div>
           <div>
             <label class="mini">timber</label>
-            <input type="number" class="in-cost-timber" value="6" />
+            <input type="number" class="in-cost-timber" value="0" />
           </div>
           <div>
             <label class="mini">tile</label>
@@ -510,7 +518,7 @@
         <div class="two">
           <div>
             <label class="mini">money</label>
-            <input type="number" class="in-m-money" value="6" />
+            <input type="number" class="in-m-money" value="0" />
           </div>
            <div>
             <label class="mini">liberti</label>
@@ -522,7 +530,7 @@
           </div>
           <div>
             <label class="mini">plebejer</label>
-            <input type="number" class="in-m-plebejer" value="3" />
+            <input type="number" class="in-m-plebejer" value="0" />
           </div>
           <div>
             <label class="mini">equites</label>
@@ -766,6 +774,19 @@
       });
 
       obj.time = numberOr0(qs('#main-time').value);
+      
+      // Add fuel if checkbox is checked
+      if (qs('#has-fuel').checked) {
+        obj.fuel = [
+          {
+            type: "wood_cutter",
+            id: "charcoal",
+            start_of_chain: true,
+            burning_time: 120
+          }
+        ];
+      }
+      
       obj.building_cost = collectBuildingCost('cost');
       obj.maintanance_cost = collectMaint('m');
 

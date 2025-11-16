@@ -1,24 +1,24 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Concrete.",
+    "README": "This file contains the Anno 117 Production Chain of iron",
     "type": "production_building",
-    "id": "concrete",
-    "icon": "concrete",
+    "id": "iron",
+    "icon": "iron",
     "input": [
         {
             "type": "mountain_slot",
             "start_of_chain": true,
-            "id": "limestone",
+            "id": "iron_ore",
             "time": 30,
             "building_cost": {
                 "money": 0,
                 "timber": 2,
-                "tile": 1,
+                "tile": 2,
                 "concrete": 0,
                 "marble": 0,
                 "mosaics": 0
             },
             "maintanance_cost": {
-                "money": 12,
+                "money": 10,
                 "liberti": 0,
                 "waders": 0,
                 "plebejer": 5,
@@ -29,35 +29,17 @@
                 "aldermen": 0,
                 "nobles": 0
             }
-        },
-        {
-            "type": "ocean_slot",
-            "start_of_chain": true,
-            "id": "silica",
-            "time": 45,
-            "building_cost": {
-                "money": 0,
-                "timber": 3,
-                "tile": 2,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 10,
-                "liberti": 5,
-                "waders": 0,
-                "plebejer": 0,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
         }
     ],
-    "time": 90,
+    "time": 60,
+    "fuel": [
+        {
+            "type": "wood_cutter",
+            "id": "charcoal",
+            "start_of_chain": true,
+            "burning_time": 120
+        }
+    ],
     "building_cost": {
         "money": 0,
         "timber": 1,
@@ -67,11 +49,11 @@
         "mosaics": 0
     },
     "maintanance_cost": {
-        "money": 16,
+        "money": 8,
         "liberti": 0,
         "waders": 0,
-        "plebejer": 0,
-        "equites": 8,
+        "plebejer": 3,
+        "equites": 0,
         "patricians": 0,
         "smiths": 0,
         "mercators": 0,

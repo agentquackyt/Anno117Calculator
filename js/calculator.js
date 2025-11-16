@@ -358,6 +358,7 @@ async function displayProductionChain(good, productionData) {
                             </div>
                             <div class="production-card-name">${fuelGood.displayName}</div>
                             ${fuel.burning_time ? `<div class="production-card-time">${Math.floor(fuel.burning_time / 60)}:${String(fuel.burning_time % 60).padStart(2, '0')}</div>` : ''}
+                            <div class="production-card-count" data-fuel-building-count="${fuel.id}">0.00x</div>
                         </div>
             `;
         });
@@ -392,11 +393,15 @@ async function displayProductionChain(good, productionData) {
     const targetInput = document.getElementById('target-rate');
     const ratePerMinute = parseFloat(targetInput.value) || 1;
     updateDependencyGraph(productionData, ratePerMinute);
+    updateFuelBuildingCounts(productionData, ratePerMinute);
 
     targetInput.addEventListener('input', () => {
         const value = parseFloat(targetInput.value);
         const rate = isNaN(value) || value < 0 ? 0 : value;
         updateDependencyGraph(productionData, rate);
+
+        // Also update fuel building counts (e.g., charcoal) based on new rate
+        updateFuelBuildingCounts(productionData, rate);
     });
 
     // Hook up recommended ratio button
@@ -405,6 +410,36 @@ async function displayProductionChain(good, productionData) {
         const recommendedRate = findRecommendedRatio(productionData);
         targetInput.value = recommendedRate.toFixed(2);
         updateDependencyGraph(productionData, recommendedRate);
+        updateFuelBuildingCounts(productionData, recommendedRate);
+    });
+}
+
+/**
+ * Update fuel building counts (e.g., charcoal) when target rate changes
+ */
+function updateFuelBuildingCounts(productionData, targetPerMinute) {
+    if (!productionData || !productionData.fuel || productionData.fuel.length === 0) return;
+
+    const secondsPerMinute = 60;
+    const allBuildings = collectAllBuildings(productionData, targetPerMinute);
+    const consumingBuildings = productionData.id ? (allBuildings[productionData.id] || 0) : 0;
+
+    productionData.fuel.forEach(fuel => {
+        const burningTime = fuel.burning_time || 120;
+        const fuelBuildingDuration = 30; // charcoal building produces on a 30s cycle
+
+        const fuelPerBuildingPerMinute = burningTime > 0 ? secondsPerMinute / burningTime : 0;
+        const totalFuelNeededPerMinute = consumingBuildings * fuelPerBuildingPerMinute;
+
+        const fuelPerBuildingProductionPerMinute = fuelBuildingDuration > 0 ? secondsPerMinute / fuelBuildingDuration : 0;
+        const fuelBuildingsNeeded = fuelPerBuildingProductionPerMinute > 0
+            ? totalFuelNeededPerMinute / fuelPerBuildingProductionPerMinute
+            : 0;
+
+        const fuelCountEl = document.querySelector(`[data-fuel-building-count="${fuel.id}"]`);
+        if (fuelCountEl) {
+            fuelCountEl.textContent = `${fuelBuildingsNeeded.toFixed(2)}x`;
+        }
     });
 }
 
@@ -569,17 +604,30 @@ function collectAllBuildings(productionData, requiredPerMinute, result = {}, dep
     if (productionData.input && productionData.input.length > 0) {
         productionData.input.forEach(input => {
             if (!input.id) return;
-            
+
             const requiredInputPerMinute = outputCyclesPerMinute;
-            
+
             if (input.start_of_chain) {
-                // Direct input - calculate buildings with adjusted time
-                const adjustedInputDuration = getAdjustedTime(input);
-                const inputRatePerBuilding = adjustedInputDuration > 0 ? secondsPerMinute / adjustedInputDuration : 0;
-                const inputBuildings = inputRatePerBuilding > 0 ? requiredInputPerMinute / inputRatePerBuilding : 0;
-                
+                // Direct input - calculate buildings with adjusted time.
+                // Special rule for charcoal fuel: each consuming building
+                // uses 1 charcoal every 120 seconds regardless of its own
+                // production time. Treat fuel as consumption-only here.
+                let inputBuildings;
+
+                if (input.id === 'charcoal' && productionData.fuel && productionData.fuel.some(f => f.id === 'charcoal')) {
+                    const charcoalConsumptionPerBuildingPerMinute = secondsPerMinute / 120;
+                    const charcoalRequiredPerMinute = buildings * charcoalConsumptionPerBuildingPerMinute;
+                    const charcoalProductionDuration = 30; // 30s per charcoal building
+                    const charcoalRatePerBuilding = secondsPerMinute / charcoalProductionDuration;
+                    inputBuildings = charcoalRatePerBuilding > 0 ? charcoalRequiredPerMinute / charcoalRatePerBuilding : 0;
+                } else {
+                    const adjustedInputDuration = getAdjustedTime(input);
+                    const inputRatePerBuilding = adjustedInputDuration > 0 ? secondsPerMinute / adjustedInputDuration : 0;
+                    inputBuildings = inputRatePerBuilding > 0 ? requiredInputPerMinute / inputRatePerBuilding : 0;
+                }
+
                 result[input.id] = (result[input.id] || 0) + inputBuildings;
-                
+
                 // Store metadata
                 if (!result._metadata[input.id]) {
                     result._metadata[input.id] = input;
