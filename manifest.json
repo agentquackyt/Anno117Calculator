@@ -4,8 +4,8 @@
   "description": "Production chain calculator and planner for Anno 117: Pax Romana",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#8b4513",
+  "background_color": "#d4b89b",
+  "theme_color": "#19010c",
   "orientation": "any",
   "icons": [
     {
