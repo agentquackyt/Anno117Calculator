@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anno 117 Production Calculator | Plan Your Production Chains</title>
+    <meta name="description" content="Free Anno 117 production calculator and chain planner. Calculate building requirements, optimize production ratios, and visualize dependency graphs for all production chains.">
+    <meta name="keywords" content="Anno 117, production calculator, chain planner, building calculator, production chain, Anno 117 tool, resource calculator, Anno 117 guide">
+    <meta name="author" content="AgentQuack">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://anno-calculator.org/">
+    <meta property="og:title" content="Anno 117 Production Calculator | Plan Your Production Chains">
+    <meta property="og:description" content="Free Anno 117 production calculator and chain planner. Calculate building requirements, optimize production ratios, and visualize dependency graphs.">
+    <meta property="og:image" content="https://anno-calculator.org/style/Anno117_calc_preview.webp">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://anno-calculator.org/">
+    <meta property="twitter:title" content="Anno 117 Production Calculator | Plan Your Production Chains">
+    <meta property="twitter:description" content="Free Anno 117 production calculator and chain planner. Calculate building requirements, optimize production ratios, and visualize dependency graphs.">
+    <meta property="twitter:image" content="https://anno-calculator.org/style/Anno117_calc_preview.webp">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://anno-calculator.org/">
+    
+    <link rel="stylesheet" href="style/theme.css">
+    <link rel="shortcut icon" href="style/anno_icon.png" type="image/png">
+    <link rel="icon" type="image/png" sizes="32x32" href="style/anno_icon.png">
+    <link rel="apple-touch-icon" href="style/anno_icon.png">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Anno 117 Production Calculator",
+      "description": "Production chain calculator and planner for Anno 117. Calculate building requirements, optimize production ratios, and visualize dependency graphs.",
+      "url": "https://anno-calculator.org/",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "AgentQuack"
+      }
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <img src="style/logo_small.png" alt="Anno 117 Logo"> <h1>Anno 117 Production Calculator</h1>
+        <button id="info-toggle" class="info-button" aria-label="About">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            About
+        </button>
+        <button id="settings-toggle" class="settings-button" aria-label="Toggle Settings">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6m0 6v6M5.636 5.636l4.243 4.243m4.242 4.242l4.243 4.243M1 12h6m6 0h6M5.636 18.364l4.243-4.243m4.242-4.242l4.243-4.243"/>
+            </svg>
+            Settings
+        </button>
+    </header>
+    <main>
+        <section class="calculator-section">
+            <!-- <h2>Production Calculator</h2> -->
+            <div class="calculator-layout">
+                <div id="selection-container">
+                    <h3>Select a Good</h3>
+                </div>
+                <div id="calculator-container" class="hidden">
+                    <p class="info-note">Select a good from the table to view its production chain details.</p>
+                </div>
+            </div>
+            <div id="settings-panel" class="settings-panel hidden">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <button id="settings-close" class="settings-close" aria-label="Close Settings">×</button>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Aqueducts</h3>
+                        <div class="setting-group">
+                            <div class="setting-item">
+                                <label class="setting-label">
+                                    <input type="checkbox" id="settings-use-aqueducts" checked>
+                                    <span class="setting-title">Enable Aqueducts</span>
+                                </label>
+                                <p class="setting-description">Include aqueduct buildings in production calculations for farms and plantations</p>
+                            </div>
+                            
+                            <div class="setting-item sub-setting">
+                                <label class="setting-label">
+                                    <img src="icons/skill-aqua-arborica.png" class="setting-icon" alt="Aqua Arborica">
+                                    <input type="checkbox" id="settings-aqua-arborica" checked>
+                                    <span class="setting-title">Aqua Arborica (Plantations +50%)</span>
+                                </label>
+                                <p class="setting-description">Reduces plantation production time by 50%</p>
+                            </div>
+                            
+                            <div class="setting-item sub-setting">
+                                <label class="setting-label">
+                                    <img src="icons/skill-feldbewaesserung.png" class="setting-icon" alt="Field Irrigation">
+                                    <input type="checkbox" id="settings-field-irrigation" checked>
+                                    <span class="setting-title">Field Irrigation (Farms +50%)</span>
+                                </label>
+                                <p class="setting-description">Reduces farm production time by 50%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Info Modal -->
+        <div id="info-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>About Anno 117 Production Calculator</h2>
+                    <button id="info-close" class="modal-close" aria-label="Close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>This free Anno 117 production calculator helps you plan and optimize production chains. Calculate building requirements, view production times, and visualize dependency graphs for all goods in Anno 117: Pax Romana. Perfect for planning your empire's economy and maximizing efficiency.</p>
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Interactive Production Chains:</strong> Visualize complete dependency graphs for all Anno 117 products</li>
+                        <li><strong>Building Calculator:</strong> Calculate exact building counts needed for target production rates</li>
+                        <li><strong>Aqueduct Support:</strong> Factor in productivity bonuses from Aqua Arborica and Field Irrigation</li>
+                        <li><strong>Recommended Ratios:</strong> Get optimal building ratios for balanced production</li>
+                        <li><strong>Cost Analysis:</strong> View total building costs and maintenance requirements</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            
+            <p><strong>Tip:</strong> Move the dependency graph by holding right mouse button and dragging. Use mouse wheel to zoom.</p>
+            <p>Developed by AgentQuack. Not affiliated with Ubisoft or Ubisoft Mainz. All trademarks are the property of their respective owners. Visit the <a href="https://github.com/jonijarvinen/anno117-mods" target="_blank" rel="noopener noreferrer">GitHub repository</a> for source code and updates.</p>
+        </footer>
+    </main>
+    <aside>
+        
+    </aside>
+    <script src="js/calculator.js"></script>
+</body>
+</html>

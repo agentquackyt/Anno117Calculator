@@ -1,0 +1,21 @@
+{
+    "README": "This file contains the Anno 117 Production Chain of Concrete.",
+    "type": "production_building",
+    "id": "concrete",
+    "icon": "concrete",
+    "input": [
+        {
+            "type": "mountain_slot",
+            "start_of_chain": true,
+            "id": "limestone",
+            "time": 30
+        },
+        {
+            "type": "ocean_slot",
+            "start_of_chain": true,
+            "id": "silica",
+            "time": 45
+        }
+    ],
+    "time": 90
+}

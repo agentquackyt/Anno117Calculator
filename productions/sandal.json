@@ -1,0 +1,34 @@
+{
+    "README": "This file contains the Anno 117 Production Chain of Sandal.",
+    "type": "production_building",
+    "id": "sandal",
+    "icon": "sandal",
+    "input": [
+        {
+            "type": "production_building",
+            "start_of_chain": false,
+            "id": "leather",
+            "time": 60,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tile": 1
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebejer": 3
+            }
+        }
+    ],
+    "time": 120,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tile": 2,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 12,
+        "plebejer": 3
+    }
+}

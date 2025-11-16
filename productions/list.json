@@ -1,0 +1,147 @@
+{
+  "README": "This file contains all goods from Anno 1117 production chains",
+  "generated": "2025-11-16T10:42:48.766Z",
+  "count": 20,
+  "goods": [
+    {
+      "displayName": "Charcoal",
+      "id": "charcoal",
+      "icon": "charcoal",
+      "startOfChain": true,
+      "type": "wood_cutter"
+    },
+    {
+      "displayName": "Clay",
+      "id": "clay",
+      "icon": "clay",
+      "startOfChain": true,
+      "type": "river_slot"
+    },
+    {
+      "displayName": "Cloth",
+      "id": "cloth",
+      "icon": "cloth",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Concrete",
+      "id": "concrete",
+      "icon": "concrete",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Flax",
+      "id": "flax",
+      "icon": "flax",
+      "startOfChain": true,
+      "type": "farm"
+    },
+    {
+      "displayName": "Grapes",
+      "id": "grapes",
+      "icon": "grapes",
+      "startOfChain": true,
+      "type": "plantation"
+    },
+    {
+      "displayName": "Hemp",
+      "id": "hemp",
+      "icon": "hemp",
+      "startOfChain": true,
+      "type": "farm"
+    },
+    {
+      "displayName": "Honeycombs",
+      "id": "honeycombs",
+      "icon": "honeycombs",
+      "startOfChain": true,
+      "type": "wood_cutter"
+    },
+    {
+      "displayName": "Leather",
+      "id": "leather",
+      "icon": "leather",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Limestone",
+      "id": "limestone",
+      "icon": "limestone",
+      "startOfChain": true,
+      "type": "mountain_slot"
+    },
+    {
+      "displayName": "Pig",
+      "id": "pig",
+      "icon": "pig",
+      "startOfChain": true,
+      "type": "animal_farm"
+    },
+    {
+      "displayName": "Porridge",
+      "id": "porridge",
+      "icon": "porridge",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Salt",
+      "id": "salt",
+      "icon": "salt",
+      "startOfChain": true,
+      "type": "ocean_slot"
+    },
+    {
+      "displayName": "Sandal",
+      "id": "sandal",
+      "icon": "sandal",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Silica",
+      "id": "silica",
+      "icon": "silica",
+      "startOfChain": true,
+      "type": "ocean_slot"
+    },
+    {
+      "displayName": "Tile",
+      "id": "tile",
+      "icon": "tile",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Timber",
+      "id": "timber",
+      "icon": "timber",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Toga",
+      "id": "toga",
+      "icon": "toga",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Wine",
+      "id": "wine",
+      "icon": "wine",
+      "startOfChain": false,
+      "type": "production_building"
+    },
+    {
+      "displayName": "Wood",
+      "id": "wood",
+      "icon": "wood",
+      "startOfChain": true,
+      "type": "wood_cutter"
+    }
+  ]
+}

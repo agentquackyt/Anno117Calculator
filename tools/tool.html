@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Anno 117 — JSON Builder</title>
+  <style>
+    @font-face {
+        font-family: "AlbertusNove";
+        src: url("/style/NotoSerif.ttf") format("truetype");
+    }
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    :root {
+        --background: #d4b89b;
+        --background-accent: #FFE9DE;
+        --theme-color: #5f032e;
+        --theme-color-dark: #19010c;
+        --font-family: "AlbertusNove", "Times New Roman", serif;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: var(--font-family);
+        background-color: var(--background);
+        color: var(--theme-color-dark);
+    }
+    
+    .wrap {
+        max-width: 1100px;
+        margin: 1.75rem auto;
+        padding: 1.625rem;
+        background: var(--background-accent);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 8px rgba(25, 1, 12, 0.1);
+    }
+    
+    header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.125rem;
+        border-bottom: 2px solid var(--theme-color);
+        padding-bottom: 0.5rem;
+    }
+    
+    header h1 {
+        font-size: 1.375rem;
+        color: var(--theme-color);
+    }
+    
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 1.25rem;
+    }
+    
+    .card {
+        background: var(--background-accent);
+        padding: 1.125rem;
+        border-radius: 0.25rem;
+        border: 1px solid var(--theme-color);
+    }
+
+    label {
+        display: block;
+        font-size: 0.8125rem;
+        margin-bottom: 0.375rem;
+        color: var(--theme-color-dark);
+        font-weight: 500;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 0.5rem 0.625rem;
+        border-radius: 0.25rem;
+        border: 1px solid var(--theme-color);
+        font-family: inherit;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: var(--theme-color-dark);
+    }
+    
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--theme-color-dark);
+    }
+    
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.625rem;
+    }
+    
+    .row {
+        margin-bottom: 0.75rem;
+    }
+    
+    .muted {
+        font-size: 0.75rem;
+        color: var(--theme-color);
+        font-style: italic;
+    }
+
+    .drop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.875rem;
+        border: 2px dashed var(--theme-color);
+        border-radius: 0.25rem;
+        background: rgba(95, 3, 46, 0.05);
+        min-height: 84px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .drop:hover {
+        background: rgba(95, 3, 46, 0.1);
+    }
+    
+    .drop.dragover {
+        border-color: var(--theme-color-dark);
+        background: var(--background);
+    }
+    
+    .drop small {
+        display: block;
+        margin-top: 0.375rem;
+        color: var(--theme-color);
+        font-size: 0.7rem;
+    }
+    
+    .controls {
+        display: flex;
+        gap: 0.625rem;
+        align-items: center;
+        margin-top: 0.625rem;
+    }
+    
+    button {
+        background: var(--theme-color);
+        color: var(--background-accent);
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.25rem;
+        border: none;
+        cursor: pointer;
+        font-family: var(--font-family);
+        font-size: 0.875rem;
+        transition: background-color 0.2s;
+    }
+    
+    button:hover {
+        background: var(--theme-color-dark);
+    }
+    
+    button:active {
+        transform: translateY(1px);
+    }
+    
+    button.ghost {
+        background: transparent;
+        color: var(--theme-color);
+        border: 1px solid var(--theme-color);
+    }
+    
+    button.ghost:hover {
+        background: rgba(95, 3, 46, 0.1);
+    }
+    
+    .inputs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .input-item {
+        border-radius: 0.25rem;
+        padding: 0.625rem;
+        background: rgba(95, 3, 46, 0.05);
+        border: 1px solid var(--theme-color);
+    }
+    
+    .mini {
+        font-size: 0.75rem;
+        color: var(--theme-color);
+    }
+    
+    .flex {
+        display: flex;
+        gap: 0.625rem;
+        align-items: center;
+    }
+    
+    .spacer {
+        flex: 1;
+    }
+    
+    .img-preview {
+        width: 48px;
+        height: 48px;
+        border-radius: 0.25rem;
+        object-fit: cover;
+        border: 1px solid var(--theme-color);
+    }
+    
+    .small {
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+    
+    .danger {
+        background: #c00;
+    }
+    
+    .danger:hover {
+        background: #a00;
+    }
+    
+    footer {
+        margin-top: 0.875rem;
+        display: flex;
+        gap: 0.625rem;
+        align-items: center;
+        padding-top: 0.875rem;
+        border-top: 1px solid var(--theme-color);
+    }
+
+    #json-card {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #json-view {
+        flex-grow: 1;
+    }
+    
+    label.mini {
+        font-size: 0.75rem;
+        color: var(--theme-color);
+        margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 980px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .wrap {
+            margin: 0.75rem;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Anno 117 — JSON Builder</h1>
+      <div class="muted">Create production building / resource JSON quickly — drag PNG(s) to set ids/icons.</div>
+    </header>
+
+    <div class="grid">
+      <div class="card" id="main-form">
+        <div class="row">
+          <label>README</label>
+          <input type="text" id="readme" value="This file contains the Anno 117 Production Chain of Wine." />
+        </div>
+
+        <div class="two">
+          <div class="row">
+            <label>type</label>
+            <select id="type">
+              <option value="production_building">production_building</option>
+              <option value="animal_farm">animal_farm</option>
+              <option value="ocean_slot">ocean_slot</option>
+              <option value="farm">farm</option>
+              <option value="mountain_slot">mountain_slot</option>
+              <option value="wood_cutter">wood_cutter</option>
+              <option value="river_slot">river_slot</option>
+              <option value="plantation">plantation</option>
+            </select>
+          </div>
+          <div class="row">
+            <label>id</label>
+            <input type="text" id="id" placeholder="will be set from dropped file name (item.png)" />
+          </div>
+        </div>
+
+        <div class="row">
+          <label>icon</label>
+          <div class="flex">
+            <div class="drop" id="main-drop">
+              <div>Drop or click PNG here</div>
+              <small class="mini">Filename like &lt;item&gt;.png → id/icon set to &lt;item&gt;</small>
+            </div>
+            <img id="main-preview" class="img-preview" src="" alt="preview" style="display:none" />
+          </div>
+          <input type="file" id="main-file" accept="image/png" style="display:none" />
+        </div>
+
+        <div class="row">
+          <label>input (chain inputs)</label>
+          <div class="inputs-list" id="inputs-list"></div>
+          <div class="controls">
+            <button id="add-input">+ Add input</button>
+            <button class="ghost" id="clear-inputs">Clear inputs</button>
+            <div class="spacer"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label>time (main)</label>
+          <input type="number" id="main-time" value="60" />
+        </div>
+
+        <div class="row">
+          <label>building_cost (main)</label>
+          <div class="two">
+            <div>
+              <label class="mini">money</label>
+              <input type="number" id="cost-money" value="0" />
+            </div>
+            <div>
+              <label class="mini">timber</label>
+              <input type="number" id="cost-timber" value="2" />
+            </div>
+            <div>
+              <label class="mini">tile</label>
+              <input type="number" id="cost-tile" value="1" />
+            </div>
+            <div>
+              <label class="mini">concrete</label>
+              <input type="number" id="cost-concrete" value="0" />
+            </div>
+            <div>
+              <label class="mini">marble</label>
+              <input type="number" id="cost-marble" value="0" />
+            </div>
+            <div>
+              <label class="mini">mosaics</label>
+              <input type="number" id="cost-mosaics" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label>maintanance_cost (main)</label>
+          <div class="two">
+            <div>
+              <label class="mini">money</label>
+              <input type="number" id="m-money" value="10" />
+            </div>
+            <div>
+              <label class="mini">liberti</label>
+              <input type="number" id="m-liberti" value="0" />
+            </div>
+            <div>
+              <label class="mini">waders</label>
+              <input type="number" id="m-waders" value="0" />
+            </div>
+            <div>
+              <label class="mini">plebejer</label>
+              <input type="number" id="m-plebejer" value="3" />
+            </div>
+            <div>
+              <label class="mini">equites</label>
+              <input type="number" id="m-equites" value="0" />
+            </div>
+            <div>
+              <label class="mini">patricians</label>
+              <input type="number" id="m-patricians" value="0" />
+            </div>
+            <div>
+              <label class="mini">smiths</label>
+              <input type="number" id="m-smiths" value="0" />
+            </div>
+            <div>
+              <label class="mini">mercators</label>
+              <input type="number" id="m-mercators" value="0" />
+            </div>
+            <div>
+              <label class="mini">aldermen</label>
+              <input type="number" id="m-aldermen" value="0" />
+            </div>
+            <div>
+              <label class="mini">nobles</label>
+              <input type="number" id="m-nobles" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <footer>
+          <button id="download">Download JSON</button>
+          <button id="copy-json" class="ghost">Copy JSON</button>
+          <div class="spacer"></div>
+          <div class="muted small">Filename will be &lt;id&gt;.json (from main id). If id is empty 'export.json' will be used.</div>
+        </footer>
+      </div>
+
+      <div class="card" id="json-card">
+        <label>Live JSON</label>
+        <textarea id="json-view"></textarea>
+        <div style="height:12px"></div>
+        <label class="mini">Preview image (main)</label>
+        <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+          <img id="preview-mini" class="img-preview" src="" alt="" style="display:none" />
+          <div id="preview-name" class="mini muted"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <template id="input-template">
+    <div class="input-item">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <strong class="small">Input</strong>
+        <div class="spacer"></div>
+        <button class="ghost btn-remove">Remove</button>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>type</label>
+          <select class="in-type">
+            <option value="production_building">production_building</option>
+            <option value="animal_farm">animal_farm</option>
+            <option value="ocean_slot">ocean_slot</option>
+            <option value="farm">farm</option>
+            <option value="mountain_slot">mountain_slot</option>
+            <option value="wood_cutter">wood_cutter</option>
+            <option value="river_slot">river_slot</option>
+            <option value="plantation">plantation</option>
+          </select>
+        </div>
+        <div>
+          <label>start_of_chain</label>
+          <select class="in-start">
+            <option value="true">true</option>
+            <option value="false" selected>false</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>id</label>
+          <input type="text" class="in-id" placeholder="set from dropped file name" />
+        </div>
+        <div>
+          <label>time</label>
+          <input type="number" class="in-time" value="30" />
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+        <div class="drop in-drop" style="flex:1">Drop or click PNG / JSON for this input</div>
+        <img class="img-preview in-preview" src="" style="display:none" />
+        <input type="file" class="in-file" accept="image/png,application/json,.json" style="display:none" />
+      </div>
+
+      <div style="margin-top:10px">
+        <label>building_cost</label>
+        <div class="two">
+          <div>
+            <label class="mini">money</label>
+            <input type="number" class="in-cost-money" value="0" />
+          </div>
+          <div>
+            <label class="mini">timber</label>
+            <input type="number" class="in-cost-timber" value="6" />
+          </div>
+          <div>
+            <label class="mini">tile</label>
+            <input type="number" class="in-cost-tile" value="0" />
+          </div>
+          <div>
+            <label class="mini">concrete</label>
+            <input type="number" class="in-cost-concrete" value="0" />
+          </div>
+          <div>
+            <label class="mini">marble</label>
+            <input type="number" class="in-cost-marble" value="0" />
+          </div>
+          <div>
+            <label class="mini">mosaics</label>
+            <input type="number" class="in-cost-mosaics" value="0" />
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <label>maintanance_cost</label>
+        <div class="two">
+          <div>
+            <label class="mini">money</label>
+            <input type="number" class="in-m-money" value="6" />
+          </div>
+           <div>
+            <label class="mini">liberti</label>
+            <input type="number" class="in-m-liberti" value="0" />
+          </div>
+          <div>
+            <label class="mini">waders</label>
+            <input type="number" class="in-m-waders" value="0" />
+          </div>
+          <div>
+            <label class="mini">plebejer</label>
+            <input type="number" class="in-m-plebejer" value="3" />
+          </div>
+          <div>
+            <label class="mini">equites</label>
+            <input type="number" class="in-m-equites" value="0" />
+          </div>
+          <div>
+            <label class="mini">patricians</label>
+            <input type="number" class="in-m-patricians" value="0" />
+          </div>
+          <div>
+            <label class="mini">smiths</label>
+            <input type="number" class="in-m-smiths" value="0" />
+          </div>
+          <div>
+            <label class="mini">mercators</label>
+            <input type="number" class="in-m-mercators" value="0" />
+          </div>
+          <div>
+            <label class="mini">aldermen</label>
+            <input type="number" class="in-m-aldermen" value="0" />
+          </div>
+          <div>
+            <label class="mini">nobles</label>
+            <input type="number" class="in-m-nobles" value="0" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </template>
+
+  <script>
+    // Utilities
+    const qs = s => document.querySelector(s);
+    const qsa = s => Array.from(document.querySelectorAll(s));
+
+    const mainDrop = qs('#main-drop');
+    const mainFile = qs('#main-file');
+    const mainPreview = qs('#main-preview');
+    const previewMini = qs('#preview-mini');
+    const previewName = qs('#preview-name');
+
+    function filenameToId(filename){
+      if(!filename) return '';
+      return filename.replace(/\.png$/i,'').replace(/\s+/g,'_');
+    }
+
+    function handleFileSetForMain(file){
+      const idVal = filenameToId(file.name);
+      qs('#id').value = idVal;
+      qs('#main-preview').src = URL.createObjectURL(file);
+      qs('#main-preview').style.display = 'block';
+      previewMini.src = qs('#main-preview').src; previewMini.style.display='block';
+      previewName.textContent = file.name;
+      updateJSON();
+    }
+
+    // main drop handling
+    ['dragenter','dragover'].forEach(e=> mainDrop.addEventListener(e, ev=>{ ev.preventDefault(); mainDrop.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(e=> mainDrop.addEventListener(e, ev=>{ ev.preventDefault(); mainDrop.classList.remove('dragover'); }));
+
+    mainDrop.addEventListener('click', ()=> mainFile.click());
+    mainFile.addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return; handleFileSetForMain(f);
+    });
+
+    mainDrop.addEventListener('drop', e=>{
+      const f = e.dataTransfer.files[0]; if(!f) return; handleFileSetForMain(f);
+    });
+
+    // Inputs management
+    const inputsList = qs('#inputs-list');
+    const tpl = qs('#input-template');
+    qs('#add-input').addEventListener('click', addInput);
+    qs('#clear-inputs').addEventListener('click', ()=>{ inputsList.innerHTML=''; updateJSON(); });
+
+    function addInput(prefill={}){
+      const node = tpl.content.cloneNode(true);
+      const el = node.querySelector('.input-item');
+      // attach event handlers
+      const btnRemove = el.querySelector('.btn-remove');
+      btnRemove.addEventListener('click', ()=>{ el.remove(); updateJSON(); });
+
+      const drop = el.querySelector('.in-drop');
+      const fileIn = el.querySelector('.in-file');
+      
+      ['dragenter','dragover'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.add('dragover'); }));
+      ['dragleave','drop'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.remove('dragover'); }));
+
+      drop.addEventListener('click', ()=> fileIn.click());
+      // Updated handlers to use the new multi-type function
+      fileIn.addEventListener('change', e=>{ const f = e.target.files[0]; if(!f) return; handleInputFile(f, el); });
+      drop.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(!f) return; handleInputFile(f, el); });
+
+      // wire changes to update
+      ['change','input'].forEach(evt=> el.querySelectorAll('input,select').forEach(n=> n.addEventListener(evt, updateJSON)));
+
+      // prefill values if provided
+      if(prefill.icon){ 
+        el.querySelector('.in-id').value = filenameToId(prefill.icon); 
+      }
+
+      inputsList.appendChild(el);
+      updateJSON();
+    }
+
+    // New function to handle JSON/PNG for input items
+    function handleInputFile(file, itemElement) {
+      const preview = itemElement.querySelector('.in-preview');
+
+      // Handle PNG
+      if (file.type === 'image/png' || file.name.endsWith('.png')) {
+        const inId = itemElement.querySelector('.in-id');
+        const idVal = filenameToId(file.name);
+        inId.value = idVal;
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+      }
+      // Handle JSON
+      else if (file.type === 'application/json' || file.name.endsWith('.json')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            populateInputFields(data, itemElement);
+            preview.src = '';
+            preview.style.display = 'none';
+          } catch (err) {
+            alert('Error parsing JSON file: ' + err.message);
+          }
+          updateJSON();
+        };
+        reader.readAsText(file);
+      } 
+      // Handle other
+      else {
+        alert('Please drop a PNG or JSON file.');
+      }
+      updateJSON();
+    }
+
+    // New helper to populate fields from a JSON object
+    function populateInputFields(data, itemElement) {
+      if (!data) return;
+
+      itemElement.querySelector('.in-type').value = data.type || 'production_building';
+      itemElement.querySelector('.in-start').value = (data.start_of_chain === true) ? 'true' : 'false';
+      itemElement.querySelector('.in-id').value = data.id || '';
+      itemElement.querySelector('.in-time').value = numberOr0(data.time);
+
+      const bCost = data.building_cost || {};
+      itemElement.querySelector('.in-cost-money').value = numberOr0(bCost.money);
+      itemElement.querySelector('.in-cost-timber').value = numberOr0(bCost.timber);
+      itemElement.querySelector('.in-cost-tile').value = numberOr0(bCost.tile);
+      itemElement.querySelector('.in-cost-concrete').value = numberOr0(bCost.concrete);
+      itemElement.querySelector('.in-cost-marble').value = numberOr0(bCost.marble);
+      itemElement.querySelector('.in-cost-mosaics').value = numberOr0(bCost.mosaics);
+
+      const mCost = data.maintanance_cost || {};
+      itemElement.querySelector('.in-m-money').value = numberOr0(mCost.money);
+      itemElement.querySelector('.in-m-liberti').value = numberOr0(mCost.liberti);
+      itemElement.querySelector('.in-m-waders').value = numberOr0(mCost.waders);
+      itemElement.querySelector('.in-m-plebejer').value = numberOr0(mCost.plebejer);
+      itemElement.querySelector('.in-m-equites').value = numberOr0(mCost.equites);
+      itemElement.querySelector('.in-m-patricians').value = numberOr0(mCost.patricians);
+      itemElement.querySelector('.in-m-smiths').value = numberOr0(mCost.smiths);
+      itemElement.querySelector('.in-m-mercators').value = numberOr0(mCost.mercators);
+      itemElement.querySelector('.in-m-aldermen').value = numberOr0(mCost.aldermen);
+      itemElement.querySelector('.in-m-nobles').value = numberOr0(mCost.nobles);
+    }
+
+    // initialize with one input example
+    addInput();
+
+    // Build JSON
+    function collectBuildingCost(prefix){
+      return {
+        money: numberOr0(qs(`#${prefix}-money`).value || qs(`.${prefix}-money`)?.value),
+        timber: numberOr0(qs(`#${prefix}-timber`)?.value || qs(`.${prefix}-timber`)?.value),
+        tile: numberOr0(qs(`#${prefix}-tile`)?.value || qs(`.${prefix}-tile`)?.value),
+        concrete: numberOr0(qs(`#${prefix}-concrete`)?.value || qs(`.${prefix}-concrete`)?.value),
+        marble: numberOr0(qs(`#${prefix}-marble`)?.value || qs(`.${prefix}-marble`)?.value),
+        mosaics: numberOr0(qs(`#${prefix}-mosaics`)?.value || qs(`.${prefix}-mosaics`)?.value)
+      };
+    }
+
+    function collectMaint(prefix){
+      return {
+        money: numberOr0(qs(`#m-money`)?.value || qs(`.${prefix}-money`)?.value),
+        liberti: numberOr0(qs(`#m-liberti`)?.value || qs(`.${prefix}-liberti`)?.value),
+        waders: numberOr0(qs(`#m-waders`)?.value || qs(`.${prefix}-waders`)?.value),
+        plebejer: numberOr0(qs(`#m-plebejer`)?.value || qs(`.${prefix}-plebejer`)?.value),
+        equites: numberOr0(qs(`#m-equites`)?.value || qs(`.${prefix}-equites`)?.value),
+        patricians: numberOr0(qs(`#m-patricians`)?.value || qs(`.${prefix}-patricians`)?.value),
+        smiths: numberOr0(qs(`#m-smiths`)?.value || qs(`.${prefix}-smiths`)?.value),
+        mercators: numberOr0(qs(`#m-mercators`)?.value || qs(`.${prefix}-mercators`)?.value),
+        aldermen: numberOr0(qs(`#m-aldermen`)?.value || qs(`.${prefix}-aldermen`)?.value),
+        nobles: numberOr0(qs(`#m-nobles`)?.value || qs(`.${prefix}-nobles`)?.value)
+      };
+    }
+
+    function numberOr0(v){ const n = Number(v); return isNaN(n)?0:n; }
+
+    function buildJSON(){
+      const obj = {};
+      obj.README = "This file contains the Anno 117 Production Chain of " + (qs('#id').value || '').toString();
+      obj.type = qs('#type').value;
+      obj.id = (qs('#id').value || '').toString();
+      obj.icon = obj.id || '';
+
+      // inputs
+      obj.input = [];
+      const items = inputsList.querySelectorAll('.input-item');
+      items.forEach(it=>{
+        const type = it.querySelector('.in-type').value;
+        const start = it.querySelector('.in-start').value === 'true';
+        const id = it.querySelector('.in-id').value || '';
+        const time = numberOr0(it.querySelector('.in-time').value);
+        const building_cost = {
+          money: numberOr0(it.querySelector('.in-cost-money').value),
+          timber: numberOr0(it.querySelector('.in-cost-timber').value),
+          tile: numberOr0(it.querySelector('.in-cost-tile').value),
+          concrete: numberOr0(it.querySelector('.in-cost-concrete').value),
+          marble: numberOr0(it.querySelector('.in-cost-marble').value),
+          mosaics: numberOr0(it.querySelector('.in-cost-mosaics').value),
+        };
+        const maint = {
+          money: numberOr0(it.querySelector('.in-m-money').value),
+          liberti: numberOr0(it.querySelector('.in-m-liberti').value),
+          waders: numberOr0(it.querySelector('.in-m-waders').value),
+          plebejer: numberOr0(it.querySelector('.in-m-plebejer').value),
+          equites: numberOr0(it.querySelector('.in-m-equites').value),
+          patricians: numberOr0(it.querySelector('.in-m-patricians').value),
+          smiths: numberOr0(it.querySelector('.in-m-smiths').value),
+          mercators: numberOr0(it.querySelector('.in-m-mercators').value),
+          aldermen: numberOr0(it.querySelector('.in-m-aldermen').value),
+          nobles: numberOr0(it.querySelector('.in-m-nobles').value),
+        };
+        const inputObj = { type, start_of_chain: start, id, time, building_cost, maintanance_cost: maint };
+        obj.input.push(inputObj);
+      });
+
+      obj.time = numberOr0(qs('#main-time').value);
+      obj.building_cost = collectBuildingCost('cost');
+      obj.maintanance_cost = collectMaint('m');
+
+      return obj;
+    }
+
+    function updateJSON(){
+      const j = buildJSON();
+      const txt = JSON.stringify(j,null,4);
+      qs('#json-view').value = txt;
+    }
+
+    // wire form inputs to update
+    qsa('input,select,textarea').forEach(el=> el.addEventListener('input', updateJSON));
+
+    updateJSON();
+
+    // download and copy
+    qs('#download').addEventListener('click', ()=>{
+      const j = buildJSON();
+      let filename = (j.id && j.id.length>0)? `${j.id}.json` : 'export.json';
+      const blob = new Blob([JSON.stringify(j,null,4)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    qs('#copy-json').addEventListener('click', async ()=>{
+      try{
+        await navigator.clipboard.writeText(qs('#json-view').value);
+        alert('JSON copied to clipboard');
+      }catch(e){ alert('Copy failed — you can select and copy the JSON manually.'); }
+    });
+
+    // expose buildJSON to console for debugging
+    window.buildAnnoJSON = buildJSON;
+  </script>
+</body>
+</html>

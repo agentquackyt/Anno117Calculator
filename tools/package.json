@@ -1,0 +1,11 @@
+{
+  "name": "anno117-calculator-tools",
+  "version": "1.0.0",
+  "description": "Tools for Anno 117 Calculator",
+  "scripts": {
+    "generate-goods": "bun run generate-goods-list.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

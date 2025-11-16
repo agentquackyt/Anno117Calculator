@@ -1,0 +1,41 @@
+{
+    "README": "This file contains the Anno 117 Production Chain of Wine.",
+    "type": "production_building",
+    "id": "cloth",
+    "icon": "cloth",
+    "input": [
+        {
+            "type": "farm",
+            "start_of_chain": true,
+            "id": "flax",
+            "time": 90,
+            "faith": [
+                "minerva"
+            ],
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tile": 2,
+                "concrete": 2
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "liberti": 3
+            }
+        }
+    ],
+    "time": 45,
+    "faith": [
+        "minerva"
+    ],
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tile": 4,
+        "concrete": 2
+    },
+    "maintanance_cost": {
+        "money": 12,
+        "equites": 10
+    }
+}

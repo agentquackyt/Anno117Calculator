@@ -1,0 +1,23 @@
+{
+    "README": "This file contains the Anno 117 Production Chain of Tiles.",
+    "type": "production_building",
+    "id": "tile",
+    "icon": "tile",
+    "input": [
+        {
+            "type": "river_slot",
+            "start_of_chain": true,
+            "id": "clay",
+            "time": 30
+        }
+    ],
+    "fuel": [
+        {
+            "type": "wood_cutter",
+            "id": "charcoal",
+            "start_of_chain": true,
+            "burning_time": 120
+        }
+    ],
+    "time": 60
+}
