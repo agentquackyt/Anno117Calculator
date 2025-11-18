@@ -34,7 +34,7 @@
             "type": "production_building",
             "start_of_chain": false,
             "id": "cloth",
-            "time": 45,
+            "time": 120,
             "building_cost": {
                 "money": 0,
                 "timber": 1,
