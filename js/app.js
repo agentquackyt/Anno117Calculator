@@ -34,7 +34,7 @@ class GoodsListView {
 
         const searchContainer = document.createElement('div');
         searchContainer.className = 'search-container';
-        searchContainer.innerHTML = '<input type="text" placeholder="Search goods..." aria-label="Search goods" />';
+        searchContainer.innerHTML = '<input type="text" placeholder="Search goods..." aria-label="Search goods" id="goods-search" />';
         this.searchInput = searchContainer.querySelector('input');
 
         const gridContainer = document.createElement('div');
