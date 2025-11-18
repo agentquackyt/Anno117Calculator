@@ -25,10 +25,10 @@ export class ProductionCalculator {
 
         if (config.aqueductsEnabled) {
             if (type === 'plantation' && config.aquaArborica) {
-                productivity *= 2;
+                productivity *= 1.5;
             }
             if (type === 'farm' && config.fieldIrrigation) {
-                productivity *= 2;
+                productivity *= 1.5;
             }
         }
 
