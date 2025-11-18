@@ -20,13 +20,14 @@ export class GraphRenderer {
 
     async attach(container) {
         if (!container) return;
-        if (!this.svgMarkup) {
-            const response = await fetch(this.templatePath);
-            if (!response.ok) {
-                throw new Error(`Failed to load SVG template (${response.status})`);
-            }
-            this.svgMarkup = await response.text();
-        }
+        // replace by creating the element directly and not fetch it?
+        // <svg xmlns="http://www.w3.org/2000/svg" id="dependency-graph" class="dependency-graph" viewBox="0 0 400 400"></svg>
+        const svgElement = document.createElement('svg');
+        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svgElement.setAttribute('id', 'dependency-graph');
+        svgElement.setAttribute('class', 'dependency-graph');
+        svgElement.setAttribute('viewBox', '0 0 400 400');
+        this.svgMarkup = svgElement.outerHTML;
         container.innerHTML = this.svgMarkup;
         this.svgElement = container.querySelector('#dependency-graph');
         this.interactionsBound = false;
