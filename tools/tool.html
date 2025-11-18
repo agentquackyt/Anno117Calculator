@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Anno 117 — JSON Builder</title>
+  <title>Anno 117 — Production Chain Builder</title>
   <style>
     @font-face {
         font-family: "AlbertusNove";
@@ -21,7 +21,14 @@
         --background-accent: #FFE9DE;
         --theme-color: #5f032e;
         --theme-color-dark: #19010c;
+        --success: #2d5f2e;
         --font-family: "AlbertusNove", "Times New Roman", serif;
+        --md-sys-color-surface: #FFE9DE;
+        --md-sys-color-on-surface: #19010c;
+        --md-sys-color-primary: #5f032e;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-surface-variant: #f5d5c8;
+        --md-sys-color-outline: #8b7567;
     }
 
     html, body {
@@ -32,47 +39,156 @@
     }
     
     .wrap {
-        max-width: 1100px;
-        margin: 1.75rem auto;
-        padding: 1.625rem;
+        max-width: 1200px;
+        margin: 1.5rem auto;
+        padding: 2rem;
         background: var(--background-accent);
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 8px rgba(25, 1, 12, 0.1);
+        border-radius: 28px;
     }
     
     header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 1rem;
-        margin-bottom: 1.125rem;
-        border-bottom: 2px solid var(--theme-color);
-        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--md-sys-color-outline);
+        padding-bottom: 1.5rem;
     }
     
     header h1 {
-        font-size: 1.375rem;
-        color: var(--theme-color);
+        font-size: 2rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--md-sys-color-primary);
+    }
+    
+    .subtitle {
+        color: var(--md-sys-color-on-surface);
+        font-size: 0.875rem;
+        font-weight: 400;
+        letter-spacing: 0.25px;
+        opacity: 0.7;
+    }
+
+    /* Progress Steps */
+    .progress-container {
+        margin-bottom: 2rem;
+    }
+
+    .steps {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .steps::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: rgba(95, 3, 46, 0.2);
+        z-index: 0;
+    }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 1;
+        flex: 1;
+    }
+
+    .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--md-sys-color-surface-variant);
+        border: 2px solid var(--md-sys-color-outline);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--md-sys-color-on-surface);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .step.active .step-circle {
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        border-color: var(--md-sys-color-primary);
+    }
+
+    .step.completed .step-circle {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        color: var(--md-sys-color-on-surface);
+        text-align: center;
+    }
+
+    .step.active .step-label {
+        font-weight: 600;
+        color: var(--md-sys-color-primary);
     }
     
     .grid {
         display: grid;
         grid-template-columns: 1fr 420px;
-        gap: 1.25rem;
+        gap: 1.5rem;
     }
     
     .card {
-        background: var(--background-accent);
-        padding: 1.125rem;
-        border-radius: 0.25rem;
-        border: 1px solid var(--theme-color);
+        background: var(--md-sys-color-surface);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid var(--md-sys-color-outline);
+    }
+
+    .stage {
+        display: none;
+    }
+
+    .stage.active {
+        display: block;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--md-sys-color-primary);
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--md-sys-color-outline);
+        padding-bottom: 0.75rem;
     }
 
     label {
         display: block;
-        font-size: 0.8125rem;
-        margin-bottom: 0.375rem;
-        color: var(--theme-color-dark);
+        font-size: 0.875rem;
         font-weight: 500;
+        letter-spacing: 0.25px;
+        margin-bottom: 0.5rem;
+        color: var(--md-sys-color-on-surface);
     }
     
     input[type="text"],
@@ -80,12 +196,15 @@
     select,
     textarea {
         width: 100%;
-        padding: 0.5rem 0.625rem;
-        border-radius: 0.25rem;
-        border: 1px solid var(--theme-color);
+        padding: 1rem;
+        border-radius: 4px;
+        border: 1px solid var(--md-sys-color-outline);
         font-family: inherit;
-        background-color: rgba(255, 255, 255, 0.8);
-        color: var(--theme-color-dark);
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        background-color: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface);
+        transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     input[type="text"]:focus,
@@ -93,12 +212,46 @@
     select:focus,
     textarea:focus {
         outline: none;
-        border-color: var(--theme-color-dark);
+        border-color: var(--md-sys-color-primary);
+        border-width: 2px;
+        padding: calc(1rem - 1px);
     }
     
     textarea {
-        min-height: 120px;
+        min-height: 150px;
         resize: vertical;
+    }
+
+    .icon-input {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .icon-img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+
+    .cost-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .cost-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .cost-item label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
     }
     
     .two {
@@ -122,29 +275,37 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 0.875rem;
-        border: 2px dashed var(--theme-color);
-        border-radius: 0.25rem;
-        background: rgba(95, 3, 46, 0.05);
-        min-height: 84px;
+        padding: 2rem;
+        border: 2px dashed var(--md-sys-color-outline);
+        border-radius: 12px;
+        background: var(--md-sys-color-surface-variant);
+        min-height: 120px;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .drop:hover {
-        background: rgba(95, 3, 46, 0.1);
+        background: rgba(95, 3, 46, 0.08);
+        border-color: var(--md-sys-color-primary);
     }
     
     .drop.dragover {
-        border-color: var(--theme-color-dark);
-        background: var(--background);
+        border-color: var(--md-sys-color-primary);
+        background: rgba(95, 3, 46, 0.12);
+        border-style: solid;
     }
     
     .drop small {
         display: block;
-        margin-top: 0.375rem;
+        margin-top: 0.5rem;
         color: var(--theme-color);
-        font-size: 0.7rem;
+        font-size: 0.75rem;
+        text-align: center;
+    }
+
+    .drop strong {
+        font-size: 1rem;
+        color: var(--theme-color-dark);
     }
     
     .controls {
@@ -155,33 +316,52 @@
     }
     
     button {
-        background: var(--theme-color);
-        color: var(--background-accent);
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.25rem;
+        background: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
+        padding: 0.625rem 1.5rem;
+        border-radius: 100px;
         border: none;
         cursor: pointer;
         font-family: var(--font-family);
         font-size: 0.875rem;
-        transition: background-color 0.2s;
+        font-weight: 500;
+        letter-spacing: 0.1px;
+        text-transform: uppercase;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     button:hover {
         background: var(--theme-color-dark);
+        opacity: 0.9;
     }
     
     button:active {
-        transform: translateY(1px);
+        transform: scale(0.98);
     }
     
     button.ghost {
         background: transparent;
-        color: var(--theme-color);
-        border: 1px solid var(--theme-color);
+        color: var(--md-sys-color-primary);
+        border: 1px solid var(--md-sys-color-outline);
     }
     
     button.ghost:hover {
-        background: rgba(95, 3, 46, 0.1);
+        background: rgba(95, 3, 46, 0.08);
+    }
+
+    button:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--md-sys-color-outline);
     }
     
     .inputs-list {
@@ -266,298 +446,478 @@
             margin: 0.75rem;
         }
     }
+    .inputs-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .row {
+        margin-bottom: 1rem;
+    }
+
+    .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .flex {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    .img-preview {
+        width: 48px;
+        height: 48px;
+        border-radius: 0.375rem;
+        object-fit: cover;
+        border: 2px solid var(--theme-color);
+    }
+
+    .muted {
+        font-size: 0.85rem;
+        color: var(--theme-color);
+        font-style: italic;
+    }
+
+    .small {
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .mini {
+        font-size: 0.75rem;
+        color: var(--theme-color);
+    }
+
+    @media (max-width: 980px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .wrap {
+            margin: 0.75rem;
+            padding: 1rem;
+        }
+
+        .steps {
+            flex-wrap: wrap;
+        }
+
+        .step {
+            flex: 0 0 20%;
+        }
+
+        .cost-grid {
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+    }
+
+    #json-card {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Anno 117 — JSON Builder</h1>
-      <div class="muted">Create production building / resource JSON quickly — drag PNG(s) to set ids/icons.</div>
+      <div>
+        <h1>Anno 117 — Production Chain Builder</h1>
+        <div class="subtitle">Multi-stage assistant for creating production building JSON</div>
+      </div>
     </header>
 
-    <div class="grid">
-      <div class="card" id="main-form">
+    <!-- Progress Steps -->
+    <div class="progress-container">
+      <div class="steps" id="progress-steps">
+        <div class="step active" data-step="1">
+          <div class="step-circle">1</div>
+          <div class="step-label">Start</div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-circle">2</div>
+          <div class="step-label">Basic Info</div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-circle">3</div>
+          <div class="step-label">Production</div>
+        </div>
+        <!-- Dynamic input steps will be inserted here -->
+        <div class="step" data-step="costs">
+          <div class="step-circle">💰</div>
+          <div class="step-label">Costs</div>
+        </div>
+        <div class="step" data-step="review">
+          <div class="step-circle">✓</div>
+          <div class="step-label">Review</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 1: Start / Upload -->
+    <div class="stage active" data-stage="1">
+      <div class="card">
+        <h2 class="section-title">Welcome! Let's build your production chain</h2>
+        <p style="margin-bottom: 2rem; color: var(--theme-color);">Start from scratch or upload an existing JSON file to edit.</p>
+        
+        <div class="drop" id="json-upload-drop">
+          <strong>📄 Upload Existing JSON (Optional)</strong>
+          <small>Drop a JSON file here or click to browse</small>
+          <small>Skip this to create a new production chain from scratch</small>
+        </div>
+        <input type="file" id="json-upload-file" accept="application/json,.json" style="display:none" />
+        
+        <div class="nav-buttons">
+          <div></div>
+          <button id="start-new">Start Building →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 2: Basic Information -->
+    <div class="stage" data-stage="2">
+      <div class="card">
+        <h2 class="section-title">Basic Information</h2>
+        
         <div class="row">
-          <label>README</label>
+          <label>Production Chain Description</label>
           <input type="text" id="readme" value="This file contains the Anno 117 Production Chain of Wine." />
         </div>
 
-        <div class="two">
+        <div class="two" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
           <div class="row">
-            <label>type</label>
+            <label>Building Type</label>
             <select id="type">
-              <option value="production_building">production_building</option>
-              <option value="animal_farm">animal_farm</option>
-              <option value="ocean_slot">ocean_slot</option>
-              <option value="farm">farm</option>
-              <option value="mountain_slot">mountain_slot</option>
-              <option value="wood_cutter">wood_cutter</option>
-              <option value="river_slot">river_slot</option>
-              <option value="plantation">plantation</option>
+              <option value="production_building">Production Building</option>
+              <option value="animal_farm">Animal Farm</option>
+              <option value="ocean_slot">Ocean Slot</option>
+              <option value="farm">Farm</option>
+              <option value="mountain_slot">Mountain Slot</option>
+              <option value="wood_cutter">Wood Cutter</option>
+              <option value="river_slot">River Slot</option>
+              <option value="plantation">Plantation</option>
             </select>
           </div>
           <div class="row">
-            <label>id</label>
-            <input type="text" id="id" placeholder="will be set from dropped file name (item.png)" />
+            <label>Production ID</label>
+            <input type="text" id="id" placeholder="e.g., wine, bread, cloth" />
           </div>
         </div>
 
-        <div class="row">
-          <label>icon</label>
-          <div class="flex">
-            <div class="drop" id="main-drop">
-              <div>Drop or click PNG here</div>
-              <small class="mini">Filename like &lt;item&gt;.png → id/icon set to &lt;item&gt;</small>
+        <div class="row" style="margin-top: 1.5rem;">
+          <label>Production Icon</label>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="drop" id="main-drop" style="flex: 1;">
+              <strong>📷 Drop PNG Icon</strong>
+              <small>Drag & drop or click to select<br>Filename will auto-set the ID</small>
             </div>
-            <img id="main-preview" class="img-preview" src="" alt="preview" style="display:none" />
+            <img id="main-preview" class="img-preview" src="" alt="preview" style="display:none; width: 64px; height: 64px; border-radius: 0.5rem;" />
           </div>
           <input type="file" id="main-file" accept="image/png" style="display:none" />
         </div>
 
+        <div class="nav-buttons">
+          <button class="ghost" id="back-to-1">← Back</button>
+          <button id="next-to-3">Next: Production →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 3: Production Chain -->
+    <div class="stage" data-stage="3">
+      <div class="card" id="main-form">
+        <h2 class="section-title">Production Configuration</h2>
+
+        <div class="row" style="margin-bottom: 1.5rem;">
+          <label>Production Time (seconds)</label>
+          <input type="number" id="main-time" value="60" style="max-width: 200px;" />
+        </div>
+
+        <div class="row" style="margin-bottom: 1.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+            <input type="checkbox" id="has-fuel" style="width:auto;margin:0; width: 20px; height: 20px; cursor: pointer;" />
+            <span>Requires Fuel (Charcoal)</span>
+          </label>
+          <small style="margin-left: 2rem; color: var(--theme-color); font-size: 0.85rem;">Check if this building needs charcoal to operate</small>
+        </div>
+
         <div class="row">
-          <label>input (chain inputs)</label>
-          <div class="inputs-list" id="inputs-list"></div>
-          <div class="controls">
-            <button id="add-input">+ Add input</button>
-            <button class="ghost" id="clear-inputs">Clear inputs</button>
-            <div class="spacer"></div>
+          <label>Input Materials Required</label>
+          <p style="color: var(--md-sys-color-on-surface); opacity: 0.7; margin-bottom: 1rem;">How many input materials does this production chain need?</p>
+          <div id="input-count-display" style="font-size: 1.125rem; font-weight: 500; margin-bottom: 1rem; color: var(--md-sys-color-primary);">
+            Current: <span id="input-count">0</span> material(s)
+          </div>
+          <div class="controls" style="margin-top: 1rem;">
+            <button id="add-input-page">+ Add Input Material</button>
+            <button class="ghost" id="remove-last-input" style="display: none;">Remove Last Material</button>
           </div>
         </div>
 
-        <div class="row">
-          <label>time (main)</label>
-          <input type="number" id="main-time" value="60" />
+        <div class="nav-buttons">
+          <button class="ghost" id="back-to-2">← Back</button>
+          <button id="next-from-3">Next →</button>
         </div>
+      </div>
+    </div>
 
-        <div class="row">
-          <label>
-            <input type="checkbox" id="has-fuel" style="width:auto;margin-right:0.5rem" />
-            Requires Fuel (charcoal)
-          </label>
-          <div class="muted" style="margin-top:0.25rem">Adds charcoal fuel requirement to the building</div>
-        </div>
+    <!-- Dynamic Input Material Pages (inserted here by JavaScript) -->
+    <div id="dynamic-input-stages"></div>
 
-        <div class="row">
-          <label>building_cost (main)</label>
-          <div class="two">
-            <div>
-              <label class="mini">money</label>
+    <!-- Stage: Costs -->
+    <div class="stage" data-stage="costs">
+      <div class="card">
+        <h2 class="section-title">Building & Maintenance Costs</h2>
+
+        <div class="row" style="margin-bottom: 2rem;">
+          <label>Building Construction Cost</label>
+          <div class="cost-grid">
+            <div class="cost-item">
+              <label><img src="../icons/money.png" class="icon-img" alt="money"> Money</label>
               <input type="number" id="cost-money" value="0" />
             </div>
-            <div>
-              <label class="mini">timber</label>
+            <div class="cost-item">
+              <label><img src="../icons/timber.png" class="icon-img" alt="timber"> Timber</label>
               <input type="number" id="cost-timber" value="0" />
             </div>
-            <div>
-              <label class="mini">tile</label>
+            <div class="cost-item">
+              <label><img src="../icons/tile.png" class="icon-img" alt="tile"> Tile</label>
               <input type="number" id="cost-tile" value="0" />
             </div>
-            <div>
-              <label class="mini">concrete</label>
+            <div class="cost-item">
+              <label><img src="../icons/concrete.png" class="icon-img" alt="concrete"> Concrete</label>
               <input type="number" id="cost-concrete" value="0" />
             </div>
-            <div>
-              <label class="mini">marble</label>
+            <div class="cost-item">
+              <label><img src="../icons/marble.png" class="icon-img" alt="marble"> Marble</label>
               <input type="number" id="cost-marble" value="0" />
             </div>
-            <div>
-              <label class="mini">mosaics</label>
+            <div class="cost-item">
+              <label><span style="width:24px;height:24px;display:inline-block">🎨</span> Mosaics</label>
               <input type="number" id="cost-mosaics" value="0" />
             </div>
           </div>
         </div>
 
         <div class="row">
-          <label>maintanance_cost (main)</label>
-          <div class="two">
-            <div>
-              <label class="mini">money</label>
+          <label>Maintenance Cost (Workforce & Money)</label>
+          <div class="cost-grid">
+            <div class="cost-item">
+              <label><img src="../icons/money.png" class="icon-img" alt="money"> Money</label>
               <input type="number" id="m-money" value="0" />
             </div>
-            <div>
-              <label class="mini">liberti</label>
+            <div class="cost-item">
+              <label><img src="../icons/liberti.png" class="icon-img" alt="liberti"> Liberti</label>
               <input type="number" id="m-liberti" value="0" />
             </div>
-            <div>
-              <label class="mini">waders</label>
+            <div class="cost-item">
+              <label><span style="width:24px;height:24px;display:inline-block">👷</span> Waders</label>
               <input type="number" id="m-waders" value="0" />
             </div>
-            <div>
-              <label class="mini">plebejer</label>
+            <div class="cost-item">
+              <label><img src="../icons/plebejer.png" class="icon-img" alt="plebejer"> Plebejer</label>
               <input type="number" id="m-plebejer" value="0" />
             </div>
-            <div>
-              <label class="mini">equites</label>
+            <div class="cost-item">
+              <label><img src="../icons/equites.png" class="icon-img" alt="equites"> Equites</label>
               <input type="number" id="m-equites" value="0" />
             </div>
-            <div>
-              <label class="mini">patricians</label>
+            <div class="cost-item">
+              <label><img src="../icons/patrizier.png" class="icon-img" alt="patricians"> Patricians</label>
               <input type="number" id="m-patricians" value="0" />
             </div>
-            <div>
-              <label class="mini">smiths</label>
+            <div class="cost-item">
+              <label><span style="width:24px;height:24px;display:inline-block">🔨</span> Smiths</label>
               <input type="number" id="m-smiths" value="0" />
             </div>
-            <div>
-              <label class="mini">mercators</label>
+            <div class="cost-item">
+              <label><span style="width:24px;height:24px;display:inline-block">💼</span> Mercators</label>
               <input type="number" id="m-mercators" value="0" />
             </div>
-            <div>
-              <label class="mini">aldermen</label>
+            <div class="cost-item">
+              <label><span style="width:24px;height:24px;display:inline-block">👔</span> Aldermen</label>
               <input type="number" id="m-aldermen" value="0" />
             </div>
-            <div>
-              <label class="mini">nobles</label>
+            <div class="cost-item">
+              <label><span style="width:24px;height:24px;display:inline-block">👑</span> Nobles</label>
               <input type="number" id="m-nobles" value="0" />
             </div>
           </div>
         </div>
 
-        <footer>
-          <button id="download">Download JSON</button>
-          <button id="copy-json" class="ghost">Copy JSON</button>
-          <div class="spacer"></div>
-          <div class="muted small">Filename will be &lt;id&gt;.json (from main id). If id is empty 'export.json' will be used.</div>
-        </footer>
-      </div>
-
-      <div class="card" id="json-card">
-        <label>Live JSON</label>
-        <textarea id="json-view"></textarea>
-        <div style="height:12px"></div>
-        <label class="mini">Preview image (main)</label>
-        <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
-          <img id="preview-mini" class="img-preview" src="" alt="" style="display:none" />
-          <div id="preview-name" class="mini muted"></div>
+        <div class="nav-buttons">
+          <button class="ghost" id="back-from-costs">← Back</button>
+          <button id="next-to-review">Review & Export →</button>
         </div>
       </div>
-
     </div>
+
+    <!-- Stage: Review & Export -->
+    <div class="stage" data-stage="review">
+      <div class="grid">
+
+        <div class="card">
+          <h2 class="section-title">✅ Review Your Production Chain</h2>
+          <div id="review-summary" style="margin: 1.5rem 0; padding: 1rem; background: rgba(95,3,46,0.05); border-radius: 0.5rem; line-height: 1.8;"></div>
+          
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button id="download" style="flex: 1;">💾 Download JSON</button>
+            <button id="copy-json" class="ghost" style="flex: 1;">📋 Copy to Clipboard</button>
+          </div>
+          <small style="display: block; margin-top: 1rem; color: var(--theme-color); text-align: center;">
+            File will be saved as <strong id="filename-preview">export.json</strong>
+          </small>
+
+          <div class="nav-buttons">
+            <button class="ghost" id="back-to-costs">← Back to Costs</button>
+            <button class="ghost" id="start-over">🔄 Start Over</button>
+          </div>
+        </div>
+
+        <div class="card" id="json-card">
+          <label>JSON Output</label>
+          <textarea id="json-view" readonly></textarea>
+          <div style="margin-top: 1rem; display:flex; gap:1rem; align-items:center">
+            <img id="preview-mini" class="img-preview" src="" alt="" style="display:none; width: 48px; height: 48px; border-radius: 0.5rem;" />
+            <div id="preview-name" style="color: var(--theme-color); font-size: 0.85rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <template id="input-template">
-    <div class="input-item">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <strong class="small">Input</strong>
-        <div class="spacer"></div>
-        <button class="ghost btn-remove">Remove</button>
+    <div class="input-item" style="background: white; padding: 1.25rem; border-radius: 0.5rem; border: 2px solid var(--theme-color); margin-bottom: 1rem;">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <strong style="font-size: 1rem; color: var(--theme-color);">📦 Input Material</strong>
+        <div style="flex: 1;"></div>
+        <button class="ghost btn-remove" style="padding: 0.5rem 1rem; font-size: 0.875rem;">🗑️ Remove</button>
       </div>
 
-      <div class="two">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
         <div>
-          <label>type</label>
+          <label>Building Type</label>
           <select class="in-type">
-            <option value="production_building">production_building</option>
-            <option value="animal_farm">animal_farm</option>
-            <option value="ocean_slot">ocean_slot</option>
-            <option value="farm">farm</option>
-            <option value="mountain_slot">mountain_slot</option>
-            <option value="wood_cutter">wood_cutter</option>
-            <option value="river_slot">river_slot</option>
-            <option value="plantation">plantation</option>
+            <option value="production_building">Production Building</option>
+            <option value="animal_farm">Animal Farm</option>
+            <option value="ocean_slot">Ocean Slot</option>
+            <option value="farm">Farm</option>
+            <option value="mountain_slot">Mountain Slot</option>
+            <option value="wood_cutter">Wood Cutter</option>
+            <option value="river_slot">River Slot</option>
+            <option value="plantation">Plantation</option>
           </select>
         </div>
         <div>
-          <label>start_of_chain</label>
+          <label>Start of Chain</label>
           <select class="in-start">
-            <option value="true">true</option>
-            <option value="false" selected>false</option>
+            <option value="false" selected>No</option>
+            <option value="true">Yes</option>
           </select>
         </div>
       </div>
 
-      <div class="two">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
         <div>
-          <label>id</label>
-          <input type="text" class="in-id" placeholder="set from dropped file name" />
+          <label>Material ID</label>
+          <input type="text" class="in-id" placeholder="e.g., grapes, flour" />
         </div>
         <div>
-          <label>time</label>
+          <label>Production Time (sec)</label>
           <input type="number" class="in-time" value="30" />
         </div>
       </div>
 
-      <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
-        <div class="drop in-drop" style="flex:1">Drop or click PNG / JSON for this input</div>
-        <img class="img-preview in-preview" src="" style="display:none" />
+      <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1rem">
+        <div class="drop in-drop" style="flex:1; min-height: 80px;">
+          <strong>📷 Drop PNG or 📄 JSON</strong>
+          <small>Set icon/data for this input</small>
+        </div>
+        <img class="img-preview in-preview" src="" style="display:none; width: 64px; height: 64px; border-radius: 0.5rem;" />
         <input type="file" class="in-file" accept="image/png,application/json,.json" style="display:none" />
       </div>
 
-      <div style="margin-top:10px">
-        <label>building_cost</label>
-        <div class="two">
-          <div>
-            <label class="mini">money</label>
+      <details style="margin-top:1rem">
+        <summary style="cursor: pointer; font-weight: 600; color: var(--theme-color); padding: 0.5rem; background: rgba(95,3,46,0.05); border-radius: 0.25rem;">Building Cost</summary>
+        <div class="cost-grid" style="margin-top: 1rem;">
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/money.png" class="icon-img"> Money</label>
             <input type="number" class="in-cost-money" value="0" />
           </div>
-          <div>
-            <label class="mini">timber</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/timber.png" class="icon-img"> Timber</label>
             <input type="number" class="in-cost-timber" value="0" />
           </div>
-          <div>
-            <label class="mini">tile</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/tile.png" class="icon-img"> Tile</label>
             <input type="number" class="in-cost-tile" value="0" />
           </div>
-          <div>
-            <label class="mini">concrete</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/concrete.png" class="icon-img"> Concrete</label>
             <input type="number" class="in-cost-concrete" value="0" />
           </div>
-          <div>
-            <label class="mini">marble</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/marble.png" class="icon-img"> Marble</label>
             <input type="number" class="in-cost-marble" value="0" />
           </div>
-          <div>
-            <label class="mini">mosaics</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;">🎨 Mosaics</label>
             <input type="number" class="in-cost-mosaics" value="0" />
           </div>
         </div>
-      </div>
+      </details>
 
-      <div style="margin-top:10px">
-        <label>maintanance_cost</label>
-        <div class="two">
-          <div>
-            <label class="mini">money</label>
+      <details style="margin-top:1rem">
+        <summary style="cursor: pointer; font-weight: 600; color: var(--theme-color); padding: 0.5rem; background: rgba(95,3,46,0.05); border-radius: 0.25rem;">Maintenance Cost</summary>
+        <div class="cost-grid" style="margin-top: 1rem;">
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/money.png" class="icon-img"> Money</label>
             <input type="number" class="in-m-money" value="0" />
           </div>
-           <div>
-            <label class="mini">liberti</label>
+           <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/liberti.png" class="icon-img"> Liberti</label>
             <input type="number" class="in-m-liberti" value="0" />
           </div>
-          <div>
-            <label class="mini">waders</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;">👷 Waders</label>
             <input type="number" class="in-m-waders" value="0" />
           </div>
-          <div>
-            <label class="mini">plebejer</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/plebejer.png" class="icon-img"> Plebejer</label>
             <input type="number" class="in-m-plebejer" value="0" />
           </div>
-          <div>
-            <label class="mini">equites</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/equites.png" class="icon-img"> Equites</label>
             <input type="number" class="in-m-equites" value="0" />
           </div>
-          <div>
-            <label class="mini">patricians</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;"><img src="../icons/patrizier.png" class="icon-img"> Patricians</label>
             <input type="number" class="in-m-patricians" value="0" />
           </div>
-          <div>
-            <label class="mini">smiths</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;">🔨 Smiths</label>
             <input type="number" class="in-m-smiths" value="0" />
           </div>
-          <div>
-            <label class="mini">mercators</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;">💼 Mercators</label>
             <input type="number" class="in-m-mercators" value="0" />
           </div>
-          <div>
-            <label class="mini">aldermen</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;">👔 Aldermen</label>
             <input type="number" class="in-m-aldermen" value="0" />
           </div>
-          <div>
-            <label class="mini">nobles</label>
+          <div class="cost-item">
+            <label style="font-size: 0.75rem;">👑 Nobles</label>
             <input type="number" class="in-m-nobles" value="0" />
           </div>
         </div>
-      </div>
+      </details>
 
     </div>
   </template>
@@ -567,11 +927,239 @@
     const qs = s => document.querySelector(s);
     const qsa = s => Array.from(document.querySelectorAll(s));
 
+    // State management
+    let currentStage = 1;
+    let inputMaterials = [];
+    const stageOrder = [1, 2, 3]; // Will be dynamically extended with input stages, then 'costs', 'review'
+
     const mainDrop = qs('#main-drop');
     const mainFile = qs('#main-file');
     const mainPreview = qs('#main-preview');
     const previewMini = qs('#preview-mini');
     const previewName = qs('#preview-name');
+
+    // Stage Navigation
+    function goToStage(stageName) {
+      currentStage = stageName;
+      
+      // Hide all stages
+      qsa('.stage').forEach(s => s.classList.remove('active'));
+      // Show target stage
+      const targetStage = qs(`.stage[data-stage="${stageName}"]`);
+      if (targetStage) {
+        targetStage.classList.add('active');
+      }
+      
+      // Update progress steps
+      updateProgressSteps();
+
+      // Update review summary if on review stage
+      if (stageName === 'review') {
+        updateReviewSummary();
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgressSteps() {
+      const allSteps = qsa('.step');
+      const currentIndex = getCurrentStageIndex();
+      
+      allSteps.forEach((step, idx) => {
+        step.classList.remove('active', 'completed');
+        if (idx === currentIndex) {
+          step.classList.add('active');
+        } else if (idx < currentIndex) {
+          step.classList.add('completed');
+          const circle = step.querySelector('.step-circle');
+          if (!circle.textContent.includes('✓') && !circle.textContent.includes('💰')) {
+            circle.textContent = '✓';
+          }
+        }
+      });
+    }
+
+    function getCurrentStageIndex() {
+      const allSteps = qsa('.step');
+      for (let i = 0; i < allSteps.length; i++) {
+        if (allSteps[i].dataset.step == currentStage) {
+          return i;
+        }
+      }
+      return 0;
+    }
+
+    function getNextStage() {
+      if (currentStage === 1) return 2;
+      if (currentStage === 2) return 3;
+      if (currentStage === 3) {
+        // Go to first input material page if any exist
+        return inputMaterials.length > 0 ? `input-0` : 'costs';
+      }
+      // If we're on an input page
+      if (typeof currentStage === 'string' && currentStage.startsWith('input-')) {
+        const inputIdx = parseInt(currentStage.split('-')[1]);
+        if (inputIdx < inputMaterials.length - 1) {
+          return `input-${inputIdx + 1}`;
+        } else {
+          return 'costs';
+        }
+      }
+      if (currentStage === 'costs') return 'review';
+      return 'review';
+    }
+
+    function getPreviousStage() {
+      if (currentStage === 2) return 1;
+      if (currentStage === 3) return 2;
+      // If we're on an input page
+      if (typeof currentStage === 'string' && currentStage.startsWith('input-')) {
+        const inputIdx = parseInt(currentStage.split('-')[1]);
+        if (inputIdx === 0) {
+          return 3;
+        } else {
+          return `input-${inputIdx - 1}`;
+        }
+      }
+      if (currentStage === 'costs') {
+        // Go to last input or back to stage 3
+        return inputMaterials.length > 0 ? `input-${inputMaterials.length - 1}` : 3;
+      }
+      if (currentStage === 'review') return 'costs';
+      return 1;
+    }
+
+    // Navigation button handlers
+    qs('#start-new').addEventListener('click', () => goToStage(2));
+    qs('#back-to-1').addEventListener('click', () => goToStage(1));
+    qs('#next-to-3').addEventListener('click', () => goToStage(3));
+    qs('#back-to-2').addEventListener('click', () => goToStage(2));
+    qs('#next-from-3').addEventListener('click', () => goToStage(getNextStage()));
+    qs('#next-to-review').addEventListener('click', () => goToStage('review'));
+    qs('#back-from-costs').addEventListener('click', () => goToStage(getPreviousStage()));
+    qs('#back-to-costs').addEventListener('click', () => goToStage('costs'));
+    qs('#start-over').addEventListener('click', () => {
+      if (confirm('Start over? This will clear all current data.')) {
+        location.reload();
+      }
+    });
+
+    // JSON Upload at Start
+    const jsonUploadDrop = qs('#json-upload-drop');
+    const jsonUploadFile = qs('#json-upload-file');
+
+    function handleJSONUpload(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          populateFromJSON(data);
+          goToStage(2);
+          alert('JSON loaded successfully! You can now edit the data.');
+        } catch (err) {
+          alert('Error parsing JSON file: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    ['dragenter','dragover'].forEach(e=> jsonUploadDrop.addEventListener(e, ev=>{ ev.preventDefault(); jsonUploadDrop.classList.add('dragover'); }));
+    ['dragleave','drop'].forEach(e=> jsonUploadDrop.addEventListener(e, ev=>{ ev.preventDefault(); jsonUploadDrop.classList.remove('dragover'); }));
+    
+    jsonUploadDrop.addEventListener('click', ()=> jsonUploadFile.click());
+    jsonUploadFile.addEventListener('change', e=>{ const f = e.target.files[0]; if(f) handleJSONUpload(f); });
+    jsonUploadDrop.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(f) handleJSONUpload(f); });
+
+    // Populate entire form from JSON
+    function populateFromJSON(data) {
+      if (!data) return;
+      
+      // Basic info
+      qs('#readme').value = data.README || '';
+      qs('#type').value = data.type || 'production_building';
+      qs('#id').value = data.id || '';
+      qs('#main-time').value = data.time || 60;
+      qs('#has-fuel').checked = !!(data.fuel && data.fuel.length > 0);
+      
+      // Building costs
+      const bCost = data.building_cost || {};
+      qs('#cost-money').value = bCost.money || 0;
+      qs('#cost-timber').value = bCost.timber || 0;
+      qs('#cost-tile').value = bCost.tile || 0;
+      qs('#cost-concrete').value = bCost.concrete || 0;
+      qs('#cost-marble').value = bCost.marble || 0;
+      qs('#cost-mosaics').value = bCost.mosaics || 0;
+      
+      // Maintenance costs
+      const mCost = data.maintanance_cost || {};
+      qs('#m-money').value = mCost.money || 0;
+      qs('#m-liberti').value = mCost.liberti || 0;
+      qs('#m-waders').value = mCost.waders || 0;
+      qs('#m-plebejer').value = mCost.plebejer || 0;
+      qs('#m-equites').value = mCost.equites || 0;
+      qs('#m-patricians').value = mCost.patricians || 0;
+      qs('#m-smiths').value = mCost.smiths || 0;
+      qs('#m-mercators').value = mCost.mercators || 0;
+      qs('#m-aldermen').value = mCost.aldermen || 0;
+      qs('#m-nobles').value = mCost.nobles || 0;
+      
+      // Clear and rebuild inputs
+      dynamicStagesContainer.innerHTML = '';
+      inputMaterials = [];
+      
+      if (data.input && Array.isArray(data.input)) {
+        data.input.forEach((inp, idx) => {
+          inputMaterials.push(inp);
+          const newPage = createInputMaterialPage(idx);
+          dynamicStagesContainer.appendChild(newPage);
+          
+          // Prefill the data
+          setTimeout(() => {
+            const stage = qs(`.stage[data-stage="input-${idx}"]`);
+            if (stage) {
+              const item = stage.querySelector('.input-item');
+              if (item) {
+                item.querySelector('.in-type').value = inp.type || 'production_building';
+                item.querySelector('.in-start').value = inp.start_of_chain ? 'true' : 'false';
+                item.querySelector('.in-id').value = inp.id || '';
+                item.querySelector('.in-time').value = inp.time || 30;
+                
+                if (inp.building_cost) {
+                  const bc = inp.building_cost;
+                  item.querySelector('.in-cost-money').value = bc.money || 0;
+                  item.querySelector('.in-cost-timber').value = bc.timber || 0;
+                  item.querySelector('.in-cost-tile').value = bc.tile || 0;
+                  item.querySelector('.in-cost-concrete').value = bc.concrete || 0;
+                  item.querySelector('.in-cost-marble').value = bc.marble || 0;
+                  item.querySelector('.in-cost-mosaics').value = bc.mosaics || 0;
+                }
+                
+                if (inp.maintanance_cost) {
+                  const mc = inp.maintanance_cost;
+                  item.querySelector('.in-m-money').value = mc.money || 0;
+                  item.querySelector('.in-m-liberti').value = mc.liberti || 0;
+                  item.querySelector('.in-m-waders').value = mc.waders || 0;
+                  item.querySelector('.in-m-plebejer').value = mc.plebejer || 0;
+                  item.querySelector('.in-m-equites').value = mc.equites || 0;
+                  item.querySelector('.in-m-patricians').value = mc.patricians || 0;
+                  item.querySelector('.in-m-smiths').value = mc.smiths || 0;
+                  item.querySelector('.in-m-mercators').value = mc.mercators || 0;
+                  item.querySelector('.in-m-aldermen').value = mc.aldermen || 0;
+                  item.querySelector('.in-m-nobles').value = mc.nobles || 0;
+                }
+                
+                setupInputEventHandlers(item);
+              }
+            }
+          }, 100);
+        });
+      }
+      
+      rebuildProgressSteps();
+      updateInputCount();
+      updateJSON();
+    }
 
     function filenameToId(filename){
       if(!filename) return '';
@@ -601,40 +1189,221 @@
       const f = e.dataTransfer.files[0]; if(!f) return; handleFileSetForMain(f);
     });
 
-    // Inputs management
-    const inputsList = qs('#inputs-list');
+    // Input Material Page Management
+    const dynamicStagesContainer = qs('#dynamic-input-stages');
     const tpl = qs('#input-template');
-    qs('#add-input').addEventListener('click', addInput);
-    qs('#clear-inputs').addEventListener('click', ()=>{ inputsList.innerHTML=''; updateJSON(); });
 
-    function addInput(prefill={}){
-      const node = tpl.content.cloneNode(true);
-      const el = node.querySelector('.input-item');
-      // attach event handlers
-      const btnRemove = el.querySelector('.btn-remove');
-      btnRemove.addEventListener('click', ()=>{ el.remove(); updateJSON(); });
+    function updateInputCount() {
+      qs('#input-count').textContent = inputMaterials.length;
+      qs('#remove-last-input').style.display = inputMaterials.length > 0 ? 'inline-block' : 'none';
+    }
 
-      const drop = el.querySelector('.in-drop');
-      const fileIn = el.querySelector('.in-file');
+    function rebuildProgressSteps() {
+      const progressSteps = qs('#progress-steps');
+      const costsStep = qs('.step[data-step="costs"]');
+      const reviewStep = qs('.step[data-step="review"]');
       
-      ['dragenter','dragover'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.add('dragover'); }));
-      ['dragleave','drop'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.remove('dragover'); }));
+      // Remove existing input steps
+      qsa('.step[data-step^="input-"]').forEach(s => s.remove());
+      
+      // Add input steps before costs
+      inputMaterials.forEach((_, idx) => {
+        const step = document.createElement('div');
+        step.className = 'step';
+        step.dataset.step = `input-${idx}`;
+        step.innerHTML = `
+          <div class="step-circle">${idx + 4}</div>
+          <div class="step-label">Input ${idx + 1}</div>
+        `;
+        progressSteps.insertBefore(step, costsStep);
+      });
+      
+      updateProgressSteps();
+    }
 
-      drop.addEventListener('click', ()=> fileIn.click());
-      // Updated handlers to use the new multi-type function
-      fileIn.addEventListener('change', e=>{ const f = e.target.files[0]; if(!f) return; handleInputFile(f, el); });
-      drop.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(!f) return; handleInputFile(f, el); });
+    function createInputMaterialPage(index) {
+      const stage = document.createElement('div');
+      stage.className = 'stage';
+      stage.dataset.stage = `input-${index}`;
+      
+      const card = document.createElement('div');
+      card.className = 'card';
+      
+      // Create header
+      const header = document.createElement('div');
+      header.innerHTML = `
+        <h2 class="section-title">Input Material ${index + 1}</h2>
+        <p style="color: var(--md-sys-color-on-surface); opacity: 0.7; margin-bottom: 2rem;">
+          Configure the ${index + 1}${getOrdinalSuffix(index + 1)} material required for this production chain.
+        </p>
+      `;
+      card.appendChild(header);
+      
+      // Clone and append template content directly to card
+      const templateContent = tpl.content.cloneNode(true);
+      const inputItem = templateContent.querySelector('.input-item');
+      
+      // Remove the wrapping div styling since we're putting it directly in card
+      inputItem.style.background = 'transparent';
+      inputItem.style.border = 'none';
+      inputItem.style.padding = '0';
+      inputItem.style.marginBottom = '0';
+      
+      // Hide remove button
+      const removeBtn = inputItem.querySelector('.btn-remove');
+      if (removeBtn) removeBtn.style.display = 'none';
+      
+      card.appendChild(inputItem);
+      
+      // Add navigation buttons
+      const navButtons = document.createElement('div');
+      navButtons.className = 'nav-buttons';
+      navButtons.innerHTML = `
+        <button class="ghost" data-nav="back">← Back</button>
+        <button data-nav="next">Next →</button>
+      `;
+      
+      // Attach event listeners to navigation buttons
+      navButtons.querySelector('[data-nav="back"]').addEventListener('click', () => goToStage(getPreviousStage()));
+      navButtons.querySelector('[data-nav="next"]').addEventListener('click', () => goToStage(getNextStage()));
+      
+      card.appendChild(navButtons);
+      stage.appendChild(card);
+      
+      // Setup input handlers after appending
+      setTimeout(() => {
+        const drop = inputItem.querySelector('.in-drop');
+        const fileIn = inputItem.querySelector('.in-file');
+        
+        if (drop && fileIn) {
+          ['dragenter','dragover'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.add('dragover'); }));
+          ['dragleave','drop'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.remove('dragover'); }));
 
-      // wire changes to update
-      ['change','input'].forEach(evt=> el.querySelectorAll('input,select').forEach(n=> n.addEventListener(evt, updateJSON)));
+          drop.addEventListener('click', ()=> fileIn.click());
+          fileIn.addEventListener('change', e=>{ const f = e.target.files[0]; if(f) handleInputFile(f, inputItem); });
+          drop.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(f) handleInputFile(f, inputItem); });
+        }
+        
+        // Add change listeners to all inputs in this item to update JSON preview
+        inputItem.querySelectorAll('input, select').forEach(input => {
+          input.addEventListener('change', updateJSON);
+          input.addEventListener('input', updateJSON);
+        });
+      }, 0);
+      
+      return stage;
+    }
 
-      // prefill values if provided
-      if(prefill.icon){ 
-        el.querySelector('.in-id').value = filenameToId(prefill.icon); 
+    function getOrdinalSuffix(num) {
+      const j = num % 10;
+      const k = num % 100;
+      if (j === 1 && k !== 11) return 'st';
+      if (j === 2 && k !== 12) return 'nd';
+      if (j === 3 && k !== 13) return 'rd';
+      return 'th';
+    }
+
+    qs('#add-input-page').addEventListener('click', () => {
+      const index = inputMaterials.length;
+      inputMaterials.push({});
+      
+      const newPage = createInputMaterialPage(index);
+      dynamicStagesContainer.appendChild(newPage);
+      
+      rebuildProgressSteps();
+      updateInputCount();
+      
+      // Delay update to ensure DOM is ready
+      setTimeout(() => {
+        updateJSON();
+      }, 50);
+    });
+
+    qs('#remove-last-input').addEventListener('click', () => {
+      if (inputMaterials.length === 0) return;
+      if (confirm('Remove the last input material?')) {
+        inputMaterials.pop();
+        const lastPage = qs(`.stage[data-stage="input-${inputMaterials.length}"]`);
+        if (lastPage) lastPage.remove();
+        
+        rebuildProgressSteps();
+        updateInputCount();
+        updateJSON();
       }
+    });
 
-      inputsList.appendChild(el);
-      updateJSON();
+    // Get input data from a specific page
+    function getInputData(index) {
+      const stage = qs(`.stage[data-stage="input-${index}"]`);
+      if (!stage) {
+        console.warn(`Stage input-${index} not found`);
+        return null;
+      }
+      
+      // Get the input-item element which contains all the fields
+      const inputItem = stage.querySelector('.input-item');
+      if (!inputItem) {
+        console.warn(`Input item in stage input-${index} not found`);
+        return null;
+      }
+      
+      // Get values directly from the input-item's inputs
+      const typeEl = inputItem.querySelector('.in-type');
+      const startEl = inputItem.querySelector('.in-start');
+      const idEl = inputItem.querySelector('.in-id');
+      const timeEl = inputItem.querySelector('.in-time');
+      
+      return {
+        type: typeEl?.value || 'production_building',
+        start_of_chain: startEl?.value === 'true',
+        id: idEl?.value || '',
+        time: numberOr0(timeEl?.value),
+        building_cost: {
+          money: numberOr0(inputItem.querySelector('.in-cost-money')?.value),
+          timber: numberOr0(inputItem.querySelector('.in-cost-timber')?.value),
+          tile: numberOr0(inputItem.querySelector('.in-cost-tile')?.value),
+          concrete: numberOr0(inputItem.querySelector('.in-cost-concrete')?.value),
+          marble: numberOr0(inputItem.querySelector('.in-cost-marble')?.value),
+          mosaics: numberOr0(inputItem.querySelector('.in-cost-mosaics')?.value)
+        },
+        maintanance_cost: {
+          money: numberOr0(inputItem.querySelector('.in-m-money')?.value),
+          liberti: numberOr0(inputItem.querySelector('.in-m-liberti')?.value),
+          waders: numberOr0(inputItem.querySelector('.in-m-waders')?.value),
+          plebejer: numberOr0(inputItem.querySelector('.in-m-plebejer')?.value),
+          equites: numberOr0(inputItem.querySelector('.in-m-equites')?.value),
+          patricians: numberOr0(inputItem.querySelector('.in-m-patricians')?.value),
+          smiths: numberOr0(inputItem.querySelector('.in-m-smiths')?.value),
+          mercators: numberOr0(inputItem.querySelector('.in-m-mercators')?.value),
+          aldermen: numberOr0(inputItem.querySelector('.in-m-aldermen')?.value),
+          nobles: numberOr0(inputItem.querySelector('.in-m-nobles')?.value)
+        }
+      };
+    }
+
+    // Setup event handlers for input items
+    function setupInputEventHandlers(itemElement) {
+      const btnRemove = itemElement.querySelector('.btn-remove');
+      if (btnRemove) btnRemove.style.display = 'none'; // Hide remove button in page mode
+
+      const drop = itemElement.querySelector('.in-drop');
+      const fileIn = itemElement.querySelector('.in-file');
+      
+      if (drop && fileIn) {
+        ['dragenter','dragover'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.add('dragover'); }));
+        ['dragleave','drop'].forEach(e=> drop.addEventListener(e, ev=>{ ev.preventDefault(); drop.classList.remove('dragover'); }));
+
+        drop.addEventListener('click', ()=> fileIn.click());
+        fileIn.addEventListener('change', e=>{ const f = e.target.files[0]; if(f) handleInputFile(f, itemElement); });
+        drop.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(f) handleInputFile(f, itemElement); });
+      }
+    }
+
+    // Re-setup handlers after pages are created
+    function refreshInputHandlers() {
+      qsa('.stage[data-stage^="input-"] .input-item').forEach(item => {
+        setupInputEventHandlers(item);
+      });
     }
 
     // New function to handle JSON/PNG for input items
@@ -702,8 +1471,39 @@
       itemElement.querySelector('.in-m-nobles').value = numberOr0(mCost.nobles);
     }
 
-    // initialize with one input example
-    addInput();
+    // Review Summary
+    function updateReviewSummary() {
+      const j = buildJSON();
+      const summary = qs('#review-summary');
+      const filename = (j.id && j.id.length>0) ? `${j.id}.json` : 'export.json';
+      qs('#filename-preview').textContent = filename;
+      
+      let html = `<strong style="font-size: 1.25rem; color: var(--md-sys-color-primary);">Production: ${j.id || 'Unnamed'}</strong><br><br>`;
+      html += `<strong>Type:</strong> ${j.type}<br>`;
+      html += `<strong>Production Time:</strong> ${j.time} seconds<br>`;
+      html += `<strong>Fuel Required:</strong> ${j.fuel ? 'Yes (Charcoal)' : 'No'}<br>`;
+      html += `<strong>Input Materials:</strong> ${j.input.length} item(s)`;
+      
+      if (j.input.length > 0) {
+        html += '<br><small style="margin-left: 1.5rem;">';
+        j.input.forEach((inp, idx) => {
+          html += `${idx + 1}. ${inp.id || 'Unnamed'} (${inp.time}s)<br>`;
+        });
+        html += '</small>';
+      }
+      
+      const totalBuildCost = j.building_cost.money + j.building_cost.timber + j.building_cost.tile + 
+                             j.building_cost.concrete + j.building_cost.marble + j.building_cost.mosaics;
+      html += `<br><strong>Building Cost:</strong> ${totalBuildCost > 0 ? totalBuildCost + ' units' : 'Not set'}<br>`;
+      
+      const totalMaintCost = j.maintanance_cost.money + j.maintanance_cost.liberti + j.maintanance_cost.waders +
+                             j.maintanance_cost.plebejer + j.maintanance_cost.equites + j.maintanance_cost.patricians +
+                             j.maintanance_cost.smiths + j.maintanance_cost.mercators + j.maintanance_cost.aldermen + 
+                             j.maintanance_cost.nobles;
+      html += `<strong>Maintenance Cost:</strong> ${totalMaintCost > 0 ? totalMaintCost + ' units' : 'Not set'}`;
+      
+      summary.innerHTML = html;
+    }
 
     // Build JSON
     function collectBuildingCost(prefix){
@@ -741,37 +1541,14 @@
       obj.id = (qs('#id').value || '').toString();
       obj.icon = obj.id || '';
 
-      // inputs
+      // inputs - collect from individual pages
       obj.input = [];
-      const items = inputsList.querySelectorAll('.input-item');
-      items.forEach(it=>{
-        const type = it.querySelector('.in-type').value;
-        const start = it.querySelector('.in-start').value === 'true';
-        const id = it.querySelector('.in-id').value || '';
-        const time = numberOr0(it.querySelector('.in-time').value);
-        const building_cost = {
-          money: numberOr0(it.querySelector('.in-cost-money').value),
-          timber: numberOr0(it.querySelector('.in-cost-timber').value),
-          tile: numberOr0(it.querySelector('.in-cost-tile').value),
-          concrete: numberOr0(it.querySelector('.in-cost-concrete').value),
-          marble: numberOr0(it.querySelector('.in-cost-marble').value),
-          mosaics: numberOr0(it.querySelector('.in-cost-mosaics').value),
-        };
-        const maint = {
-          money: numberOr0(it.querySelector('.in-m-money').value),
-          liberti: numberOr0(it.querySelector('.in-m-liberti').value),
-          waders: numberOr0(it.querySelector('.in-m-waders').value),
-          plebejer: numberOr0(it.querySelector('.in-m-plebejer').value),
-          equites: numberOr0(it.querySelector('.in-m-equites').value),
-          patricians: numberOr0(it.querySelector('.in-m-patricians').value),
-          smiths: numberOr0(it.querySelector('.in-m-smiths').value),
-          mercators: numberOr0(it.querySelector('.in-m-mercators').value),
-          aldermen: numberOr0(it.querySelector('.in-m-aldermen').value),
-          nobles: numberOr0(it.querySelector('.in-m-nobles').value),
-        };
-        const inputObj = { type, start_of_chain: start, id, time, building_cost, maintanance_cost: maint };
-        obj.input.push(inputObj);
-      });
+      for (let i = 0; i < inputMaterials.length; i++) {
+        const inputData = getInputData(i);
+        if (inputData) {
+          obj.input.push(inputData);
+        }
+      }
 
       obj.time = numberOr0(qs('#main-time').value);
       
@@ -799,8 +1576,19 @@
       qs('#json-view').value = txt;
     }
 
-    // wire form inputs to update
-    qsa('input,select,textarea').forEach(el=> el.addEventListener('input', updateJSON));
+    // wire form inputs to update (delegate to avoid issues with dynamic elements)
+    document.addEventListener('input', (e) => {
+      if (e.target.matches('input, select, textarea')) {
+        // Small delay to ensure value is set
+        setTimeout(updateJSON, 10);
+      }
+    });
+
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('input, select, textarea')) {
+        setTimeout(updateJSON, 10);
+      }
+    });
 
     updateJSON();
 
@@ -810,18 +1598,51 @@
       let filename = (j.id && j.id.length>0)? `${j.id}.json` : 'export.json';
       const blob = new Blob([JSON.stringify(j,null,4)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      const a = document.createElement('a'); 
+      a.href = url; 
+      a.download = filename; 
+      document.body.appendChild(a); 
+      a.click(); 
+      a.remove(); 
+      URL.revokeObjectURL(url);
+      
+      // Show success message
+      const btn = qs('#download');
+      const originalText = btn.textContent;
+      btn.textContent = '✓ Downloaded!';
+      btn.style.background = 'var(--success)';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 2000);
     });
 
     qs('#copy-json').addEventListener('click', async ()=>{
       try{
         await navigator.clipboard.writeText(qs('#json-view').value);
-        alert('JSON copied to clipboard');
-      }catch(e){ alert('Copy failed — you can select and copy the JSON manually.'); }
+        const btn = qs('#copy-json');
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.style.borderColor = 'var(--success)';
+        btn.style.color = 'var(--success)';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2000);
+      }catch(e){ 
+        alert('Copy failed — you can select and copy the JSON manually.'); 
+      }
     });
 
-    // expose buildJSON to console for debugging
+    // Initialize
+    updateInputCount();
+    
+    // expose functions to console for debugging
     window.buildAnnoJSON = buildJSON;
+    window.goToStage = goToStage;
+    window.getPreviousStage = getPreviousStage;
+    window.getNextStage = getNextStage;
   </script>
 </body>
 </html>
