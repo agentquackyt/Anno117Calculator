@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "concrete",
     "icon": "concrete",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "mountain_slot",

@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "mineral_dye",
     "icon": "mineral_dye",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "mountain_slot",

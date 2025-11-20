@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "iron",
     "icon": "iron",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "mountain_slot",

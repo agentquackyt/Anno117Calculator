@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "sail",
     "icon": "sail",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "animal_farm",

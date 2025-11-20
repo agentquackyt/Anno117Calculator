@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "pig_lard",
     "icon": "pig_lard",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "animal_farm",

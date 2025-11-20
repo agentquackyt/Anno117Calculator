@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "marble",
     "icon": "marble",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "mountain_slot",

@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "cloth",
     "icon": "cloth",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "farm",

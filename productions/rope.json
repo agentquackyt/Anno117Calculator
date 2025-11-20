@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "rope",
     "icon": "rope",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "farm",

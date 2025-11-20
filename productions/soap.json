@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "soap",
     "icon": "soap",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "production_building",

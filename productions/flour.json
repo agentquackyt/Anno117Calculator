@@ -3,6 +3,9 @@
     "type": "river_slot",
     "id": "flour",
     "icon": "flour",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "farm",

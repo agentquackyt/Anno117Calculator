@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "toga",
     "icon": "toga",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "production_building",

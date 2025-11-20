@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "weapons",
     "icon": "weapons",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "production_building",

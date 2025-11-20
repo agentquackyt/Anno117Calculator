@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "sandal",
     "icon": "sandal",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "production_building",

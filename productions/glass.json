@@ -3,6 +3,9 @@
     "type": "river_slot",
     "id": "glass",
     "icon": "glass",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "ocean_slot",

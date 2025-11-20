@@ -421,7 +421,8 @@ class Anno117CalculatorApp {
         this.productionCalculator = new ProductionCalculator(() => this.settingsManager.getConfig());
         this.graphRenderer = new GraphRenderer({
             goodsRepository: this.goodsRepository,
-            configProvider: () => this.settingsManager.getConfig()
+            configProvider: () => this.settingsManager.getConfig(),
+            productionCalculator: this.productionCalculator
         });
         this.selectionContainer = document.getElementById('selection-container');
         this.calculatorContainer = document.getElementById('calculator-container');
@@ -444,6 +445,7 @@ class Anno117CalculatorApp {
         this.settingsManager.init();
         this.settingsManager.onChange(() => this.handleSettingsChange());
         await this.loadGoodsList();
+        // document.addEventListener('popstate', this.restoreFromUrl())
         this.restoreFromUrl();
     }
 
@@ -516,7 +518,7 @@ class Anno117CalculatorApp {
     pushChainToUrl(goodId) {
         const url = new URL(window.location);
         url.searchParams.set('chain', goodId);
-        window.history.pushState({}, '', url);
+        window.history.pushState({ chain: goodId }, '', url);
     }
 }
 

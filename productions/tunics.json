@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "tunics",
     "icon": "tunics",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "farm",

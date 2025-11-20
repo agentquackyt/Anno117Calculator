@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "olive_oil",
     "icon": "olive_oil",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "plantation",

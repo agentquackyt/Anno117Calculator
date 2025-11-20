@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "bread",
     "icon": "bread",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "river_slot",

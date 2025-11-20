@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "leather",
     "icon": "leather",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "animal_farm",

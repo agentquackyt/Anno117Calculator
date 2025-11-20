@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "fine_glass",
     "icon": "fine_glass",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "production_building",

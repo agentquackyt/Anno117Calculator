@@ -16,9 +16,8 @@ export class ProductionCalculator {
         return this.configProvider();
     }
 
-    getAdjustedTime(node) {
-        if (!node) return 60;
-        let time = node.time || 60;
+    getProductivity(node) {
+        if (!node) return 1;
         let productivity = 1;
         const type = node.type || '';
         const config = this.config;
@@ -31,6 +30,13 @@ export class ProductionCalculator {
                 productivity *= 1.5;
             }
         }
+        return productivity;
+    }
+
+    getAdjustedTime(node) {
+        if (!node) return 60;
+        let time = node.time || 60;
+        const productivity = this.getProductivity(node);
 
         return productivity ? time / productivity : time;
     }

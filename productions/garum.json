@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "garum",
     "icon": "garum",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "ocean_slot",

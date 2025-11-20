@@ -3,6 +3,10 @@
     "type": "production_building",
     "id": "tile",
     "icon": "tile",
+    "region": [
+        "latium",
+        "albion"
+    ],
     "input": [
         {
             "type": "river_slot",

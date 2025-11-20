@@ -3,11 +3,14 @@
     "type": "production_building",
     "id": "porridge",
     "icon": "porridge",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "farm",
             "start_of_chain": true,
-            "id": "hemp",
+            "id": "oat",
             "time": 60,
             "faith": [
                 "ceres"

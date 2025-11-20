@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "amphorae",
     "icon": "amphorae",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "wood_cutter",

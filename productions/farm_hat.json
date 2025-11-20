@@ -3,6 +3,9 @@
     "type": "production_building",
     "id": "farm_hat",
     "icon": "farm_hat",
+    "region": [
+        "latium"
+    ],
     "input": [
         {
             "type": "animal_farm",

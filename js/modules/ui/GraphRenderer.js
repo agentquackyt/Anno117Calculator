@@ -8,14 +8,17 @@ export class GraphRenderer {
     constructor({
         templatePath = 'svg/dependency-graph.svg',
         goodsRepository,
-        configProvider
+        configProvider,
+        productionCalculator
     }) {
         this.templatePath = templatePath;
         this.goodsRepository = goodsRepository;
         this.configProvider = configProvider;
+        this.productionCalculator = productionCalculator;
         this.svgMarkup = null;
         this.svgElement = null;
         this.interactionsBound = false;
+        this.displayInfoMenue = this.displayInfoMenue.bind(this);
     }
 
     async attach(container) {
@@ -77,7 +80,10 @@ export class GraphRenderer {
             depth,
             maxDepth,
             isLeaf,
-            startOfChain: false
+            startOfChain: false,
+            buildingCost: prodData.building_cost,
+            maintenanceCost: prodData.maintanance_cost,
+            productivity: this.calculateProductivity(prodData)
         });
 
         if (typeof parentX === 'number' && typeof parentY === 'number') {
@@ -130,14 +136,17 @@ export class GraphRenderer {
                     depth: depth + 1,
                     maxDepth,
                     isLeaf: true,
-                    startOfChain: true
+                    startOfChain: true,
+                    buildingCost: input.building_cost,
+                    maintenanceCost: input.maintanance_cost,
+                    productivity: this.calculateProductivity(input)
                 });
                 this.drawLink(x, y + 32, inputX, nextY - 32, false);
             }
         });
     }
 
-    addNode({ x, y, good, buildings, textAlign, hasFuel, buildingType, depth, maxDepth, isLeaf, startOfChain }) {
+    addNode({ x, y, good, buildings, textAlign, hasFuel, buildingType, depth, maxDepth, isLeaf, startOfChain, buildingCost, maintenanceCost, productivity }) {
         if (!this.svgElement) return;
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
@@ -150,6 +159,7 @@ export class GraphRenderer {
         rect.setAttribute('rx', '12');
         rect.setAttribute('ry', '12');
         rect.setAttribute('class', 'graph-node');
+        // Might add data attribute for under/overflow => more/good than the desired good per minute
         group.appendChild(rect);
 
         const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
@@ -158,7 +168,13 @@ export class GraphRenderer {
         img.setAttribute('y', String(y - size / 2));
         img.setAttribute('width', String(size));
         img.setAttribute('height', String(size));
+        img.dataset.goodId = good.id;
+        img.productionData = { buildingCost, maintenanceCost, buildings, good, productivity };
+        img.addEventListener('mousedown', this.displayInfoMenue)
         group.appendChild(img);
+
+        // TEMP: log
+        console.log("[SVG Generator] Good data: ", good);
 
         if (hasFuel) {
             this.addCornerImage(group, x, y, size, 'icons/charcoal.png');
@@ -261,6 +277,10 @@ export class GraphRenderer {
         group.appendChild(box);
 
         this.addCornerImage(group, x, y, size, 'icons/aquaduct.png');
+    }
+
+    calculateProductivity(node) {
+        return this.productionCalculator ? this.productionCalculator.getProductivity(node) : 1;
     }
 
     shouldShowAqueductBadge(buildingType) {
@@ -475,5 +495,128 @@ export class GraphRenderer {
         const dx = p1.x - p2.x;
         const dy = p1.y - p2.y;
         return Math.hypot(dx, dy);
+    }
+
+    /**
+     * Click Event on the icon
+     * @param {MouseEvent} event 
+     */
+    displayInfoMenue(event) {
+        if (event.button != 0) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        const { buildingCost, maintenanceCost, buildings, good } = event.currentTarget.productionData || {};
+        if (!good) return;
+
+        let infoContainer = document.createElement('div');
+        infoContainer.classList.add("metadata-container");
+        infoContainer.style.position = "absolute";
+        infoContainer.style.left = `${event.clientX}px`;
+        infoContainer.style.top = `${event.clientY}px`;
+        infoContainer.tabIndex = -1;
+        infoContainer.style.zIndex = 1000;
+
+        // Basic styling is handled by CSS class, but we ensure positioning
+
+        const content = document.createElement('div');
+        content.className = 'metadata-content';
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'metadata-header';
+        header.innerHTML = `
+            <img src="icons/${good.icon || good.id}.png" alt="${good.displayName}" class="metadata-icon" onerror="this.style.display='none';"/>
+            <h4>${good.displayName || good.id}</h4>
+        `;
+        content.appendChild(header);
+
+        // Building Count
+        const countInfo = document.createElement('div');
+        countInfo.className = 'metadata-row';
+        // show the expected productivity of the building in percentage (account for the special effects, like the productivity booster (aqueduct) and production overflow)
+        if (event.currentTarget.productionData.productivity) {
+            const productivity = event.currentTarget.productionData.productivity;
+            const productivityInfo = document.createElement('div');
+            productivityInfo.className = 'metadata-row';
+            productivityInfo.innerHTML = `<strong>Productivity:</strong> ${((productivity * 100) * Math.min(buildings, 1)).toFixed(0)}%`;
+            content.appendChild(productivityInfo);
+        }
+
+        countInfo.innerHTML = `<strong>Required:</strong> ${buildings ? buildings.toFixed(2) : '0.00'}x`;
+        content.appendChild(countInfo);
+
+        // Helper to render cost list
+        const renderCostList = (title, costs) => {
+            if (!costs || Object.keys(costs).length === 0) return null;
+            const validCosts = Object.entries(costs).filter(([, amount]) => amount > 0);
+            if (validCosts.length === 0) return null;
+
+            const container = document.createElement('div');
+            container.className = 'metadata-section';
+            container.innerHTML = `<h5>${title}</h5>`;
+
+            const list = document.createElement('div');
+            list.className = 'cost-list';
+
+            validCosts.forEach(([resource, amount]) => {
+                list.innerHTML += `
+                    <div class="cost-resource">
+                        <img src="icons/${resource}.png" alt="${resource}" class="cost-icon-small" onerror="this.style.display='none';"/>
+                        <span>${amount}</span>
+                    </div>
+                `;
+            });
+            container.appendChild(list);
+            return container;
+        };
+
+        // Costs
+        const buildingCostEl = renderCostList('Construction Cost', buildingCost);
+        if (buildingCostEl) content.appendChild(buildingCostEl);
+
+        const maintenanceCostEl = renderCostList('Maintenance', maintenanceCost);
+        if (maintenanceCostEl) content.appendChild(maintenanceCostEl);
+
+        infoContainer.appendChild(content);
+        document.body.appendChild(infoContainer);
+
+        // Focus and cleanup
+        setTimeout(() => {
+            infoContainer.focus();
+        }, 10);
+
+        const closeMenu = () => {
+            if (infoContainer.parentNode) {
+                infoContainer.parentNode.removeChild(infoContainer);
+            }
+            document.removeEventListener('mousedown', outsideClickListener);
+        };
+
+        const outsideClickListener = (e) => {
+            if (!infoContainer.contains(e.target)) {
+                closeMenu();
+            }
+        };
+
+        // We use mousedown on document to close when clicking outside, 
+        // but we need to make sure we don't close immediately if the click was the one that opened it.
+        // Since we are in the event handler, the click has already happened.
+        // We'll add the listener in a timeout to avoid current event triggering it? 
+        // Actually, the current event is on the SVG element. The document listener will catch future clicks.
+        setTimeout(() => {
+            document.addEventListener('mousedown', outsideClickListener);
+        }, 0);
+
+        infoContainer.addEventListener("focusout", (e) => {
+            if (infoContainer.contains(e.relatedTarget)) return;
+            closeMenu();
+        });
+
+        // Also close on Escape
+        infoContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
     }
 }
