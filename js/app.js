@@ -207,7 +207,13 @@ class ProductionChainView {
     buildMarkup(good, recipe, baseInputs) {
         const outputIcon = recipe.head?.icon || recipe.icon || good.icon;
         const baseCards = this.buildBaseInputCards(baseInputs);
-        const fuelCards = this.buildFuelCards(recipe.fuel);
+        
+        let fuelList = recipe.fuel || [];
+        if (recipe.needs_fuel && !fuelList.length) {
+            fuelList = [{ id: 'charcoal', burning_time: 120 }];
+        }
+
+        const fuelCards = this.buildFuelCards(fuelList);
         const outputTime = this.buildTimeBadge(recipe);
 
         return `
@@ -438,15 +444,52 @@ class Anno117CalculatorApp {
         });
         this.productionView.setBackHandler(() => this.showSelectionView());
         this.currentGood = null;
+        this.currentRegion = 'Roman';
+        this.allGoods = [];
     }
 
     async init() {
         this.registerServiceWorker();
         this.settingsManager.init();
         this.settingsManager.onChange(() => this.handleSettingsChange());
+        this.bindRegionToggle();
         await this.loadGoodsList();
         // document.addEventListener('popstate', this.restoreFromUrl())
         this.restoreFromUrl();
+    }
+
+    bindRegionToggle() {
+        const toggleBtn = document.getElementById('region-toggle-btn');
+        const icon = toggleBtn?.querySelector('.region-icon');
+        const text = toggleBtn?.querySelector('.region-text');
+
+        const updateButtonState = (region) => {
+            if (icon) {
+                icon.src = region === 'Roman' ? 'icons/latium.webp' : 'icons/albion.webp';
+            }
+            if (text) {
+                text.textContent = region === 'Roman' ? 'Latium' : 'Albion';
+            }
+        };
+
+        const setRegion = (region) => {
+            if (this.currentRegion === region) return;
+            this.currentRegion = region;
+            updateButtonState(region);
+            this.updateUrl();
+            this.updateGoodsList();
+            if (this.currentGood) {
+                this.handleGoodSelection(this.currentGood);
+            }
+        };
+
+        toggleBtn?.addEventListener('click', () => {
+            const newRegion = this.currentRegion === 'Roman' ? 'Celtic' : 'Roman';
+            setRegion(newRegion);
+        });
+
+        // Initialize button state
+        updateButtonState(this.currentRegion);
     }
 
     registerServiceWorker() {
@@ -462,23 +505,33 @@ class Anno117CalculatorApp {
 
     async loadGoodsList() {
         try {
-            const goods = await this.goodsRepository.loadGoodsList();
-            this.goodsListView.render(goods);
+            this.allGoods = await this.goodsRepository.loadGoodsList();
+            this.updateGoodsList();
         } catch (error) {
             console.error('Error loading goods list:', error);
             this.goodsListView.showError('Error loading goods list. Please try again later.');
         }
     }
 
+    updateGoodsList() {
+        if (!this.allGoods) return;
+        const filtered = this.allGoods.filter((good) => {
+            if (good.startOfChain) return true;
+            if (!good.regions || good.regions.length === 0) return false;
+            return good.regions.includes(this.currentRegion);
+        });
+        this.goodsListView.render(filtered);
+    }
+
     async handleGoodSelection(good) {
         this.currentGood = good;
-        this.pushChainToUrl(good.id);
+        this.updateUrl();
         this.goodsListView.highlight(good.id);
         this.selectionContainer.classList.add('hidden');
         this.calculatorContainer.classList.remove('hidden');
         this.productionView.showLoading(good);
         try {
-            const recipe = await this.goodsRepository.loadProductionChain(good.id);
+            const recipe = await this.goodsRepository.loadProductionChain(good.id, this.currentRegion);
             if (recipe) {
                 await this.productionView.showChain(good, recipe);
             } else {
@@ -492,9 +545,7 @@ class Anno117CalculatorApp {
 
     showSelectionView() {
         this.currentGood = null;
-        const url = new URL(window.location);
-        url.searchParams.delete('chain');
-        window.history.pushState({}, '', url);
+        this.updateUrl();
         this.calculatorContainer.classList.add('hidden');
         this.selectionContainer.classList.remove('hidden');
     }
@@ -507,6 +558,27 @@ class Anno117CalculatorApp {
 
     restoreFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
+        
+        const regionParam = urlParams.get('region');
+        if (regionParam) {
+            const region = regionParam.charAt(0).toUpperCase() + regionParam.slice(1).toLowerCase();
+            if (['Roman', 'Celtic'].includes(region)) {
+                this.currentRegion = region;
+                
+                // Update toggle button state
+                const toggleBtn = document.getElementById('region-toggle-btn');
+                const icon = toggleBtn?.querySelector('.region-icon');
+                const text = toggleBtn?.querySelector('.region-text');
+                
+                if (icon) {
+                    icon.src = region === 'Roman' ? 'icons/latium.webp' : 'icons/albion.webp';
+                }
+                if (text) {
+                    text.textContent = region === 'Roman' ? 'Latium' : 'Albion';
+                }
+            }
+        }
+
         const chainParam = urlParams.get('chain');
         if (!chainParam) return;
         const good = this.goodsRepository.getGoods().find((item) => item.id === chainParam);
@@ -515,10 +587,15 @@ class Anno117CalculatorApp {
         }
     }
 
-    pushChainToUrl(goodId) {
+    updateUrl() {
         const url = new URL(window.location);
-        url.searchParams.set('chain', goodId);
-        window.history.pushState({ chain: goodId }, '', url);
+        url.searchParams.set('region', this.currentRegion.toLowerCase());
+        if (this.currentGood) {
+            url.searchParams.set('chain', this.currentGood.id);
+        } else {
+            url.searchParams.delete('chain');
+        }
+        window.history.pushState({ chain: this.currentGood?.id, region: this.currentRegion }, '', url);
     }
 }
 

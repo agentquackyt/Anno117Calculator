@@ -1,58 +1,47 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of tunics",
-    "type": "production_building",
     "id": "tunics",
-    "icon": "tunics",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "farm",
-            "start_of_chain": true,
-            "id": "hemp",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 0,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 4,
-                "liberti": 3,
-                "waders": 0,
-                "plebejer": 0,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Tunics",
+    "type": "clothier",
+    "guid": "3187",
     "time": 60,
+    "needs_fuel": false,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 0,
+        "tiles": 0,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 8,
-        "liberti": 3,
-        "waders": 0,
-        "plebejer": 3,
-        "equites": 0,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "libertus": 3
+    },
+    "input": [
+        {
+            "id": "hemp",
+            "name": "Hemp",
+            "type": "arable_farm",
+            "guid": "31750",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

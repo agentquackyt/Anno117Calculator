@@ -73,7 +73,11 @@
 <body>
     <header>
         <img src="style/logo_small.png" alt="Anno 117 Logo">
-        <h1>Anno 117 Production Calculator</h1>
+        <h1 style="display: none;">Anno 117 Production Calculator</h1>
+        <button id="region-toggle-btn" class="region-toggle-btn" aria-label="Toggle Region">
+            <img src="icons/latium.webp" alt="Region Icon" class="region-icon">
+            <span class="region-text">Latium</span>
+        </button>
         <button id="info-toggle" class="info-button" aria-label="About">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                 stroke="currentColor" fill="currentColor">
@@ -134,9 +138,19 @@
                                     <img src="icons/skill-feldbewaesserung.png" class="setting-icon"
                                         alt="Field Irrigation">
                                     <input type="checkbox" id="settings-field-irrigation" checked>
-                                    <span class="setting-title">Field Irrigation (Farms +50%)</span>
+                                    <span class="setting-title">Field Irrigation (Arable Farms +50%)</span>
                                 </label>
                                 <p class="setting-description">Reduces farm production time by 50%</p>
+                            </div>
+
+                            <div class="setting-item sub-setting">
+                                <label class="setting-label">
+                                    <img src="icons/skill-hydraulischer-bergbau.png" class="setting-icon"
+                                        alt="Hushing">
+                                    <input type="checkbox" id="settings-hushing" checked>
+                                    <span class="setting-title">Hushing (Mines +50%)</span>
+                                </label>
+                                <p class="setting-description">Reduces mine production time by 50%</p>
                             </div>
                         </div>
                     </div>
@@ -173,7 +187,6 @@
 
     </main>
     <footer>
-        <h3>Note: Not all production chains implemented (Missing Albion and Patricians)</h3>
         <p><strong>Tip:</strong> On touch, drag with one finger to pan and pinch to zoom. On desktop, hold right mouse
             button to pan and use the mouse wheel to zoom.</p>
         <p>Developed by AgentQuack. Not affiliated with Ubisoft or Ubisoft Mainz. All trademarks are the property of

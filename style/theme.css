@@ -18,6 +18,22 @@
   --font-family: "AlbertusNove", "Tim New Roman", serif;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--background-accent);
+  border-radius: 4px;
+}
+
+
 html,
 body {
   margin: 0;
@@ -133,6 +149,7 @@ main {
   gap: 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
+  aspect-ratio: 1/1;
 }
 
 .goods-card:hover {
@@ -533,9 +550,7 @@ main {
   display: inline;
 }
 
-.info-button {
-  margin-left: auto;
-}
+
 
 .info-button:hover,
 .settings-button:hover {
@@ -1094,4 +1109,42 @@ footer {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--theme-color-dark);
+}
+
+/* Region Toggle */
+.region-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--background-accent);
+  border: 1px solid var(--theme-color);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  color: var(--theme-color-dark);
+  margin-left: auto;
+  transition: all 0.2s;
+  height: 44px;
+}
+
+.region-toggle-btn:hover {
+  background-color: var(--background);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.region-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.region-text {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
 }

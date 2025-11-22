@@ -1,0 +1,44 @@
+{
+    "id": "tunics",
+    "name": "Tunics",
+    "type": "clothier",
+    "guid": "5958",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 0,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 8,
+        "wader": 2
+    },
+    "input": [
+        {
+            "id": "hemp",
+            "name": "Hemp",
+            "type": "arable_farm",
+            "guid": "31762",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

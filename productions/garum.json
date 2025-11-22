@@ -1,84 +1,69 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of garum",
-    "type": "production_building",
     "id": "garum",
-    "icon": "garum",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "ocean_slot",
-            "start_of_chain": true,
-            "id": "mackerels",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 1,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 8,
-                "liberti": 4,
-                "waders": 0,
-                "plebejer": 0,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        },
-        {
-            "type": "ocean_slot",
-            "start_of_chain": true,
-            "id": "salt",
-            "time": 30,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 2,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 8,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 4,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Garum",
+    "type": "victualler",
+    "guid": "3185",
     "time": 90,
+    "needs_fuel": false,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 2,
+        "tiles": 2,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 12,
-        "liberti": 0,
-        "waders": 0,
-        "plebejer": 4,
-        "equites": 0,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "plebeian": 4
+    },
+    "input": [
+        {
+            "id": "mackerel",
+            "name": "Mackerel",
+            "type": "fishery",
+            "guid": "2956",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 1,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "libertus": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "salt",
+            "name": "Salt",
+            "type": "extractor",
+            "guid": "2957",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

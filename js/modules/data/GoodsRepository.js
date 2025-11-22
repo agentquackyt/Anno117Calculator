@@ -23,6 +23,7 @@ export class GoodsRepository {
         }
         const payload = await response.json();
         this.goods = payload.goods || [];
+        this.goodsMap = new Map(this.goods.map(g => [g.id, g]));
         return this.goods;
     }
 
@@ -31,49 +32,84 @@ export class GoodsRepository {
     }
 
     getGoodById(id) {
-        return this.goods.find((good) => good.id === id);
+        return this.goodsMap ? this.goodsMap.get(id) : this.goods.find((good) => good.id === id);
     }
 
-    async loadProductionChain(goodId, visited = new Set()) {
+    async loadProductionChain(goodId, region, visited = new Set()) {
         if (!goodId) return null;
         if (visited.has(goodId)) {
             return null;
         }
         visited.add(goodId);
 
-        const baseRecipe = await this.fetchProduction(goodId);
+        const baseRecipe = await this.fetchProduction(goodId, region);
         if (!baseRecipe) {
             visited.delete(goodId);
             return null;
         }
         const recipe = this.cloneRecipe(baseRecipe);
 
-        if (Array.isArray(recipe.input)) {
-            for (const input of recipe.input) {
-                if (!input.start_of_chain && input.id) {
-                    const nested = await this.loadProductionChain(input.id, visited);
-                    if (nested) {
-                        input.recipe = nested;
-                    }
-                }
-            }
-        }
+        await this.expandRecipe(recipe, region, visited);
 
         visited.delete(goodId);
         return recipe;
     }
 
-    async fetchProduction(goodId) {
-        if (this.productionCache.has(goodId)) {
-            return this.productionCache.get(goodId);
+    async expandRecipe(node, region, visited) {
+        if (Array.isArray(node.input)) {
+            for (const input of node.input) {
+                if (Array.isArray(input.input)) {
+                    // Already defined, just recurse
+                    await this.expandRecipe(input, region, visited);
+                } else if (!input.start_of_chain && input.id) {
+                    // Reference, fetch it
+                    const nested = await this.loadProductionChain(input.id, region, visited);
+                    if (nested) {
+                        Object.assign(input, nested);
+                    }
+                }
+            }
         }
+    }
+
+    async fetchProduction(goodId, region) {
+        const cacheKey = `${goodId}:${region || 'default'}`;
+        if (this.productionCache.has(cacheKey)) {
+            return this.productionCache.get(cacheKey);
+        }
+        
+        const good = this.getGoodById(goodId);
+        let filename = goodId;
+        
+        if (good && good.files) {
+            let candidates = Object.entries(good.files);
+            
+            if (region) {
+                // Filter by region if provided
+                const regionMatches = candidates.filter(([file, regions]) => 
+                    regions.some(r => r.toLowerCase() === region.toLowerCase())
+                );
+                if (regionMatches.length > 0) {
+                    candidates = regionMatches;
+                }
+            }
+            
+            // Tie-breaker: Exact ID match
+            const exactMatch = candidates.find(([file]) => file === goodId);
+            if (exactMatch) {
+                filename = exactMatch[0];
+            } else if (candidates.length > 0) {
+                filename = candidates[0][0];
+            }
+        }
+
         try {
-            const response = await fetch(`${this.productionBaseUrl}/${goodId}.json`);
+            const response = await fetch(`${this.productionBaseUrl}/${filename}.json`);
             if (!response.ok) {
                 return null;
             }
             const data = await response.json();
-            this.productionCache.set(goodId, data);
+            this.productionCache.set(cacheKey, data);
             return data;
         } catch (error) {
             console.error(`[GoodsRepository] Failed to fetch production data for ${goodId}`, error);

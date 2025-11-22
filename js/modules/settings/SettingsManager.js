@@ -1,7 +1,8 @@
 const DEFAULT_CONFIG = {
     aqueductsEnabled: false,
     aquaArborica: false,
-    fieldIrrigation: false
+    fieldIrrigation: false,
+    hushing: false
 };
 
 /**
@@ -82,6 +83,7 @@ export class SettingsManager {
         const aqueductToggle = document.getElementById('settings-use-aqueducts');
         const arboricaToggle = document.getElementById('settings-aqua-arborica');
         const irrigationToggle = document.getElementById('settings-field-irrigation');
+        const hushingToggle = document.getElementById('settings-hushing');
 
         aqueductToggle?.addEventListener('change', (e) => {
             this.updateSetting('aqueductsEnabled', Boolean(e.target.checked));
@@ -91,6 +93,9 @@ export class SettingsManager {
         });
         irrigationToggle?.addEventListener('change', (e) => {
             this.updateSetting('fieldIrrigation', Boolean(e.target.checked));
+        });
+        hushingToggle?.addEventListener('change', (e) => {
+            this.updateSetting('hushing', Boolean(e.target.checked));
         });
     }
 
@@ -158,10 +163,12 @@ export class SettingsManager {
         const aqueductToggle = document.getElementById('settings-use-aqueducts');
         const arboricaToggle = document.getElementById('settings-aqua-arborica');
         const irrigationToggle = document.getElementById('settings-field-irrigation');
+        const hushingToggle = document.getElementById('settings-hushing');
 
         if (aqueductToggle) aqueductToggle.checked = this.config.aqueductsEnabled;
         if (arboricaToggle) arboricaToggle.checked = this.config.aquaArborica;
         if (irrigationToggle) irrigationToggle.checked = this.config.fieldIrrigation;
+        if (hushingToggle) hushingToggle.checked = this.config.hushing;
     }
 
     notify() {

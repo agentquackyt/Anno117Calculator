@@ -7,7 +7,8 @@ export class ProductionCalculator {
     constructor(configProvider = () => ({
         aqueductsEnabled: false,
         aquaArborica: false,
-        fieldIrrigation: false
+        fieldIrrigation: false,
+        hushing: false
     })) {
         this.configProvider = configProvider;
     }
@@ -26,7 +27,10 @@ export class ProductionCalculator {
             if (type === 'plantation' && config.aquaArborica) {
                 productivity *= 1.5;
             }
-            if (type === 'farm' && config.fieldIrrigation) {
+            if (type === 'arable_farm' && config.fieldIrrigation) {
+                productivity *= 1.5;
+            }
+            if (type === 'mine' && config.hushing) {
                 productivity *= 1.5;
             }
         }
@@ -74,7 +78,9 @@ export class ProductionCalculator {
                     continue;
                 }
 
-                if (input.recipe) {
+                if (Array.isArray(input.input)) {
+                    this.collectAllBuildings(input, requiredInputPerMinute, result, depth + 1);
+                } else if (input.recipe) {
                     this.collectAllBuildings(input.recipe, requiredInputPerMinute, result, depth + 1);
                 }
             }
@@ -84,7 +90,9 @@ export class ProductionCalculator {
     }
 
     calculateStartOfChainBuildings(input, requiredInputPerMinute, consumingBuildings, parentProduction) {
-        if (input.id === 'charcoal' && parentProduction?.fuel?.some((fuel) => fuel.id === 'charcoal')) {
+        const parentNeedsCharcoal = parentProduction?.fuel?.some((fuel) => fuel.id === 'charcoal') || parentProduction?.needs_fuel;
+
+        if (input.id === 'charcoal' && parentNeedsCharcoal) {
             const charcoalConsumptionPerBuildingPerMinute = SECONDS_PER_MINUTE / 120;
             const charcoalRequiredPerMinute = consumingBuildings * charcoalConsumptionPerBuildingPerMinute;
             const charcoalProductionDuration = 30;
@@ -113,7 +121,9 @@ export class ProductionCalculator {
                 }
                 continue;
             }
-            if (input.recipe) {
+            if (Array.isArray(input.input)) {
+                this.collectBaseInputs(input, baseInputs);
+            } else if (input.recipe) {
                 this.collectBaseInputs(input.recipe, baseInputs);
             }
         }
@@ -121,10 +131,15 @@ export class ProductionCalculator {
     }
 
     calculateFuelBuildings(productionData, allBuildings) {
-        if (!productionData?.fuel?.length) return [];
+        let fuelList = productionData?.fuel || [];
+        if (productionData?.needs_fuel && !fuelList.length) {
+            fuelList = [{ id: 'charcoal', burning_time: 120 }];
+        }
+        
+        if (!fuelList.length) return [];
         const consumingBuildings = productionData.id ? (allBuildings[productionData.id] || 0) : 0;
 
-        return productionData.fuel.map((fuel) => {
+        return fuelList.map((fuel) => {
             const burningTime = fuel.burning_time || 120;
             const fuelBuildingDuration = 30;
 
@@ -161,7 +176,9 @@ export class ProductionCalculator {
 
         if (Array.isArray(productionData.input)) {
             for (const input of productionData.input) {
-                if (input.recipe) {
+                if (Array.isArray(input.input)) {
+                    this.collectCycleTimes(input, bucket);
+                } else if (input.recipe) {
                     this.collectCycleTimes(input.recipe, bucket);
                 } else if (input.time) {
                     bucket.push(input.time);

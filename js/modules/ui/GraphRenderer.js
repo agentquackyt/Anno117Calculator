@@ -61,11 +61,21 @@ export class GraphRenderer {
         if (!prodData || depth > 5) return;
 
         const good = this.findGood(prodData.id);
-        const hasFuel = Array.isArray(prodData.fuel) && prodData.fuel.length > 0;
+        const hasFuel = (Array.isArray(prodData.fuel) && prodData.fuel.length > 0) || prodData.needs_fuel === true;
         const buildings = allBuildings[prodData.id] || 0;
         const buildingType = prodData.type || '';
 
-        const textAlign = depth === 0 ? 'left' : (x < CENTER_X ? 'left' : 'right');
+        let textAlign = 'left';
+        if (depth === 0) {
+            textAlign = 'left';
+        } else if (parentX !== null && parentX !== undefined) {
+            if (x < parentX) textAlign = 'left';
+            else if (x > parentX) textAlign = 'right';
+            else textAlign = x < CENTER_X ? 'left' : 'right';
+        } else {
+            textAlign = x < CENTER_X ? 'left' : 'right';
+        }
+
         const inputs = Array.isArray(prodData.input) ? prodData.input : [];
         const isLeaf = inputs.length === 0 || inputs.every((input) => input.start_of_chain);
 
@@ -80,7 +90,7 @@ export class GraphRenderer {
             depth,
             maxDepth,
             isLeaf,
-            startOfChain: false,
+            startOfChain: prodData.start_of_chain === true,
             buildingCost: prodData.building_cost,
             maintenanceCost: prodData.maintanance_cost,
             productivity: this.calculateProductivity(prodData)
@@ -93,7 +103,11 @@ export class GraphRenderer {
         if (!inputs.length) return;
         const nextY = y + 120;
 
-        const inputWidths = inputs.map((input) => input.recipe ? this.calculateTreeWidth(input.recipe) : 1);
+        const inputWidths = inputs.map((input) => {
+            if (Array.isArray(input.input)) return this.calculateTreeWidth(input);
+            if (input.recipe) return this.calculateTreeWidth(input.recipe);
+            return 1;
+        });
         const totalWidth = inputWidths.reduce((sum, width) => sum + width, 0);
 
         let hasRightAlignedText = false;
@@ -106,7 +120,7 @@ export class GraphRenderer {
             probeOffset += width * 90;
         });
 
-        const nodeSpacing = hasRightAlignedText ? 140 : 90;
+        const nodeSpacing = hasRightAlignedText ? 160 : 120;
         let currentOffset = x - (totalWidth * nodeSpacing) / 2;
 
         inputs.forEach((input, index) => {
@@ -114,6 +128,11 @@ export class GraphRenderer {
             const widthUnits = inputWidths[index];
             const inputX = currentOffset + (widthUnits * nodeSpacing) / 2;
             currentOffset += widthUnits * nodeSpacing;
+
+            if (Array.isArray(input.input)) {
+                this.renderRecursiveGraph(input, inputX, nextY, depth + 1, allBuildings, widthUnits * nodeSpacing, x, y, maxDepth);
+                return;
+            }
 
             if (input.recipe) {
                 this.renderRecursiveGraph(input.recipe, inputX, nextY, depth + 1, allBuildings, widthUnits * nodeSpacing, x, y, maxDepth);
@@ -123,7 +142,11 @@ export class GraphRenderer {
             if (input.start_of_chain) {
                 const inputGood = this.findGood(input.id);
                 const inputBuildings = allBuildings[input.id] || 0;
-                const align = inputX < CENTER_X ? 'left' : 'right';
+                
+                let align = 'left';
+                if (inputX < x) align = 'left';
+                else if (inputX > x) align = 'right';
+                else align = inputX < CENTER_X ? 'left' : 'right';
 
                 this.addNode({
                     x: inputX,
@@ -231,12 +254,14 @@ export class GraphRenderer {
     }
 
     resolveLabelGeometry({ x, y, textAlign, label, buildings, depth, maxDepth, isLeaf, startOfChain }) {
-        const approxLabelWidth = Math.max(label.length, buildings.length) * 7;
-        if (maxDepth >= 3 && isLeaf && startOfChain) {
+        // Render labels below for 3rd row (depth 2) and lower, when they are leaf items
+        if (depth >= 2 && startOfChain) {
             return { labelX: x, labelY: y + 50, buildingsY: y + 67, labelAnchor: 'middle' };
         }
+        
+        const offset = 45;
+
         if (textAlign === 'right') {
-            const offset = 40 + Math.max(0, approxLabelWidth - 70);
             return {
                 labelX: x + offset,
                 labelY: y - 5,
@@ -244,7 +269,7 @@ export class GraphRenderer {
                 labelAnchor: 'start'
             };
         }
-        const offset = depth === 0 ? 40 : (40 + Math.max(0, approxLabelWidth - 70));
+        
         return {
             labelX: x - offset,
             labelY: y - 5,
@@ -286,11 +311,14 @@ export class GraphRenderer {
     shouldShowAqueductBadge(buildingType) {
         const config = this.configProvider ? this.configProvider() : {};
         if (!config.aqueductsEnabled) return false;
-        if (buildingType === 'farm') {
+        if (buildingType === 'arable_farm') {
             return Boolean(config.fieldIrrigation);
         }
         if (buildingType === 'plantation') {
             return Boolean(config.aquaArborica);
+        }
+        if (buildingType === 'mine') {
+            return Boolean(config.hushing);
         }
         return false;
     }
@@ -300,6 +328,9 @@ export class GraphRenderer {
             return 1;
         }
         return prodData.input.reduce((sum, input) => {
+            if (Array.isArray(input.input)) {
+                return sum + this.calculateTreeWidth(input);
+            }
             if (input.recipe) {
                 return sum + this.calculateTreeWidth(input.recipe);
             }
@@ -312,6 +343,9 @@ export class GraphRenderer {
             return depth;
         }
         return prodData.input.reduce((max, input) => {
+            if (Array.isArray(input.input)) {
+                return Math.max(max, this.calculateMaxDepth(input, depth + 1));
+            }
             if (input.recipe) {
                 return Math.max(max, this.calculateMaxDepth(input.recipe, depth + 1));
             }

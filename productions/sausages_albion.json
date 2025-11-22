@@ -1,0 +1,64 @@
+{
+    "id": "sausages",
+    "name": "Sausages",
+    "type": "kitchen",
+    "guid": "5959",
+    "time": 60,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 2,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 14,
+        "mercators": 4
+    },
+    "input": [
+        {
+            "id": "pigs",
+            "name": "Pigs",
+            "type": "livestock_farm",
+            "guid": "5974",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 6,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "herbs",
+            "name": "Herbs",
+            "type": "plantation",
+            "guid": "31764",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 6,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

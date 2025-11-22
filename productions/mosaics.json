@@ -1,0 +1,91 @@
+{
+    "id": "mosaics",
+    "name": "Mosaics",
+    "type": "refinery",
+    "guid": "3203",
+    "time": 120,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 4,
+        "concrete": 3,
+        "marble": 4,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 30,
+        "patrician": 14
+    },
+    "input": [
+        {
+            "id": "pigments",
+            "name": "Pigments",
+            "type": "extractor",
+            "guid": "3082",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 3,
+                "concrete": 2,
+                "marble": 2,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebeian": 4
+            },
+            "input": [
+                {
+                    "id": "minerals",
+                    "name": "Minerals",
+                    "type": "quarry",
+                    "guid": "2920",
+                    "time": 45,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 1,
+                        "concrete": 1,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 20,
+                        "plebeian": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "clay",
+            "name": "Clay",
+            "type": "pit",
+            "guid": "2970",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

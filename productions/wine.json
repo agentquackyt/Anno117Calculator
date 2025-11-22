@@ -1,62 +1,69 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Wine.",
-    "type": "production_building",
     "id": "wine",
-    "icon": "wine",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "plantation",
-            "start_of_chain": true,
-            "id": "grapes",
-            "time": 90,
-            "faith": [
-                "ceres"
-            ],
-            "building_cost": {
-                "money": 0,
-                "timber": 3,
-                "concrete": 1
-            },
-            "maintanance_cost": {
-                "money": 8,
-                "liberti": 3
-            }
-        },
-        {
-            "type": "wood_cutter",
-            "start_of_chain": true,
-            "id": "honeycombs",
-            "time": 45,
-            "faith": [
-                "ceres"
-            ],
-            "building_cost": {
-                "money": 0,
-                "timber": 1,
-                "tile": 2,
-                "concrete": 2
-            },
-            "maintanance_cost": {
-                "money": 14,
-                "liberti": 3
-            }
-        }
-    ],
+    "name": "Wine",
+    "type": "victualler",
+    "guid": "3177",
     "time": 45,
-    "faith": [
-        "ceres"
-    ],
+    "needs_fuel": false,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 5,
-        "concrete": 2
+        "tiles": 5,
+        "concrete": 2,
+        "marble": 0,
+        "mosaics": 0
     },
     "maintanance_cost": {
         "money": 30,
         "equites": 14
-    }
+    },
+    "input": [
+        {
+            "id": "grapes",
+            "name": "Grapes",
+            "type": "plantation",
+            "guid": "2694",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 3,
+                "concrete": 1,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "honeycombs",
+            "name": "Honeycombs",
+            "type": "gatherer",
+            "guid": "2795",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 14,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

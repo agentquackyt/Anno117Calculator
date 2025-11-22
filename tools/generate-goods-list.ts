@@ -10,26 +10,22 @@ import { join, resolve } from "path";
 
 interface Good {
   displayName: string;
-  type: string;
   id: string;
   icon: string;
   startOfChain: boolean;
+  regions: string[];
+  files: Record<string, string[]>; // filename -> regions
 }
 
-interface ProductionFile {
-  type?: string;
+interface ProductionNode {
   id?: string;
+  name?: string;
+  type?: string;
   icon?: string;
-  input?: Array<{
-    type?: string;
-    id?: string;
-    start_of_chain?: boolean;
-  }>;
-  fuel?: Array<{
-    type?: string;
-    id?: string;
-    start_of_chain?: boolean;
-  }>;
+  input?: ProductionNode[];
+  fuel?: ProductionNode[];
+  start_of_chain?: boolean;
+  region?: string[];
 }
 
 /**
@@ -43,61 +39,128 @@ function toDisplayName(id: string): string {
 }
 
 /**
- * Extract goods from a production file
+ * Extract goods from a production file recursively
  */
-function extractGoods(production: ProductionFile): Good[] {
-  const goods: Good[] = [];
-  const seen = new Set<string>();
+function extractGoods(node: ProductionNode, filename: string, goodsMap: Map<string, Good>) {
+  if (!node.id) return;
 
-  // Add the main product (head)
-  if (production.id) {
-    const id = production.id;
-    if (!seen.has(id)) {
-      goods.push({
-        displayName: toDisplayName(id),
-        id: id,
-        icon: production.icon || id,
-        startOfChain: false, // Head products are not start of chain
-        type: production.type || "generic",
-      });
-      seen.add(id);
-    }
+  const id = node.id;
+  const regions = node.region || [];
+  const isStartOfChain = node.start_of_chain === true;
+  const displayName = node.name || toDisplayName(id);
+  
+  // Get or create good entry
+  let good = goodsMap.get(id);
+  if (!good) {
+    good = {
+      displayName,
+      id,
+      icon: node.icon || id,
+      startOfChain: isStartOfChain,
+      regions: [],
+      files: {}
+    };
+    goodsMap.set(id, good);
   }
 
-  // Add input goods
-  if (production.input) {
-    for (const input of production.input) {
-      if (input.id && !seen.has(input.id)) {
-        goods.push({
-          displayName: toDisplayName(input.id),
-          id: input.id,
-          icon: input.id, // Assuming icon name matches ID
-          startOfChain: input.start_of_chain === true,
-          type: input.type || "generic",
-        });
-        seen.add(input.id);
-      }
-    }
+  // Update startOfChain if this occurrence says so (or if it was already true)
+  if (isStartOfChain) {
+    good.startOfChain = true;
   }
-
-  // Add fuel goods
-  if (production.fuel) {
-    for (const fuel of production.fuel) {
-      if (fuel.id && !seen.has(fuel.id)) {
-        goods.push({
-          displayName: toDisplayName(fuel.id),
-          id: fuel.id,
-          icon: fuel.id, // Assuming icon name matches ID
-          startOfChain: fuel.start_of_chain === true,
-          type: fuel.type || "generic",
-        });
-        seen.add(fuel.id);
-      }
-    }
-  }
-
-  return goods;
+  
+  // If this is the root node of the file (or we treat every node as potentially available in that file/region?)
+  // Actually, only the root node of the file represents the "recipe" defined by that file.
+  // Nested nodes are just ingredients.
+  // So we should only update 'regions' and 'files' for the ROOT node of the file.
+  // But wait, extractGoods is recursive. How do we know if we are at root?
+  // We can pass a flag.
 }
+
+function processFile(node: ProductionNode, filename: string, goodsMap: Map<string, Good>) {
+    if (!node.id) return;
+
+    // Process the root item (the product of this file)
+    const id = node.id;
+    const regions = node.region || [];
+    const displayName = node.name || toDisplayName(id);
+
+    let good = goodsMap.get(id);
+    if (!good) {
+        good = {
+            displayName,
+            id,
+            icon: node.icon || id,
+            startOfChain: false, // Will be updated if found as input with start_of_chain=true
+            regions: [],
+            files: {}
+        };
+        goodsMap.set(id, good);
+    }
+
+    // Update regions and files for this good (since this file defines a recipe for it)
+    // Merge regions
+    for (const region of regions) {
+        if (!good.regions.includes(region)) {
+            good.regions.push(region);
+        }
+    }
+    // Add file mapping
+    const simpleFilename = filename.replace('.json', '');
+    good.files[simpleFilename] = regions;
+
+    // Now recursively extract ingredients to ensure they exist in the goods list
+    // But for ingredients, we don't add the current file as a "source" for them, 
+    // unless they are also defined as a recipe in another file.
+    // We just want to make sure they appear in the list.
+    extractIngredients(node, goodsMap);
+}
+
+function extractIngredients(node: ProductionNode, goodsMap: Map<string, Good>) {
+    if (node.input) {
+        for (const input of node.input) {
+            if (input.id) {
+                let inputGood = goodsMap.get(input.id);
+                if (!inputGood) {
+                    inputGood = {
+                        displayName: input.name || toDisplayName(input.id),
+                        id: input.id,
+                        icon: input.icon || input.id,
+                        startOfChain: input.start_of_chain === true,
+                        regions: [], // We don't know regions for ingredients unless we find their own files
+                        files: {}
+                    };
+                    goodsMap.set(input.id, inputGood);
+                } else if (input.start_of_chain) {
+                    inputGood.startOfChain = true;
+                }
+                extractIngredients(input, goodsMap);
+            }
+        }
+    }
+    if (node.fuel) {
+        for (const fuel of node.fuel) {
+             if (fuel.id) {
+                let fuelGood = goodsMap.get(fuel.id);
+                if (!fuelGood) {
+                    fuelGood = {
+                        displayName: fuel.name || toDisplayName(fuel.id),
+                        id: fuel.id,
+                        icon: fuel.icon || fuel.id,
+                        startOfChain: fuel.start_of_chain === true,
+                        regions: [],
+                        files: {}
+                    };
+                    goodsMap.set(fuel.id, fuelGood);
+                } else if (fuel.start_of_chain) {
+                    fuelGood.startOfChain = true;
+                }
+                // Fuel usually doesn't have inputs in the fuel definition, but if it did...
+                extractIngredients(fuel, goodsMap);
+            }
+        }
+    }
+}
+
 
 /**
  * Main function to generate the goods list
@@ -126,19 +189,8 @@ async function generateGoodsList() {
 
       try {
         const content = await readFile(filePath, "utf-8");
-        const production: ProductionFile = JSON.parse(content);
-        const goods = extractGoods(production);
-
-        // Add to map or update startOfChain if already exists
-        for (const good of goods) {
-          const existing = allGoods.get(good.id);
-          if (!existing) {
-            allGoods.set(good.id, good);
-          } else if (good.startOfChain) {
-            // If this occurrence is marked as start of chain, update it
-            existing.startOfChain = true;
-          }
-        }
+        const production: ProductionNode = JSON.parse(content);
+        processFile(production, file, allGoods);
       } catch (error) {
         console.warn(`   ⚠️  Warning: Could not process ${file}:`, error);
       }

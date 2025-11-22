@@ -1,66 +1,69 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of weapons",
-    "type": "production_building",
     "id": "weapons",
-    "icon": "weapons",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "production_building",
-            "start_of_chain": false,
-            "id": "iron",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 1,
-                "tile": 4,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 8,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 3,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Weapons",
+    "type": "armoury",
+    "guid": "3170",
     "time": 90,
-    "fuel": [
-        {
-            "type": "wood_cutter",
-            "id": "charcoal",
-            "start_of_chain": true,
-            "burning_time": 120
-        }
-    ],
+    "needs_fuel": true,
     "building_cost": {
         "money": 0,
         "timber": 1,
-        "tile": 3,
+        "tiles": 3,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 16,
-        "liberti": 0,
-        "waders": 0,
-        "plebejer": 5,
-        "equites": 0,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "plebeian": 5
+    },
+    "input": [
+        {
+            "id": "iron",
+            "name": "Iron",
+            "type": "smelter",
+            "guid": "3070",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 4,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [
+                {
+                    "id": "iron_ore",
+                    "name": "Iron Ore",
+                    "type": "mine",
+                    "guid": "2918",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 10,
+                        "plebeian": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

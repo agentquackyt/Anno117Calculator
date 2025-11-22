@@ -1,44 +1,47 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Porridge.",
-    "type": "production_building",
     "id": "porridge",
-    "icon": "porridge",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "farm",
-            "start_of_chain": true,
-            "id": "oat",
-            "time": 60,
-            "faith": [
-                "ceres"
-            ],
-            "building_cost": {
-                "money": 0,
-                "timber": 3,
-                "tile": 0,
-                "concrete": 0
-            },
-            "maintanance_cost": {
-                "money": 4,
-                "liberti": 3
-            }
-        }
-    ],
+    "name": "Porridge",
+    "type": "kitchen",
+    "guid": "3171",
     "time": 60,
-    "faith": [
-        "ceres"
-    ],
+    "needs_fuel": false,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 0,
-        "concrete": 0
+        "tiles": 0,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
     },
     "maintanance_cost": {
         "money": 8,
-        "liberti": 2
-    }
+        "libertus": 2
+    },
+    "input": [
+        {
+            "id": "oats",
+            "name": "Oats",
+            "type": "arable_farm",
+            "guid": "2200",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

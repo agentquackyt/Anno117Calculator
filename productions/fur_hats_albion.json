@@ -1,0 +1,83 @@
+{
+    "id": "fur_hats",
+    "name": "Fur Hats",
+    "type": "artisanal_studio",
+    "guid": "31770",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "wattle_&_daub": 2,
+        "granite": 1
+    },
+    "maintanance_cost": {
+        "money": 14,
+        "alderman": 6
+    },
+    "input": [
+        {
+            "id": "beavers",
+            "name": "Beavers",
+            "type": "hunting_cabin",
+            "guid": "31759",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "wattle_&_daub": 1,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "saltwash",
+            "name": "Saltwash",
+            "type": "extractor",
+            "guid": "31772",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "wattle_&_daub": 2,
+                "granite": 1
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "alderman": 6
+            },
+            "input": [
+                {
+                    "id": "saltwort",
+                    "name": "Saltwort",
+                    "type": "gatherer",
+                    "guid": "2796",
+                    "time": 90,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "wattle_&_daub": 1,
+                        "granite": 1
+                    },
+                    "maintanance_cost": {
+                        "money": 8,
+                        "wader": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

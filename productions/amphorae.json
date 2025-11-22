@@ -1,92 +1,69 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of amphorae",
-    "type": "production_building",
     "id": "amphorae",
-    "icon": "amphorae",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "wood_cutter",
-            "start_of_chain": true,
-            "id": "resin",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 2,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 8,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 4,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        },
-        {
-            "type": "river_slot",
-            "start_of_chain": true,
-            "id": "clay",
-            "time": 30,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 0,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 8,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 3,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Amphorae",
+    "type": "victualler",
+    "guid": "3199",
     "time": 60,
-    "fuel": [
-        {
-            "type": "wood_cutter",
-            "id": "charcoal",
-            "start_of_chain": true,
-            "burning_time": 120
-        }
-    ],
+    "needs_fuel": true,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 2,
+        "tiles": 2,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 14,
-        "liberti": 0,
-        "waders": 0,
-        "plebejer": 4,
-        "equites": 0,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "plebeian": 4
+    },
+    "input": [
+        {
+            "id": "clay",
+            "name": "Clay",
+            "type": "pit",
+            "guid": "2970",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "resin",
+            "name": "Resin",
+            "type": "forest_camp",
+            "guid": "31752",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

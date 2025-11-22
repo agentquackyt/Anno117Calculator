@@ -1,0 +1,113 @@
+{
+    "id": "togas",
+    "name": "Togas",
+    "type": "clothier",
+    "guid": "3191",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 3,
+        "concrete": 3,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 20,
+        "equites": 6
+    },
+    "input": [
+        {
+            "id": "cloth",
+            "name": "Cloth",
+            "type": "upholsterer",
+            "guid": "3079",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 4,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 12,
+                "equites": 10
+            },
+            "input": [
+                {
+                    "id": "flax",
+                    "name": "Flax",
+                    "type": "arable_farm",
+                    "guid": "2669",
+                    "time": 90,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "tiles": 2,
+                        "concrete": 2,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 8,
+                        "libertus": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "tyrian_purple",
+            "name": "Tyrian Purple",
+            "type": "extractor",
+            "guid": "2999",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 4,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 12,
+                "equites": 8
+            },
+            "input": [
+                {
+                    "id": "murex_snails",
+                    "name": "Murex Snails",
+                    "type": "livestock_farm",
+                    "guid": "8580",
+                    "time": 90,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 3,
+                        "tiles": 3,
+                        "concrete": 1,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 10,
+                        "libertus": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

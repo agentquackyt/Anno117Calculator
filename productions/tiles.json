@@ -1,0 +1,47 @@
+{
+    "id": "tiles",
+    "name": "Tiles",
+    "type": "refinery",
+    "guid": "3091",
+    "time": 60,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 3,
+        "tiles": 0,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 12,
+        "plebeian": 4
+    },
+    "input": [
+        {
+            "id": "clay",
+            "name": "Clay",
+            "type": "pit",
+            "guid": "2970",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

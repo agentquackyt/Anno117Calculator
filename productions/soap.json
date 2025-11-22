@@ -1,84 +1,91 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of soap",
-    "type": "production_building",
     "id": "soap",
-    "icon": "soap",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "production_building",
-            "start_of_chain": false,
-            "id": "pig_lard",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 1,
-                "tile": 2,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 10,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 3,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        },
-        {
-            "type": "farm",
-            "start_of_chain": true,
-            "id": "lavender",
-            "time": 120,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 2,
-                "concrete": 0,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 6,
-                "liberti": 4,
-                "waders": 0,
-                "plebejer": 0,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Soap",
+    "type": "victualler",
+    "guid": "3189",
     "time": 60,
+    "needs_fuel": false,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 1,
+        "tiles": 1,
         "concrete": 0,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 12,
-        "liberti": 0,
-        "waders": 0,
-        "plebejer": 3,
-        "equites": 0,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "plebeian": 3
+    },
+    "input": [
+        {
+            "id": "lard",
+            "name": "Lard",
+            "type": "extractor",
+            "guid": "31756",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebeian": 3
+            },
+            "input": [
+                {
+                    "id": "pigs",
+                    "name": "Pigs",
+                    "type": "livestock_farm",
+                    "guid": "2793",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 6,
+                        "libertus": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "lavender",
+            "name": "Lavender",
+            "type": "plantation",
+            "guid": "2698",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 6,
+                "libertus": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

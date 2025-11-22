@@ -1,0 +1,83 @@
+{
+    "id": "handmirrors",
+    "name": "Handmirrors",
+    "type": "artisanal_studio",
+    "guid": "5615",
+    "time": 120,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 2,
+        "concrete": 3
+    },
+    "maintanance_cost": {
+        "money": 30,
+        "nobles": 12
+    },
+    "input": [
+        {
+            "id": "seashells",
+            "name": "Seashells",
+            "type": "gatherer",
+            "guid": "8431",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 3
+            },
+            "maintanance_cost": {
+                "money": 20,
+                "nobles": 10
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "silver",
+            "name": "Silver",
+            "type": "smelter",
+            "guid": "5472",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 3,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "mercators": 5
+            },
+            "input": [
+                {
+                    "id": "silver_ore",
+                    "name": "Silver Ore",
+                    "type": "mine",
+                    "guid": "5980",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 10,
+                        "mercators": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

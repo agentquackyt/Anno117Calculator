@@ -1,0 +1,24 @@
+{
+    "id": "cockles",
+    "name": "Cockles",
+    "type": "gatherer",
+    "guid": "5278",
+    "time": 45,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 3,
+        "wattle_&_daub": 0,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 6,
+        "wader": 4
+    },
+    "input": [],
+    "start_of_chain": true,
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

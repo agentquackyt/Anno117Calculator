@@ -1,58 +1,47 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of marble",
-    "type": "production_building",
     "id": "marble",
-    "icon": "marble",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "mountain_slot",
-            "start_of_chain": true,
-            "id": "raw_marble",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 1,
-                "concrete": 2,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 16,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 5,
-                "equites": 0,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Marble",
+    "type": "refinery",
+    "guid": "3138",
     "time": 90,
+    "needs_fuel": false,
     "building_cost": {
         "money": 0,
         "timber": 2,
-        "tile": 3,
+        "tiles": 3,
         "concrete": 2,
         "marble": 0,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 24,
-        "liberti": 0,
-        "waders": 0,
-        "plebejer": 0,
-        "equites": 5,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "equites": 10
+    },
+    "input": [
+        {
+            "id": "uncut_marble",
+            "name": "Uncut Marble",
+            "type": "quarry",
+            "guid": "2954",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 1,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 16,
+                "plebeian": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

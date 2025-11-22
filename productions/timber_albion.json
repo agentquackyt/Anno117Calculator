@@ -1,0 +1,44 @@
+{
+    "id": "timber",
+    "name": "Timber",
+    "type": "refinery",
+    "guid": "5945",
+    "time": 30,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 250,
+        "timber": 0,
+        "tiles": 0,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 8,
+        "wader": 4
+    },
+    "input": [
+        {
+            "id": "wood",
+            "name": "Wood",
+            "type": "forest_camp",
+            "guid": "5976",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 100,
+                "timber": 0,
+                "tiles": 0,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

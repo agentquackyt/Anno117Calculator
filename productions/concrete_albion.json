@@ -1,0 +1,64 @@
+{
+    "id": "concrete",
+    "name": "Concrete",
+    "type": "refinery",
+    "guid": "5946",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 4,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "nobles": 8
+    },
+    "input": [
+        {
+            "id": "limestone",
+            "name": "Limestone",
+            "type": "quarry",
+            "guid": "5978",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 1,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 12,
+                "mercators": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "silica",
+            "name": "Silica",
+            "type": "pit",
+            "guid": "10929",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "tiles": 2,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "mercators": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

@@ -1,0 +1,104 @@
+{
+    "id": "wigs",
+    "name": "Wigs",
+    "type": "artisanal_studio",
+    "guid": "31769",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 2,
+        "concrete": 2
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "nobles": 8
+    },
+    "input": [
+        {
+            "id": "head_piece",
+            "name": "Head Piece",
+            "type": "upholsterer",
+            "guid": "31766",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 2
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "nobles": 8
+            },
+            "input": [
+                {
+                    "id": "flax",
+                    "name": "Flax",
+                    "type": "arable_farm",
+                    "guid": "5971",
+                    "time": 90,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "tiles": 2,
+                        "concrete": 2
+                    },
+                    "maintanance_cost": {
+                        "money": 8,
+                        "wader": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                },
+                {
+                    "id": "resin",
+                    "name": "Resin",
+                    "type": "forest_camp",
+                    "guid": "31761",
+                    "time": 60,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 8,
+                        "mercators": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "horses",
+            "name": "Horses",
+            "type": "livestock_farm",
+            "guid": "15514",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 3,
+                "concrete": 2
+            },
+            "maintanance_cost": {
+                "money": 16,
+                "nobles": 6
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

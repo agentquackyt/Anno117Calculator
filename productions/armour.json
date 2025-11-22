@@ -1,0 +1,135 @@
+{
+    "id": "armour",
+    "name": "Armour",
+    "type": "armoury",
+    "guid": "13808",
+    "time": 90,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 4,
+        "tiles": 5,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 20,
+        "plebeian": 6
+    },
+    "input": [
+        {
+            "id": "iron",
+            "name": "Iron",
+            "type": "smelter",
+            "guid": "3070",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 4,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [
+                {
+                    "id": "iron_ore",
+                    "name": "Iron Ore",
+                    "type": "mine",
+                    "guid": "2918",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 10,
+                        "plebeian": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "leather",
+            "name": "Leather",
+            "type": "upholsterer",
+            "guid": "2994",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebeian": 3
+            },
+            "input": [
+                {
+                    "id": "pigs",
+                    "name": "Pigs",
+                    "type": "livestock_farm",
+                    "guid": "2793",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 6,
+                        "libertus": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                },
+                {
+                    "id": "salt",
+                    "name": "Salt",
+                    "type": "extractor",
+                    "guid": "2957",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 8,
+                        "plebeian": 4
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

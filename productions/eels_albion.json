@@ -1,0 +1,23 @@
+{
+    "id": "eels",
+    "name": "Eels",
+    "type": "fishery",
+    "guid": "5299",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 0,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 6,
+        "wader": 3
+    },
+    "input": [],
+    "start_of_chain": true,
+    "region": [
+        "Celtic"
+    ]
+}

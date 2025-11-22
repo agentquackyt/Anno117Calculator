@@ -1,0 +1,107 @@
+{
+    "id": "bird_tongues_in_aspic",
+    "name": "Bird Tongues in Aspic",
+    "type": "kitchen",
+    "guid": "5604",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 2,
+        "concrete": 2
+    },
+    "maintanance_cost": {
+        "money": 22,
+        "nobles": 12
+    },
+    "input": [
+        {
+            "id": "bird_tongues",
+            "name": "Bird Tongues",
+            "type": "extractor",
+            "guid": "5477",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "tiles": 2,
+                "concrete": 1
+            },
+            "maintanance_cost": {
+                "money": 16,
+                "mercators": 3
+            },
+            "input": [
+                {
+                    "id": "small_birds",
+                    "name": "Small Birds",
+                    "type": "hunting_cabin",
+                    "guid": "5851",
+                    "time": 90,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 1,
+                        "concrete": 1
+                    },
+                    "maintanance_cost": {
+                        "money": 12,
+                        "nobles": 6
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "lard",
+            "name": "Lard",
+            "type": "extractor",
+            "guid": "31756",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebeian": 3
+            },
+            "input": [
+                {
+                    "id": "pigs",
+                    "name": "Pigs",
+                    "type": "livestock_farm",
+                    "guid": "2793",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 6,
+                        "libertus": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

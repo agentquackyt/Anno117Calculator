@@ -1,0 +1,64 @@
+{
+    "id": "bread",
+    "name": "Bread",
+    "type": "kitchen",
+    "guid": "5960",
+    "time": 60,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 3,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 14,
+        "mercators": 3
+    },
+    "input": [
+        {
+            "id": "flour",
+            "name": "Flour",
+            "type": "extractor",
+            "guid": "5967",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 3,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "mercators": 3
+            },
+            "input": [
+                {
+                    "id": "wheat",
+                    "name": "Wheat",
+                    "type": "arable_farm",
+                    "guid": "5972",
+                    "time": 60,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 3,
+                        "tiles": 1,
+                        "concrete": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 6,
+                        "wader": 4
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

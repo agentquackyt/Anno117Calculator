@@ -1,92 +1,113 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of fine_glass",
-    "type": "production_building",
     "id": "fine_glass",
-    "icon": "fine_glass",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "production_building",
-            "start_of_chain": false,
-            "id": "mineral_dye",
-            "time": 60,
-            "building_cost": {
-                "money": 0,
-                "timber": 1,
-                "tile": 3,
-                "concrete": 1,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 10,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 0,
-                "equites": 4,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        },
-        {
-            "type": "river_slot",
-            "start_of_chain": false,
-            "id": "glass",
-            "time": 90,
-            "building_cost": {
-                "money": 0,
-                "timber": 2,
-                "tile": 2,
-                "concrete": 1,
-                "marble": 0,
-                "mosaics": 0
-            },
-            "maintanance_cost": {
-                "money": 12,
-                "liberti": 0,
-                "waders": 0,
-                "plebejer": 0,
-                "equites": 8,
-                "patricians": 0,
-                "smiths": 0,
-                "mercators": 0,
-                "aldermen": 0,
-                "nobles": 0
-            }
-        }
-    ],
+    "name": "Fine Glass",
+    "type": "artisanal_studio",
+    "guid": "3202",
     "time": 120,
-    "fuel": [
-        {
-            "type": "wood_cutter",
-            "id": "charcoal",
-            "start_of_chain": true,
-            "burning_time": 120
-        }
-    ],
+    "needs_fuel": true,
     "building_cost": {
         "money": 0,
         "timber": 3,
-        "tile": 4,
+        "tiles": 4,
         "concrete": 3,
         "marble": 2,
         "mosaics": 0
     },
     "maintanance_cost": {
         "money": 26,
-        "liberti": 0,
-        "waders": 0,
-        "plebejer": 0,
-        "equites": 12,
-        "patricians": 0,
-        "smiths": 0,
-        "mercators": 0,
-        "aldermen": 0,
-        "nobles": 0
-    }
+        "equites": 12
+    },
+    "input": [
+        {
+            "id": "glass",
+            "name": "Glass",
+            "type": "smelter",
+            "guid": "3074",
+            "time": 90,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 1,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 12,
+                "equites": 8
+            },
+            "input": [
+                {
+                    "id": "silica",
+                    "name": "Silica",
+                    "type": "pit",
+                    "guid": "2958",
+                    "time": 45,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 3,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 10,
+                        "plebeian": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "pigments",
+            "name": "Pigments",
+            "type": "extractor",
+            "guid": "3082",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 3,
+                "concrete": 2,
+                "marble": 2,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebeian": 4
+            },
+            "input": [
+                {
+                    "id": "minerals",
+                    "name": "Minerals",
+                    "type": "quarry",
+                    "guid": "2920",
+                    "time": 45,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 1,
+                        "concrete": 1,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 20,
+                        "plebeian": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

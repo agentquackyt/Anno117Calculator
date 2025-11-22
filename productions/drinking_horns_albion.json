@@ -1,0 +1,63 @@
+{
+    "id": "drinking_horns",
+    "name": "Drinking Horns",
+    "type": "artisanal_studio",
+    "guid": "55963",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 3,
+        "wattle_&_daub": 4,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 12,
+        "smith": 3
+    },
+    "input": [
+        {
+            "id": "ochs",
+            "name": "Ochs",
+            "type": "livestock_farm",
+            "guid": "5847",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "wattle_&_daub": 2,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "tin_ore",
+            "name": "Tin Ore",
+            "type": "mine",
+            "guid": "5291",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 2,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "smith": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

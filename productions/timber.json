@@ -1,38 +1,47 @@
 {
-    "README": "This file contains the Anno 117 Production Chain of Timber.",
-    "type": "production_building",
     "id": "timber",
-    "icon": "timber",
-    "region": [
-        "latium"
-    ],
-    "input": [
-        {
-            "type": "wood_cutter",
-            "start_of_chain": true,
-            "id": "wood",
-            "time": 30,
-            "faith": [
-                "cernunnos"
-            ],
-            "building_cost": {
-                "money": 100
-            },
-            "maintanance_cost": {
-                "money": 4,
-                "liberti": 3
-            }
-        }
-    ],
+    "name": "Timber",
+    "type": "refinery",
+    "guid": "3089",
     "time": 30,
-    "faith": [
-        "cernunnos"
-    ],
+    "needs_fuel": false,
     "building_cost": {
-        "money": 250
+        "money": 250,
+        "timber": 0,
+        "tiles": 0,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
     },
     "maintanance_cost": {
         "money": 8,
-        "liberti": 4
-    }
+        "libertus": 4
+    },
+    "input": [
+        {
+            "id": "wood",
+            "name": "Wood",
+            "type": "forest_camp",
+            "guid": "2878",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 100,
+                "timber": 0,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
 }

@@ -1,0 +1,25 @@
+{
+    "id": "sardines",
+    "name": "Sardines",
+    "type": "fishery",
+    "guid": "2955",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 0,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 6,
+        "libertus": 4
+    },
+    "input": [],
+    "start_of_chain": true,
+    "region": [
+        "Roman"
+    ]
+}
