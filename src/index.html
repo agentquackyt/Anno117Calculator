@@ -18,7 +18,7 @@
     <meta property="og:title" content="Anno 117 Production Calculator | Plan Your Production Chains">
     <meta property="og:description"
         content="Free Anno 117 production calculator and chain planner. Calculate building requirements, optimize production ratios, and visualize dependency graphs.">
-    <meta property="og:image" content="https://anno-calculator.org/style/Anno117_calc_preview.webp">
+    <meta property="og:image" content="https://anno-calculator.org/assets/images/splash.webp">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -26,7 +26,7 @@
     <meta property="twitter:title" content="Anno 117 Production Calculator | Plan Your Production Chains">
     <meta property="twitter:description"
         content="Free Anno 117 production calculator and chain planner. Calculate building requirements, optimize production ratios, and visualize dependency graphs.">
-    <meta property="twitter:image" content="https://anno-calculator.org/style/Anno117_calc_preview.webp">
+    <meta property="twitter:image" content="https://anno-calculator.org/assets/images/splash.webp">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://anno-calculator.org/">
@@ -36,15 +36,13 @@
     <link rel="dns-prefetch" href="https://anno-calculator.org">
 
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="style/theme.css" as="style">
-    <link rel="modulepreload" href="js/app.js">
-    <link rel="preload" href="productions/list.json" as="fetch">
-    <link rel="preload" href="style/logo_small.png" as="image">
+    <link rel="preload" href="./assets/productions/list.json" as="fetch">
+    <link rel="preload" href="./assets/images/logo_small.png" as="image">
 
-    <link rel="stylesheet" href="style/theme.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="48x48" href="style/anno_icon.png">
-    <link rel="apple-touch-icon" href="style/anno_icon.png">
+    <link rel="stylesheet" href="./css/theme.css">
+    <link rel="manifest" href="./assets/data/manifest.json">
+    <link rel="icon" type="image/png" sizes="48x48" href="./assets/images/anno_icon.png">
+    <link rel="apple-touch-icon" href="./assets/images/anno_icon.png">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -71,10 +69,10 @@
 
 <body>
     <header>
-        <img src="style/logo_small.png" alt="Anno 117 Logo">
+        <img src="./assets/images/logo_small.png" alt="Anno 117 Logo">
         <h1 style="display: none;">Anno 117 Production Calculator</h1>
         <button id="region-toggle-btn" class="region-toggle-btn" aria-label="Toggle Region">
-            <img src="icons/latium.webp" alt="Region Icon" class="region-icon">
+            <img src="./assets/icons/latium.webp" alt="Region Icon" class="region-icon">
             <span class="region-text">Latium</span>
         </button>
         <button id="info-toggle" class="info-button" aria-label="About">
@@ -124,7 +122,7 @@
 
                             <div class="setting-item sub-setting">
                                 <label class="setting-label">
-                                    <img src="icons/skill-aqua-arborica.png" class="setting-icon" alt="Aqua Arborica">
+                                    <img src="./assets/icons/skill-aqua-arborica.png" class="setting-icon" alt="Aqua Arborica">
                                     <input type="checkbox" id="settings-aqua-arborica" checked>
                                     <span class="setting-title">Aqua Arborica (Plantations +50%)</span>
                                 </label>
@@ -133,7 +131,7 @@
 
                             <div class="setting-item sub-setting">
                                 <label class="setting-label">
-                                    <img src="icons/skill-feldbewaesserung.png" class="setting-icon"
+                                    <img src="./assets/icons/skill-feldbewaesserung.png" class="setting-icon"
                                         alt="Field Irrigation">
                                     <input type="checkbox" id="settings-field-irrigation" checked>
                                     <span class="setting-title">Field Irrigation (Arable Farms +50%)</span>
@@ -143,7 +141,7 @@
 
                             <div class="setting-item sub-setting">
                                 <label class="setting-label">
-                                    <img src="icons/skill-hydraulischer-bergbau.png" class="setting-icon"
+                                    <img src="./assets/icons/skill-hydraulischer-bergbau.png" class="setting-icon"
                                         alt="Hushing">
                                     <input type="checkbox" id="settings-hushing" checked>
                                     <span class="setting-title">Hushing (Mines +50%)</span>
@@ -191,7 +189,7 @@
             their respective owners. Visit the <a href="https://github.com/agentquackyt/Anno117Calculator"
                 target="_blank" rel="noopener noreferrer">GitHub repository</a> for source code and updates.</p>
     </footer>
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="./ts/entry.ts"></script>
 </body>
 
 </html>

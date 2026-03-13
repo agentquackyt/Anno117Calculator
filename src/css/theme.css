@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "AlbertusNove";
-  src: url("./NotoSerif.ttf") format("truetype");
+  font-family: "NotoSerif";
+  src: url("./../assets/fonts/NotoSerif.ttf") format("truetype");
 }
 
 * {
@@ -15,7 +15,7 @@
   --theme-color: #5f032e;
   --theme-color-dark: #19010c;
 
-  --font-family: "AlbertusNove", "Tim New Roman", serif;
+  --font-family: "NotoSerif", "Tim New Roman", serif;
 }
 
 /* Custom Scrollbar */
@@ -1143,8 +1143,4 @@ footer {
 .region-text {
   font-weight: 600;
   text-transform: capitalize;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
 }

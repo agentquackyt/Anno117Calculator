@@ -161,16 +161,20 @@ function extractIngredients(node: ProductionNode, goodsMap: Map<string, Good>) {
     }
 }
 
+function formatConsoleLog(text: string, error = false): void {
+  console.log((error ? Bun.color("#dc7979", "ansi-16m") + "[Production List / ERROR] " : Bun.color("#fee5ca", "ansi-16m") + "[Production List] ") + Bun.color("#c7ad90", "ansi") + text);
+};
+
 
 /**
  * Main function to generate the goods list
  */
-async function generateGoodsList() {
+export default async function generateGoodsList(showList = true) {
   try {
-    const productionsDir = resolve(__dirname, "../productions");
+    const productionsDir = resolve(__dirname, "../src/assets/productions");
     const outputPath = join(productionsDir, "list.json");
 
-    console.log(`📁 Scanning directory: ${productionsDir}`);
+    formatConsoleLog(`Scanning directory: ${productionsDir}`);
 
     // Read all JSON files from productions directory
     const files = await readdir(productionsDir);
@@ -178,21 +182,20 @@ async function generateGoodsList() {
       (file) => file.endsWith(".json") && file !== "list.json"
     );
 
-    console.log(`📄 Found ${jsonFiles.length} production files`);
+    formatConsoleLog(`Found ${jsonFiles.length} production files`);
 
     // Collect all goods
     const allGoods = new Map<string, Good>();
 
     for (const file of jsonFiles) {
       const filePath = join(productionsDir, file);
-      console.log(`   Processing: ${file}`);
 
       try {
         const content = await readFile(filePath, "utf-8");
         const production: ProductionNode = JSON.parse(content);
         processFile(production, file, allGoods);
       } catch (error) {
-        console.warn(`   ⚠️  Warning: Could not process ${file}:`, error);
+        formatConsoleLog(`Could not process ${file}`, true);
       }
     }
 
@@ -203,7 +206,7 @@ async function generateGoodsList() {
 
     // Write to list.json
     const output = {
-      README: "This file contains all goods from Anno 1117 production chains",
+      README: "This file contains all goods from Anno 117 production chains",
       generated: new Date().toISOString(),
       count: goodsList.length,
       goods: goodsList,
@@ -211,19 +214,17 @@ async function generateGoodsList() {
 
     await writeFile(outputPath, JSON.stringify(output, null, 2), "utf-8");
 
-    console.log(
-      `\n✅ Successfully generated list.json with ${goodsList.length} goods`
+    formatConsoleLog(
+      `Successfully generated list.json with ${goodsList.length} goods`
     );
-    console.log(`📝 Output: ${outputPath}`);
-    console.log("\nGoods found:");
+    formatConsoleLog(`Output: ${outputPath}`);
+    if (!showList) return;
+    formatConsoleLog(`Goods found:`);
     goodsList.forEach((good) => {
       console.log(`   - ${good.displayName} (${good.id})`);
     });
   } catch (error) {
-    console.error("❌ Error generating goods list:", error);
+    formatConsoleLog(`Error generating goods list:`, true);
     process.exit(1);
   }
 }
-
-// Run the script
-generateGoodsList();

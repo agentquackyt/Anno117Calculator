@@ -1,7 +1,7 @@
 // Service Worker for Anno 117 Calculator
 // Provides offline support and intelligent caching
 
-const CACHE_NAME = 'anno117-calc-v1';
+const CACHE_NAME = 'anno117-calc-v2';
 const DYNAMIC_CACHE = 'anno117-dynamic-v1';
 
 // Critical assets to cache immediately
