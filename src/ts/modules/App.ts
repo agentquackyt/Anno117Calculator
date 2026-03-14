@@ -156,7 +156,7 @@ export class App {
     private registerServiceWorker(): void {
         if (!('serviceWorker' in navigator)) return;
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./assets/data/sw.js')
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
                 .then((registration) => setInterval(() => registration.update(), 60_000))
                 .catch((error) => console.error('[SW] Registration failed:', error));
         });
@@ -231,7 +231,9 @@ export class App {
     // -----------------------------------------------------------------------
 
     private restoreFromUrl(): void {
-        const state = ParameterParser.parse(new URL(window.location.href));
+        const url = new URL(window.location.href);
+        const state = ParameterParser.parse(url);
+        const settings = ParameterParser.parseExtras(url);
 
         if (state.region) {
             const region = state.region.charAt(0).toUpperCase() + state.region.slice(1).toLowerCase();

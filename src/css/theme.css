@@ -45,6 +45,7 @@ body {
   flex-direction: column;
   height: 100dvh;
   min-height: 100dvh;
+  overflow: hidden;
 }
 
 header {
@@ -476,15 +477,27 @@ main {
   border-radius: 0.25rem;
 }
 
+.cost-tooltip {
+  position: fixed;
+  background: var(--theme-color-dark);
+  color: var(--background-accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 .cost-icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 
 .cost-amount {
   color: var(--theme-color-dark);
-  font-size: 0.85rem;
+  font-size: 1em;
   font-weight: 500;
 }
 
@@ -1106,7 +1119,7 @@ footer {
 }
 
 .cost-item span {
-  font-size: 0.8rem;
+  font-size: .95rem;
   font-weight: 600;
   color: var(--theme-color-dark);
 }

@@ -448,21 +448,41 @@ class ProductionChainView {
     updateCostSummary(allBuildings: Record<string, number>): void {
         if (!this.buildingCostElement || !this.maintenanceElement) return;
         const totals = this.calculator.calculateTotals(allBuildings);
-        this.buildingCostElement.innerHTML = this.formatCostMap(totals.buildingCost);
-        this.maintenanceElement.innerHTML = this.formatCostMap(totals.maintenance);
+        this.buildingCostElement.replaceChildren(...this.buildCostElements(totals.buildingCost));
+        this.maintenanceElement.replaceChildren(...this.buildCostElements(totals.maintenance));
     }
 
-    formatCostMap(costs: Record<string, number> = {}): string {
+    buildCostElements(costs: Record<string, number> = {}): HTMLElement[] {
         const entries = Object.entries(costs).filter(([, amount]) => amount > 0);
         if (!entries.length) {
-            return '<span class="cost-none">None</span>';
+            const none = document.createElement('span');
+            none.className = 'cost-none';
+            none.textContent = 'None';
+            return [none];
         }
-        return entries.map(([resource, amount]) => `
-            <span class="cost-resource">
-                <img src="./assets/icons/${resource}.png" alt="${resource}" class="cost-icon" onerror="this.style.display='none';" />
-                <span class="cost-amount">${amount}</span>
-            </span>
-        `).join('');
+        return entries.map(([resource, amount]) => {
+            const item = document.createElement('span');
+            item.className = 'cost-resource';
+            const label = resource.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            item.innerHTML = `<img src="./assets/icons/${resource}.png" alt="${label}" class="cost-icon" onerror="this.style.display='none';"/><span class="cost-amount">${amount}</span>`;
+
+            item.addEventListener('mouseenter', () => {
+                const tip = document.createElement('div');
+                tip.className = 'cost-tooltip';
+                tip.textContent = label;
+                document.body.appendChild(tip);
+                const rect = item.getBoundingClientRect();
+                const tipRect = tip.getBoundingClientRect();
+                tip.style.left = `${rect.left + rect.width / 2 - tipRect.width / 2}px`;
+                tip.style.top = `${rect.top - tipRect.height - 4}px`;
+            });
+
+            item.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.cost-tooltip').forEach(el => el.remove());
+            });
+
+            return item;
+        });
     }
 
     showBasicInfo(good: RecipeListItem): void {

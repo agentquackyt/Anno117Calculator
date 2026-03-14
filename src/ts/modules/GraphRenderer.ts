@@ -1,6 +1,5 @@
 import type { Goods } from '../types/Goods';
 import type { RecipeListItem } from '../types/RecipeList';
-import { SettingsManager } from './SettingsManager';
 import { ProductionCalculator } from './ProductionCalculator';
 import { GoodsRepository } from './GoodRepository';
 
@@ -250,15 +249,15 @@ export class GraphRenderer {
         img.addEventListener('mousedown', this.displayInfoMenue);
         group.appendChild(img);
 
-        console.log("[SVG Generator] Good data: ", good);
-
         if (hasFuel) {
             this.addCornerImage(group, x, y, size, './assets/icons/charcoal.png');
+        } else {
+            for (const icon of ProductionCalculator.getInstance().getActiveVisualModifiers(buildingType)) {
+                this.addCornerImage(group, x, y, size, `./assets/icons/${icon}`, true);
+            }
         }
 
-        if (this.shouldShowAqueductBadge(buildingType)) {
-            this.addAqueductBadge(group, x, y, size);
-        }
+
 
         const { labelX, labelAnchor, labelY, buildingsY } = this.resolveLabelGeometry({
             x,
@@ -342,7 +341,7 @@ export class GraphRenderer {
         };
     }
 
-    addCornerImage(group: SVGGElement, x: number, y: number, size: number, href: string): void {
+    addCornerImage(group: SVGGElement, x: number, y: number, size: number, href: string, filled: boolean = false): void {
         const icon = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         const iconSize = 32;
         icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
@@ -350,35 +349,25 @@ export class GraphRenderer {
         icon.setAttribute('y', String(y + 37 - size / 2));
         icon.setAttribute('width', String(iconSize));
         icon.setAttribute('height', String(iconSize));
+
+        if (filled) {
+            // square with rounded corners as background for better visibility
+            const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            bg.setAttribute('x', String(x + 37 - size / 2));
+            bg.setAttribute('y', String(y + 37 - size / 2));
+            bg.setAttribute('width', String(iconSize));
+            bg.setAttribute('height', String(iconSize));
+            bg.setAttribute('rx', '5');
+            bg.setAttribute('ry', '5');
+            // color depends on whether it's a fuel icon or a modifier icon
+            bg.setAttribute('fill', '#5f032e');
+            group.appendChild(bg);
+        }
         group.appendChild(icon);
-    }
-
-    addAqueductBadge(group: SVGGElement, x: number, y: number, size: number): void {
-        const box = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const badgeSize = 32;
-        box.setAttribute('x', String(x + 37 - size / 2));
-        box.setAttribute('y', String(y + 37 - size / 2));
-        box.setAttribute('width', String(badgeSize));
-        box.setAttribute('height', String(badgeSize));
-        box.setAttribute('rx', '4');
-        box.setAttribute('ry', '4');
-        box.setAttribute('class', 'aquaduct-box');
-        group.appendChild(box);
-
-        this.addCornerImage(group, x, y, size, './assets/icons/aquaduct.png');
     }
 
     calculateProductivity(node: Goods): number {
         return ProductionCalculator.getInstance().getProductivity(node);
-    }
-
-    shouldShowAqueductBadge(buildingType: string): boolean {
-        const config = SettingsManager.getInstance().getConfig();
-        if (!config.aqueductsEnabled) return false;
-        if (buildingType === 'arable_farm') return config.fieldIrrigation;
-        if (buildingType === 'plantation') return config.aquaArborica;
-        if (buildingType === 'mine') return config.hushing;
-        return false;
     }
 
     calculateTreeWidth(prodData: Goods): number {
@@ -661,12 +650,27 @@ export class GraphRenderer {
             list.className = 'cost-list';
 
             validCosts.forEach(([resource, amount]) => {
-                list.innerHTML += `
-                    <div class="cost-resource">
-                        <img src="./assets/icons/${resource}.png" alt="${resource}" class="cost-icon-small" onerror="this.style.display='none';"/>
-                        <span>${amount}</span>
-                    </div>
-                `;
+                const item = document.createElement('div');
+                item.className = 'cost-resource';
+                const label = resource.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                item.innerHTML = `<img src="./assets/icons/${resource}.png" alt="${label}" class="cost-icon-small" onerror="this.style.display='none';"/><span>${amount}</span>`;
+
+                item.addEventListener('mouseenter', () => {
+                    const tip = document.createElement('div');
+                    tip.className = 'cost-tooltip';
+                    tip.textContent = label;
+                    document.body.appendChild(tip);
+                    const rect = item.getBoundingClientRect();
+                    const tipRect = tip.getBoundingClientRect();
+                    tip.style.left = `${rect.left + rect.width / 2 - tipRect.width / 2}px`;
+                    tip.style.top = `${rect.top - tipRect.height - 4}px`;
+                });
+
+                item.addEventListener('mouseleave', () => {
+                    document.querySelectorAll('.cost-tooltip').forEach(el => el.remove());
+                });
+
+                list.appendChild(item);
             });
             container.appendChild(list);
             return container;
@@ -687,10 +691,11 @@ export class GraphRenderer {
             infoContainer.focus();
         }, 10);
 
+        let closed = false;
         const closeMenu = () => {
-            if (infoContainer.parentNode) {
-                infoContainer.parentNode.removeChild(infoContainer);
-            }
+            if (closed) return;
+            closed = true;
+            infoContainer.remove();
             document.removeEventListener('mousedown', outsideClickListener);
         };
 

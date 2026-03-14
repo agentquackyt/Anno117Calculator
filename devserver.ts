@@ -65,6 +65,9 @@ if (values.build) {
 
     await Bun.$`xcopy src\\assets docs\\assets /s /i`.text().catch(() => { /* ignore if already exists */ });
 
+    // SW must be at the root so its scope covers the entire origin.
+    await Bun.write('./docs/sw.js', Bun.file('./docs/assets/data/sw.js'));
+
     console.log(`\n${Bun.color("#acf3ff", "ansi-16m") + "[Developer Server] " + Bun.color("#1394bf", "ansi-16m")}Build completed! Output in ./docs/`);
 }
 
@@ -76,6 +79,18 @@ if (values.dev) {
         async fetch(req) {
             // Serve static asset dir
             let url = new URL(req.url);
+
+            // Serve SW from root with Service-Worker-Allowed header so its
+            // scope covers the entire origin (not just /assets/data/).
+            if (url.pathname === '/sw.js') {
+                const swFile = Bun.file('./src/assets/data/sw.js');
+                return new Response(swFile, {
+                    headers: {
+                        'Content-Type': 'application/javascript',
+                        'Service-Worker-Allowed': '/',
+                    },
+                });
+            }
 
             if (url.pathname.startsWith("/assets")) {
                 // strip the trailing slash if it exists

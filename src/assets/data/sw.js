@@ -1,132 +1,183 @@
 // Service Worker for Anno 117 Calculator
 // Provides offline support and intelligent caching
 
-const CACHE_NAME = 'anno117-calc-v2';
-const DYNAMIC_CACHE = 'anno117-dynamic-v1';
+const CACHE_VERSION = 'v3';
+const STATIC_CACHE  = `anno117-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `anno117-dynamic-${CACHE_VERSION}`;
+const ALL_CACHES    = [STATIC_CACHE, DYNAMIC_CACHE];
 
-// Critical assets to cache immediately
-const STATIC_ASSETS = [
+// Stable, known assets to pre-cache on install.
+// Hashed JS/CSS bundles are NOT listed here — they are populated
+// dynamically the first time the browser requests them.
+const PRECACHE_ASSETS = [
     '/',
-    '/index.html',
-    '/style/theme.css',
-    '/js/calculator.js',
-    '/productions/list.json',
-    '/style/logo_small.png',
-    '/style/anno_icon.png'
+    '/assets/productions/list.json',
+    '/assets/images/logo_small.png',
+    '/assets/images/anno_icon.png',
+    '/assets/data/manifest.json',
 ];
 
-// Install event - cache static assets
+// ---------------------------------------------------------------------------
+// URL classification helpers
+// ---------------------------------------------------------------------------
+
+/** Bun-generated bundles have a content hash in the filename, e.g. chunk-a1b2c3d4.js */
+function isHashedBundle(url) {
+    return /[.-][a-f0-9]{8,}\.(js|css)(\?.*)?$/.test(url.pathname);
+}
+
+function isProductionData(url) {
+    return url.pathname.startsWith('/assets/productions/');
+}
+
+function isStaticMedia(url) {
+    return url.pathname.startsWith('/assets/icons/')   ||
+           url.pathname.startsWith('/assets/images/')  ||
+           url.pathname.startsWith('/assets/fonts/')   ||
+           /\.(png|webp|jpg|jpeg|svg|gif|woff2?|ttf|otf)$/i.test(url.pathname);
+}
+
+// ---------------------------------------------------------------------------
+// Install — pre-cache stable assets
+// ---------------------------------------------------------------------------
+
 self.addEventListener('install', (event) => {
-    console.log('[ServiceWorker] Installing...');
+    console.log('[SW] Installing...');
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('[ServiceWorker] Caching static assets');
-                return cache.addAll(STATIC_ASSETS);
-            })
+        caches.open(STATIC_CACHE)
+            .then((cache) => cache.addAll(PRECACHE_ASSETS))
             .then(() => self.skipWaiting())
     );
 });
 
-// Activate event - clean up old caches
+// ---------------------------------------------------------------------------
+// Activate — evict obsolete caches
+// ---------------------------------------------------------------------------
+
 self.addEventListener('activate', (event) => {
-    console.log('[ServiceWorker] Activating...');
+    console.log('[SW] Activating...');
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME && cacheName !== DYNAMIC_CACHE) {
-                        console.log('[ServiceWorker] Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        }).then(() => self.clients.claim())
+        caches.keys()
+            .then((names) => Promise.all(
+                names
+                    .filter((n) => !ALL_CACHES.includes(n))
+                    .map((n) => {
+                        console.log('[SW] Deleting old cache:', n);
+                        return caches.delete(n);
+                    })
+            ))
+            .then(() => self.clients.claim())
     );
 });
 
-// Fetch event - serve from cache with network fallback
+// ---------------------------------------------------------------------------
+// Fetch — per-resource caching strategy
+// ---------------------------------------------------------------------------
+
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
 
-    // Skip cross-origin requests
-    if (url.origin !== location.origin) {
+    // Skip cross-origin requests (e.g. analytics, fonts CDN)
+    if (url.origin !== location.origin) return;
+
+    if (request.destination === 'document') {
+        // HTML: network-first so the app always gets the latest entry point
+        // (and therefore the latest hashed bundle references).
+        event.respondWith(networkFirst(request, STATIC_CACHE));
         return;
     }
 
-    event.respondWith(
-        caches.match(request).then((cachedResponse) => {
-            // Return cached response if available
-            if (cachedResponse) {
-                // For HTML and JSON, also fetch in background to update cache
-                if (request.destination === 'document' || 
-                    request.url.endsWith('.json')) {
-                    // Update cache in background
-                    event.waitUntil(
-                        fetch(request).then((networkResponse) => {
-                            if (networkResponse && networkResponse.status === 200) {
-                                return caches.open(DYNAMIC_CACHE).then((cache) => {
-                                    cache.put(request, networkResponse.clone());
-                                });
-                            }
-                        }).catch(() => {
-                            // Network failed, but we have cache
-                        })
-                    );
-                }
-                return cachedResponse;
-            }
+    if (isHashedBundle(url)) {
+        // Hashed JS/CSS: cache-first — content is immutable for a given hash.
+        event.respondWith(cacheFirst(request, STATIC_CACHE));
+        return;
+    }
 
-            // Not in cache, fetch from network
-            return fetch(request).then((networkResponse) => {
-                // Don't cache if response is not OK
-                if (!networkResponse || networkResponse.status !== 200) {
-                    return networkResponse;
-                }
+    if (isProductionData(url)) {
+        // Production JSONs: stale-while-revalidate — show cached data
+        // immediately while silently refreshing in the background.
+        event.respondWith(staleWhileRevalidate(request, DYNAMIC_CACHE));
+        return;
+    }
 
-                // Cache production JSON files and images dynamically
-                if (request.url.includes('/productions/') || 
-                    request.url.includes('/icons/') ||
-                    request.destination === 'image') {
-                    const responseClone = networkResponse.clone();
-                    caches.open(DYNAMIC_CACHE).then((cache) => {
-                        cache.put(request, responseClone);
-                    });
-                }
+    if (isStaticMedia(url)) {
+        // Icons, images, fonts: cache-first, populated on first use.
+        event.respondWith(cacheFirst(request, DYNAMIC_CACHE));
+        return;
+    }
 
-                return networkResponse;
-            }).catch(() => {
-                // Network failed and no cache - return offline page or error
-                if (request.destination === 'document') {
-                    return new Response('Offline - please check your connection', {
-                        status: 503,
-                        statusText: 'Service Unavailable',
-                        headers: new Headers({
-                            'Content-Type': 'text/plain'
-                        })
-                    });
-                }
-            });
-        })
-    );
+    // Anything else (manifest, etc.): network-first.
+    event.respondWith(networkFirst(request, DYNAMIC_CACHE));
 });
 
-// Handle messages from clients
+// ---------------------------------------------------------------------------
+// Strategy helpers
+// ---------------------------------------------------------------------------
+
+async function cacheFirst(request, cacheName) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    const response = await fetch(request);
+    if (response.ok) {
+        const cache = await caches.open(cacheName);
+        cache.put(request, response.clone());
+    }
+    return response;
+}
+
+async function networkFirst(request, cacheName) {
+    try {
+        const response = await fetch(request);
+        if (response.ok) {
+            const cache = await caches.open(cacheName);
+            cache.put(request, response.clone());
+        }
+        return response;
+    } catch {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+
+        // Last resort offline fallback for navigation requests
+        if (request.destination === 'document') {
+            return new Response('<h1>Offline</h1><p>Please check your connection and try again.</p>', {
+                status: 503,
+                headers: { 'Content-Type': 'text/html; charset=utf-8' },
+            });
+        }
+        return new Response('Network error', { status: 503 });
+    }
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+    const cache  = await caches.open(cacheName);
+    const cached = await cache.match(request);
+
+    const networkFetch = fetch(request)
+        .then((response) => {
+            if (response.ok) cache.put(request, response.clone());
+            return response;
+        })
+        .catch(() => null);
+
+    return cached ?? await networkFetch;
+}
+
+// ---------------------------------------------------------------------------
+// Messages from the client
+// ---------------------------------------------------------------------------
+
 self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
+    if (event.data?.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
-    
-    if (event.data && event.data.type === 'CLEAR_CACHE') {
+
+    if (event.data?.type === 'CLEAR_CACHE') {
         event.waitUntil(
-            caches.keys().then((cacheNames) => {
-                return Promise.all(
-                    cacheNames.map((cacheName) => caches.delete(cacheName))
-                );
-            }).then(() => {
-                event.ports[0].postMessage({ success: true });
-            })
+            caches.keys()
+                .then((names) => Promise.all(names.map((n) => caches.delete(n))))
+                .then(() => event.ports[0]?.postMessage({ success: true }))
         );
     }
 });

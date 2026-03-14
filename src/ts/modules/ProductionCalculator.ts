@@ -1,4 +1,6 @@
 import type { Goods } from '../types/Goods';
+import { Aqueduct } from './modifier/Aqueduct';
+import type { AbstractProductionModifier } from './ProductionModifier';
 import { SettingsManager } from './SettingsManager';
 
 const SECONDS_PER_MINUTE = 60;
@@ -14,6 +16,7 @@ type BuildingsMap = Record<string, any>;
  */
 export class ProductionCalculator {
     private static _instance: ProductionCalculator | null = null;
+    private productionModifiers: AbstractProductionModifier[] = [];
 
     public static getInstance(): ProductionCalculator {
         if (!ProductionCalculator._instance) {
@@ -22,7 +25,27 @@ export class ProductionCalculator {
         return ProductionCalculator._instance;
     }
 
-    private constructor() {}
+    private constructor() {
+        // Register production modifiers here — loadConfig() seeds state from URL params
+        const aqueduct = new Aqueduct();
+        aqueduct.loadConfig();
+        this.productionModifiers.push(aqueduct);
+
+        // Keep modifier configs in sync when the settings panel changes
+        SettingsManager.getInstance().onChange((config) => {
+            aqueduct.applySettings(config);
+        });
+    }
+
+    /** Returns icon filenames for all modifiers that are boosting the given node. */
+    getActiveVisualModifiers(buildingType: string): string[] {
+        const goodsLike = { type: buildingType } as Goods;
+        return this.productionModifiers.flatMap(m => {
+            const icon = m.getVisualModifier();
+            if (!icon) return [];
+            return m.getProductivity(goodsLike).isAffected ? [icon] : [];
+        });
+    }
 
     private get config() {
         return SettingsManager.getInstance().getConfig();
@@ -31,20 +54,17 @@ export class ProductionCalculator {
     getProductivity(node: Goods): number {
         if (!node) return 1;
         let productivity = 1;
-        const type = node.type || '';
-        const config = this.config;
 
-        if (config.aqueductsEnabled) {
-            if (type === 'plantation' && config.aquaArborica) {
-                productivity *= 1.5;
-            }
-            if (type === 'arable_farm' && config.fieldIrrigation) {
-                productivity *= 1.5;
-            }
-            if (type === 'mine' && config.hushing) {
-                productivity *= 1.5;
+        for (const modifier of this.productionModifiers) {
+            const modType = modifier.getType();
+            if (modType === 'flat') {
+                productivity += modifier.getValue(node);
+            } else if (modType === 'percentage') {
+                productivity += (100 * modifier.getValue(node));
             }
         }
+
+        console.debug(`[ProductionCalculator] Productivity for ${node.name || node.id}: ${productivity.toFixed(2)}x`);
         return productivity;
     }
 
