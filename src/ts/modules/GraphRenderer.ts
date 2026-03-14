@@ -1,30 +1,89 @@
+import type { Goods } from '../types/Goods';
+import type { RecipeListItem } from '../types/RecipeList';
+import { SettingsManager } from './SettingsManager';
+import { ProductionCalculator } from './ProductionCalculator';
+import { GoodsRepository } from './GoodRepository';
+
 const CENTER_X = 200;
 const CENTER_Y = 40;
 
+interface GraphRendererConfig {
+    templatePath?: string;
+}
+
+interface ViewBox {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+interface Point {
+    x: number;
+    y: number;
+}
+
+interface GoodMetadata {
+    id: string;
+    displayName: string;
+    icon: string;
+}
+
+interface NodeData {
+    x: number;
+    y: number;
+    good: GoodMetadata;
+    buildings: number;
+    textAlign: 'left' | 'right';
+    hasFuel: boolean;
+    buildingType: string;
+    depth: number;
+    maxDepth: number;
+    isLeaf: boolean;
+    startOfChain: boolean;
+    buildingCost?: Record<string, number>;
+    maintenanceCost?: Record<string, number>;
+    productivity: number;
+}
+
+interface LabelGeometry {
+    labelX: number;
+    labelY: number;
+    labelAnchor: 'start' | 'middle' | 'end';
+    buildingsY: number;
+}
+
 /**
  * Renders dependency graphs inside an external SVG template.
+ * Singleton — always access via GraphRenderer.getInstance().
  */
 export class GraphRenderer {
-    constructor({
-        templatePath = 'svg/dependency-graph.svg',
-        goodsRepository,
-        configProvider,
-        productionCalculator
-    }) {
+    private static _instance: GraphRenderer | null = null;
+
+    public static getInstance(): GraphRenderer {
+        if (!GraphRenderer._instance) {
+            GraphRenderer._instance = new GraphRenderer();
+        }
+        return GraphRenderer._instance;
+    }
+
+    templatePath: string;
+    svgMarkup: string | null;
+    svgElement: SVGSVGElement | null;
+    interactionsBound: boolean;
+
+    private constructor(config: GraphRendererConfig = {}) {
+        const { templatePath = 'svg/dependency-graph.svg' } = config;
+
         this.templatePath = templatePath;
-        this.goodsRepository = goodsRepository;
-        this.configProvider = configProvider;
-        this.productionCalculator = productionCalculator;
         this.svgMarkup = null;
         this.svgElement = null;
         this.interactionsBound = false;
         this.displayInfoMenue = this.displayInfoMenue.bind(this);
     }
 
-    async attach(container) {
+    async attach(container: HTMLElement | null): Promise<void> {
         if (!container) return;
-        // replace by creating the element directly and not fetch it?
-        // <svg xmlns="http://www.w3.org/2000/svg" id="dependency-graph" class="dependency-graph" viewBox="0 0 400 400"></svg>
         const svgElement = document.createElement('svg');
         svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         svgElement.setAttribute('id', 'dependency-graph');
@@ -32,46 +91,49 @@ export class GraphRenderer {
         svgElement.setAttribute('viewBox', '0 0 400 400');
         this.svgMarkup = svgElement.outerHTML;
         container.innerHTML = this.svgMarkup;
-        this.svgElement = container.querySelector('#dependency-graph');
+        this.svgElement = container.querySelector('#dependency-graph') as SVGSVGElement | null;
         this.interactionsBound = false;
         this.setupInteractions();
     }
 
-    render(productionData, allBuildings) {
+    render(productionData: Goods, allBuildings: Record<string, number>): void {
         if (!this.svgElement || !productionData) return;
         this.clearSvg();
         if (!allBuildings || Object.keys(allBuildings).length === 0) return;
 
         const maxDepth = this.calculateMaxDepth(productionData);
-        const treeWidth = this.calculateTreeWidth(productionData);
-        const nodeSpacing = 90;
-        const totalWidth = treeWidth * nodeSpacing;
-
-        this.renderRecursiveGraph(productionData, CENTER_X, CENTER_Y, 0, allBuildings, totalWidth, null, null, maxDepth);
+        this.renderRecursiveGraph(productionData, CENTER_X, CENTER_Y, 0, allBuildings, null, null, maxDepth);
     }
 
-    clearSvg() {
+    clearSvg(): void {
         if (!this.svgElement) return;
         while (this.svgElement.firstChild) {
             this.svgElement.removeChild(this.svgElement.firstChild);
         }
     }
 
-    renderRecursiveGraph(prodData, x, y, depth, allBuildings, availableWidth, parentX, parentY, maxDepth) {
+    renderRecursiveGraph(
+        prodData: Goods,
+        x: number,
+        y: number,
+        depth: number,
+        allBuildings: Record<string, number>,
+        parentX: number | null,
+        parentY: number | null,
+        maxDepth: number
+    ): void {
         if (!prodData || depth > 5) return;
 
-        const good = this.findGood(prodData.id);
-        const hasFuel = (Array.isArray(prodData.fuel) && prodData.fuel.length > 0) || prodData.needs_fuel === true;
+        const good = this.findGood(prodData.id, prodData);
+        const hasFuel = prodData.needs_fuel === true;
         const buildings = allBuildings[prodData.id] || 0;
         const buildingType = prodData.type || '';
 
-        let textAlign = 'left';
+        let textAlign: 'left' | 'right' = 'left';
         if (depth === 0) {
             textAlign = 'left';
         } else if (parentX !== null && parentX !== undefined) {
-            if (x < parentX) textAlign = 'left';
-            else if (x > parentX) textAlign = 'right';
-            else textAlign = x < CENTER_X ? 'left' : 'right';
+            textAlign = x < parentX ? 'left' : x > parentX ? 'right' : x < CENTER_X ? 'left' : 'right';
         } else {
             textAlign = x < CENTER_X ? 'left' : 'right';
         }
@@ -105,7 +167,6 @@ export class GraphRenderer {
 
         const inputWidths = inputs.map((input) => {
             if (Array.isArray(input.input)) return this.calculateTreeWidth(input);
-            if (input.recipe) return this.calculateTreeWidth(input.recipe);
             return 1;
         });
         const totalWidth = inputWidths.reduce((sum, width) => sum + width, 0);
@@ -125,28 +186,21 @@ export class GraphRenderer {
 
         inputs.forEach((input, index) => {
             if (!input.id) return;
-            const widthUnits = inputWidths[index];
+            const widthUnits = inputWidths[index] ?? 1;
             const inputX = currentOffset + (widthUnits * nodeSpacing) / 2;
             currentOffset += widthUnits * nodeSpacing;
 
             if (Array.isArray(input.input)) {
-                this.renderRecursiveGraph(input, inputX, nextY, depth + 1, allBuildings, widthUnits * nodeSpacing, x, y, maxDepth);
-                return;
-            }
-
-            if (input.recipe) {
-                this.renderRecursiveGraph(input.recipe, inputX, nextY, depth + 1, allBuildings, widthUnits * nodeSpacing, x, y, maxDepth);
+                this.renderRecursiveGraph(input, inputX, nextY, depth + 1, allBuildings, x, y, maxDepth);
                 return;
             }
 
             if (input.start_of_chain) {
-                const inputGood = this.findGood(input.id);
+                const inputGood = this.findGood(input.id, input);
                 const inputBuildings = allBuildings[input.id] || 0;
-                
-                let align = 'left';
-                if (inputX < x) align = 'left';
-                else if (inputX > x) align = 'right';
-                else align = inputX < CENTER_X ? 'left' : 'right';
+
+                let align: 'left' | 'right' = 'left';
+                align = inputX < x ? 'left' : inputX > x ? 'right' : inputX < CENTER_X ? 'left' : 'right';
 
                 this.addNode({
                     x: inputX,
@@ -169,8 +223,9 @@ export class GraphRenderer {
         });
     }
 
-    addNode({ x, y, good, buildings, textAlign, hasFuel, buildingType, depth, maxDepth, isLeaf, startOfChain, buildingCost, maintenanceCost, productivity }) {
+    addNode(nodeData: NodeData): void {
         if (!this.svgElement) return;
+        const { x, y, good, buildings, textAlign, hasFuel, buildingType, depth, maxDepth, isLeaf, startOfChain, buildingCost, maintenanceCost, productivity } = nodeData;
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -182,25 +237,23 @@ export class GraphRenderer {
         rect.setAttribute('rx', '12');
         rect.setAttribute('ry', '12');
         rect.setAttribute('class', 'graph-node');
-        // Might add data attribute for under/overflow => more/good than the desired good per minute
         group.appendChild(rect);
 
-        const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-        img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `icons/${good.icon || good.id}.png`);
+        const img = document.createElementNS('http://www.w3.org/2000/svg', 'image') as any;
+        img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `./assets/icons/${good.icon || good.id}.png`);
         img.setAttribute('x', String(x - size / 2));
         img.setAttribute('y', String(y - size / 2));
         img.setAttribute('width', String(size));
         img.setAttribute('height', String(size));
         img.dataset.goodId = good.id;
         img.productionData = { buildingCost, maintenanceCost, buildings, good, productivity };
-        img.addEventListener('mousedown', this.displayInfoMenue)
+        img.addEventListener('mousedown', this.displayInfoMenue);
         group.appendChild(img);
 
-        // TEMP: log
         console.log("[SVG Generator] Good data: ", good);
 
         if (hasFuel) {
-            this.addCornerImage(group, x, y, size, 'icons/charcoal.png');
+            this.addCornerImage(group, x, y, size, './assets/icons/charcoal.png');
         }
 
         if (this.shouldShowAqueductBadge(buildingType)) {
@@ -242,7 +295,7 @@ export class GraphRenderer {
         this.svgElement.appendChild(group);
     }
 
-    drawLink(x1, y1, x2, y2, primary) {
+    drawLink(x1: number, y1: number, x2: number, y2: number, primary: boolean): void {
         if (!this.svgElement) return;
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', String(x1));
@@ -253,12 +306,23 @@ export class GraphRenderer {
         this.svgElement.insertBefore(line, this.svgElement.firstChild);
     }
 
-    resolveLabelGeometry({ x, y, textAlign, label, buildings, depth, maxDepth, isLeaf, startOfChain }) {
-        // Render labels below for 3rd row (depth 2) and lower, when they are leaf items
+    resolveLabelGeometry(params: {
+        x: number;
+        y: number;
+        textAlign: 'left' | 'right';
+        label: string;
+        buildings: string;
+        depth: number;
+        maxDepth: number;
+        isLeaf: boolean;
+        startOfChain: boolean;
+    }): LabelGeometry {
+        const { x, y, textAlign, depth, startOfChain } = params;
+
         if (depth >= 2 && startOfChain) {
             return { labelX: x, labelY: y + 50, buildingsY: y + 67, labelAnchor: 'middle' };
         }
-        
+
         const offset = 45;
 
         if (textAlign === 'right') {
@@ -269,7 +333,7 @@ export class GraphRenderer {
                 labelAnchor: 'start'
             };
         }
-        
+
         return {
             labelX: x - offset,
             labelY: y - 5,
@@ -278,7 +342,7 @@ export class GraphRenderer {
         };
     }
 
-    addCornerImage(group, x, y, size, href) {
+    addCornerImage(group: SVGGElement, x: number, y: number, size: number, href: string): void {
         const icon = document.createElementNS('http://www.w3.org/2000/svg', 'image');
         const iconSize = 32;
         icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
@@ -289,7 +353,7 @@ export class GraphRenderer {
         group.appendChild(icon);
     }
 
-    addAqueductBadge(group, x, y, size) {
+    addAqueductBadge(group: SVGGElement, x: number, y: number, size: number): void {
         const box = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const badgeSize = 32;
         box.setAttribute('x', String(x + 37 - size / 2));
@@ -301,29 +365,23 @@ export class GraphRenderer {
         box.setAttribute('class', 'aquaduct-box');
         group.appendChild(box);
 
-        this.addCornerImage(group, x, y, size, 'icons/aquaduct.png');
+        this.addCornerImage(group, x, y, size, './assets/icons/aquaduct.png');
     }
 
-    calculateProductivity(node) {
-        return this.productionCalculator ? this.productionCalculator.getProductivity(node) : 1;
+    calculateProductivity(node: Goods): number {
+        return ProductionCalculator.getInstance().getProductivity(node);
     }
 
-    shouldShowAqueductBadge(buildingType) {
-        const config = this.configProvider ? this.configProvider() : {};
+    shouldShowAqueductBadge(buildingType: string): boolean {
+        const config = SettingsManager.getInstance().getConfig();
         if (!config.aqueductsEnabled) return false;
-        if (buildingType === 'arable_farm') {
-            return Boolean(config.fieldIrrigation);
-        }
-        if (buildingType === 'plantation') {
-            return Boolean(config.aquaArborica);
-        }
-        if (buildingType === 'mine') {
-            return Boolean(config.hushing);
-        }
+        if (buildingType === 'arable_farm') return config.fieldIrrigation;
+        if (buildingType === 'plantation') return config.aquaArborica;
+        if (buildingType === 'mine') return config.hushing;
         return false;
     }
 
-    calculateTreeWidth(prodData) {
+    calculateTreeWidth(prodData: Goods): number {
         if (!prodData || !Array.isArray(prodData.input) || !prodData.input.length) {
             return 1;
         }
@@ -331,14 +389,11 @@ export class GraphRenderer {
             if (Array.isArray(input.input)) {
                 return sum + this.calculateTreeWidth(input);
             }
-            if (input.recipe) {
-                return sum + this.calculateTreeWidth(input.recipe);
-            }
             return sum + 1;
         }, 0);
     }
 
-    calculateMaxDepth(prodData, depth = 0) {
+    calculateMaxDepth(prodData: Goods, depth: number = 0): number {
         if (!prodData || !Array.isArray(prodData.input) || !prodData.input.length) {
             return depth;
         }
@@ -346,19 +401,24 @@ export class GraphRenderer {
             if (Array.isArray(input.input)) {
                 return Math.max(max, this.calculateMaxDepth(input, depth + 1));
             }
-            if (input.recipe) {
-                return Math.max(max, this.calculateMaxDepth(input.recipe, depth + 1));
-            }
             return Math.max(max, depth + 1);
         }, depth);
     }
 
-    findGood(id) {
-        const goods = this.goodsRepository?.getGoods?.() || [];
-        return goods.find((good) => good.id === id) || { id, displayName: id, icon: id };
+    findGood(id: string, node?: Goods): GoodMetadata {
+        const goods = GoodsRepository.getInstance().getGoodsList();
+        const found = goods.find((good: RecipeListItem) => good.id === id);
+        if (found) {
+            return {
+                id: found.id,
+                displayName: found.displayName,
+                icon: found.icon
+            };
+        }
+        return { id, displayName: node?.name || id, icon: id };
     }
 
-    setupInteractions() {
+    setupInteractions(): void {
         if (!this.svgElement || this.interactionsBound) return;
         this.interactionsBound = true;
 
@@ -366,26 +426,26 @@ export class GraphRenderer {
         let startX = 0;
         let startY = 0;
         let viewBox = this.parseViewBox();
-        const activeTouches = new Map();
-        let initialPinchDistance = null;
-        let initialViewBox = null;
+        const activeTouches = new Map<number, Point>();
+        let initialPinchDistance: number | null = null;
+        let initialViewBox: ViewBox | null = null;
 
         this.svgElement.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        this.svgElement.addEventListener('mousedown', (e) => {
+        this.svgElement.addEventListener('mousedown', (e: MouseEvent) => {
             if (e.button === 2) {
                 isDragging = true;
                 startX = e.clientX;
                 startY = e.clientY;
-                this.svgElement.style.cursor = 'grabbing';
+                this.svgElement!.style.cursor = 'grabbing';
                 e.preventDefault();
             }
         });
 
-        this.svgElement.addEventListener('mousemove', (e) => {
+        this.svgElement.addEventListener('mousemove', (e: MouseEvent) => {
             if (!isDragging) return;
-            const dx = (e.clientX - startX) * (viewBox.width / this.svgElement.clientWidth);
-            const dy = (e.clientY - startY) * (viewBox.height / this.svgElement.clientHeight);
+            const dx = (e.clientX - startX) * (viewBox.width / this.svgElement!.clientWidth);
+            const dy = (e.clientY - startY) * (viewBox.height / this.svgElement!.clientHeight);
             viewBox.x -= dx;
             viewBox.y -= dy;
             this.updateViewBox(viewBox);
@@ -393,80 +453,84 @@ export class GraphRenderer {
             startY = e.clientY;
         });
 
-        this.svgElement.addEventListener('mouseup', (e) => {
+        this.svgElement.addEventListener('mouseup', (e: MouseEvent) => {
             if (e.button === 2) {
                 isDragging = false;
-                this.svgElement.style.cursor = 'default';
+                this.svgElement!.style.cursor = 'default';
             }
         });
 
         this.svgElement.addEventListener('mouseleave', () => {
             isDragging = false;
-            this.svgElement.style.cursor = 'default';
+            this.svgElement!.style.cursor = 'default';
         });
 
-        this.svgElement.addEventListener('wheel', (e) => {
+        this.svgElement.addEventListener('wheel', (e: WheelEvent) => {
             e.preventDefault();
-            const rect = this.svgElement.getBoundingClientRect();
+            const rect = this.svgElement!.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
             const mouseY = e.clientY - rect.top;
-            const svgX = viewBox.x + (mouseX / this.svgElement.clientWidth) * viewBox.width;
-            const svgY = viewBox.y + (mouseY / this.svgElement.clientHeight) * viewBox.height;
+            const svgX = viewBox.x + (mouseX / this.svgElement!.clientWidth) * viewBox.width;
+            const svgY = viewBox.y + (mouseY / this.svgElement!.clientHeight) * viewBox.height;
             const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
             const newWidth = viewBox.width * zoomFactor;
             const newHeight = viewBox.height * zoomFactor;
-            viewBox.x = svgX - (mouseX / this.svgElement.clientWidth) * newWidth;
-            viewBox.y = svgY - (mouseY / this.svgElement.clientHeight) * newHeight;
+            viewBox.x = svgX - (mouseX / this.svgElement!.clientWidth) * newWidth;
+            viewBox.y = svgY - (mouseY / this.svgElement!.clientHeight) * newHeight;
             viewBox.width = newWidth;
             viewBox.height = newHeight;
             this.updateViewBox(viewBox);
         });
 
-        this.svgElement.addEventListener('touchstart', (e) => {
+        this.svgElement.addEventListener('touchstart', (e: TouchEvent) => {
             if (e.touches.length > 0) e.preventDefault();
             for (const touch of e.changedTouches) {
                 activeTouches.set(touch.identifier, this.clientToSvgPoint(touch));
             }
             if (activeTouches.size === 1) {
-                const [point] = activeTouches.values();
+                const point = Array.from(activeTouches.values())[0]!;
                 isDragging = true;
                 startX = point.x;
                 startY = point.y;
-                this.svgElement.style.cursor = 'grabbing';
+                this.svgElement!.style.cursor = 'grabbing';
             } else if (activeTouches.size === 2) {
-                const [p1, p2] = activeTouches.values();
+                const points = Array.from(activeTouches.values());
+                const p1 = points[0]!;
+                const p2 = points[1]!;
                 initialPinchDistance = this.distance(p1, p2);
                 initialViewBox = { ...viewBox };
                 isDragging = false;
             }
         }, { passive: false });
 
-        this.svgElement.addEventListener('touchmove', (e) => {
+        this.svgElement.addEventListener('touchmove', (e: TouchEvent) => {
             if (e.touches.length > 0) e.preventDefault();
             for (const touch of e.changedTouches) {
                 activeTouches.set(touch.identifier, this.clientToSvgPoint(touch));
             }
             if (activeTouches.size === 1 && isDragging) {
-                const [point] = activeTouches.values();
-                const dx = (point.x - startX) * (viewBox.width / this.svgElement.clientWidth);
-                const dy = (point.y - startY) * (viewBox.height / this.svgElement.clientHeight);
+                const point = Array.from(activeTouches.values())[0]!;
+                const dx = (point.x - startX) * (viewBox.width / this.svgElement!.clientWidth);
+                const dy = (point.y - startY) * (viewBox.height / this.svgElement!.clientHeight);
                 viewBox.x -= dx;
                 viewBox.y -= dy;
                 this.updateViewBox(viewBox);
                 startX = point.x;
                 startY = point.y;
             } else if (activeTouches.size === 2 && initialPinchDistance && initialViewBox) {
-                const [p1, p2] = activeTouches.values();
+                const points = Array.from(activeTouches.values());
+                const p1 = points[0]!;
+                const p2 = points[1]!;
                 const currentDistance = this.distance(p1, p2);
                 if (currentDistance <= 0) return;
                 const scale = initialPinchDistance / currentDistance;
                 const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
-                const focusX = initialViewBox.x + (mid.x / this.svgElement.clientWidth) * initialViewBox.width;
-                const focusY = initialViewBox.y + (mid.y / this.svgElement.clientHeight) * initialViewBox.height;
+                const focusX = initialViewBox.x + (mid.x / this.svgElement!.clientWidth) * initialViewBox.width;
+                const focusY = initialViewBox.y + (mid.y / this.svgElement!.clientHeight) * initialViewBox.height;
                 const newWidth = initialViewBox.width * scale;
                 const newHeight = initialViewBox.height * scale;
-                viewBox.x = focusX - (mid.x / this.svgElement.clientWidth) * newWidth;
-                viewBox.y = focusY - (mid.y / this.svgElement.clientHeight) * newHeight;
+                viewBox.x = focusX - (mid.x / this.svgElement!.clientWidth) * newWidth;
+                viewBox.y = focusY - (mid.y / this.svgElement!.clientHeight) * newHeight;
                 viewBox.width = newWidth;
                 viewBox.height = newHeight;
                 this.updateViewBox(viewBox);
@@ -478,10 +542,10 @@ export class GraphRenderer {
             initialPinchDistance = null;
             initialViewBox = null;
             isDragging = false;
-            this.svgElement.style.cursor = 'default';
+            this.svgElement!.style.cursor = 'default';
         };
 
-        this.svgElement.addEventListener('touchend', (e) => {
+        this.svgElement.addEventListener('touchend', (e: TouchEvent) => {
             for (const touch of e.changedTouches) {
                 activeTouches.delete(touch.identifier);
             }
@@ -492,7 +556,7 @@ export class GraphRenderer {
             if (activeTouches.size === 0) {
                 resetTouches();
             } else if (activeTouches.size === 1) {
-                const [point] = activeTouches.values();
+                const point = Array.from(activeTouches.values())[0]!;
                 isDragging = true;
                 startX = point.x;
                 startY = point.y;
@@ -502,30 +566,34 @@ export class GraphRenderer {
         this.svgElement.addEventListener('touchcancel', resetTouches);
     }
 
-    parseViewBox() {
+    parseViewBox(): ViewBox {
         if (!this.svgElement) {
             return { x: 0, y: 0, width: 400, height: 400 };
         }
-        const vb = this.svgElement.getAttribute('viewBox')?.split(' ').map(Number);
-        if (!vb || vb.length !== 4 || vb.some((value) => Number.isNaN(value))) {
+        const viewBoxStr = this.svgElement.getAttribute('viewBox');
+        if (!viewBoxStr) {
             return { x: 0, y: 0, width: 400, height: 400 };
         }
-        return { x: vb[0], y: vb[1], width: vb[2], height: vb[3] };
+        const vb = viewBoxStr.split(' ').map(Number).filter(v => !Number.isNaN(v));
+        if (vb.length !== 4) {
+            return { x: 0, y: 0, width: 400, height: 400 };
+        }
+        return { x: vb[0]!, y: vb[1]!, width: vb[2]!, height: vb[3]! };
     }
 
-    updateViewBox(viewBox) {
+    updateViewBox(viewBox: ViewBox): void {
         this.svgElement?.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
     }
 
-    clientToSvgPoint(touch) {
-        const rect = this.svgElement.getBoundingClientRect();
+    clientToSvgPoint(touch: Touch): Point {
+        const rect = this.svgElement!.getBoundingClientRect();
         return {
             x: touch.clientX - rect.left,
             y: touch.clientY - rect.top
         };
     }
 
-    distance(p1, p2) {
+    distance(p1: Point, p2: Point): number {
         const dx = p1.x - p2.x;
         const dy = p1.y - p2.y;
         return Math.hypot(dx, dy);
@@ -533,15 +601,15 @@ export class GraphRenderer {
 
     /**
      * Click Event on the icon
-     * @param {MouseEvent} event 
      */
-    displayInfoMenue(event) {
-        if (event.button != 0) return;
+    displayInfoMenue(event: MouseEvent): void {
+        if ((event as any).button !== 0) return;
 
         event.preventDefault();
         event.stopPropagation();
 
-        const { buildingCost, maintenanceCost, buildings, good } = event.currentTarget.productionData || {};
+        const currentTarget = event.currentTarget as any;
+        const { buildingCost, maintenanceCost, buildings, good } = currentTarget.productionData || {};
         if (!good) return;
 
         let infoContainer = document.createElement('div');
@@ -550,9 +618,7 @@ export class GraphRenderer {
         infoContainer.style.left = `${event.clientX}px`;
         infoContainer.style.top = `${event.clientY}px`;
         infoContainer.tabIndex = -1;
-        infoContainer.style.zIndex = 1000;
-
-        // Basic styling is handled by CSS class, but we ensure positioning
+        infoContainer.style.zIndex = '1000';
 
         const content = document.createElement('div');
         content.className = 'metadata-content';
@@ -561,7 +627,7 @@ export class GraphRenderer {
         const header = document.createElement('div');
         header.className = 'metadata-header';
         header.innerHTML = `
-            <img src="icons/${good.icon || good.id}.png" alt="${good.displayName}" class="metadata-icon" onerror="this.style.display='none';"/>
+            <img src="./assets/icons/${good.icon || good.id}.png" alt="${good.displayName}" class="metadata-icon" onerror="this.style.display='none';"/>
             <h4>${good.displayName || good.id}</h4>
         `;
         content.appendChild(header);
@@ -569,9 +635,9 @@ export class GraphRenderer {
         // Building Count
         const countInfo = document.createElement('div');
         countInfo.className = 'metadata-row';
-        // show the expected productivity of the building in percentage (account for the special effects, like the productivity booster (aqueduct) and production overflow)
-        if (event.currentTarget.productionData.productivity) {
-            const productivity = event.currentTarget.productionData.productivity;
+
+        if (currentTarget.productionData.productivity) {
+            const productivity = currentTarget.productionData.productivity;
             const productivityInfo = document.createElement('div');
             productivityInfo.className = 'metadata-row';
             productivityInfo.innerHTML = `<strong>Productivity:</strong> ${((productivity * 100) * Math.min(buildings, 1)).toFixed(0)}%`;
@@ -582,7 +648,7 @@ export class GraphRenderer {
         content.appendChild(countInfo);
 
         // Helper to render cost list
-        const renderCostList = (title, costs) => {
+        const renderCostList = (title: string, costs?: Record<string, number>) => {
             if (!costs || Object.keys(costs).length === 0) return null;
             const validCosts = Object.entries(costs).filter(([, amount]) => amount > 0);
             if (validCosts.length === 0) return null;
@@ -597,7 +663,7 @@ export class GraphRenderer {
             validCosts.forEach(([resource, amount]) => {
                 list.innerHTML += `
                     <div class="cost-resource">
-                        <img src="icons/${resource}.png" alt="${resource}" class="cost-icon-small" onerror="this.style.display='none';"/>
+                        <img src="./assets/icons/${resource}.png" alt="${resource}" class="cost-icon-small" onerror="this.style.display='none';"/>
                         <span>${amount}</span>
                     </div>
                 `;
@@ -628,28 +694,23 @@ export class GraphRenderer {
             document.removeEventListener('mousedown', outsideClickListener);
         };
 
-        const outsideClickListener = (e) => {
-            if (!infoContainer.contains(e.target)) {
+        const outsideClickListener = (e: MouseEvent) => {
+            if (!infoContainer.contains(e.target as Node)) {
                 closeMenu();
             }
         };
 
-        // We use mousedown on document to close when clicking outside, 
-        // but we need to make sure we don't close immediately if the click was the one that opened it.
-        // Since we are in the event handler, the click has already happened.
-        // We'll add the listener in a timeout to avoid current event triggering it? 
-        // Actually, the current event is on the SVG element. The document listener will catch future clicks.
         setTimeout(() => {
             document.addEventListener('mousedown', outsideClickListener);
         }, 0);
 
-        infoContainer.addEventListener("focusout", (e) => {
-            if (infoContainer.contains(e.relatedTarget)) return;
+        infoContainer.addEventListener("focusout", (e: FocusEvent) => {
+            if (infoContainer.contains(e.relatedTarget as Node)) return;
             closeMenu();
         });
 
         // Also close on Escape
-        infoContainer.addEventListener('keydown', (e) => {
+        infoContainer.addEventListener('keydown', (e: KeyboardEvent) => {
             if (e.key === 'Escape') closeMenu();
         });
     }

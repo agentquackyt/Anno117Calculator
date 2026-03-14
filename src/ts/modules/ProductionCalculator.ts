@@ -1,23 +1,34 @@
+import type { Goods } from '../types/Goods';
+import { SettingsManager } from './SettingsManager';
+
 const SECONDS_PER_MINUTE = 60;
+
+// The buildings map stores counts (numbers) plus a special '_metadata' key for production data.
+// We use 'any' here since we need to mix counts and metadata in the same Record
+// that is compatible with the existing interface contract (Record<string, number>).
+type BuildingsMap = Record<string, any>;
 
 /**
  * Pure calculation utilities for production chains.
+ * Singleton — always access via ProductionCalculator.getInstance().
  */
 export class ProductionCalculator {
-    constructor(configProvider = () => ({
-        aqueductsEnabled: false,
-        aquaArborica: false,
-        fieldIrrigation: false,
-        hushing: false
-    })) {
-        this.configProvider = configProvider;
+    private static _instance: ProductionCalculator | null = null;
+
+    public static getInstance(): ProductionCalculator {
+        if (!ProductionCalculator._instance) {
+            ProductionCalculator._instance = new ProductionCalculator();
+        }
+        return ProductionCalculator._instance;
     }
 
-    get config() {
-        return this.configProvider();
+    private constructor() {}
+
+    private get config() {
+        return SettingsManager.getInstance().getConfig();
     }
 
-    getProductivity(node) {
+    getProductivity(node: Goods): number {
         if (!node) return 1;
         let productivity = 1;
         const type = node.type || '';
@@ -37,15 +48,14 @@ export class ProductionCalculator {
         return productivity;
     }
 
-    getAdjustedTime(node) {
+    getAdjustedTime(node: Goods): number {
         if (!node) return 60;
-        let time = node.time || 60;
+        const time = node.time || 60;
         const productivity = this.getProductivity(node);
-
         return productivity ? time / productivity : time;
     }
 
-    collectAllBuildings(productionData, requiredPerMinute, result = {}, depth = 0) {
+    collectAllBuildings(productionData: Goods, requiredPerMinute: number, result: BuildingsMap = {}, depth = 0): BuildingsMap {
         if (!productionData || depth > 10) return result;
 
         const adjustedDuration = this.getAdjustedTime(productionData);
@@ -55,9 +65,9 @@ export class ProductionCalculator {
             : 0;
 
         result[key] = (result[key] || 0) + buildings;
-        if (!result._metadata) result._metadata = {};
-        if (!result._metadata[key]) {
-            result._metadata[key] = productionData;
+        if (!result['_metadata']) result['_metadata'] = {};
+        if (!result['_metadata'][key]) {
+            result['_metadata'][key] = productionData;
         }
 
         const outputCyclesPerMinute = adjustedDuration > 0
@@ -72,16 +82,14 @@ export class ProductionCalculator {
                 if (input.start_of_chain) {
                     const inputBuildings = this.calculateStartOfChainBuildings(input, requiredInputPerMinute, buildings, productionData);
                     result[input.id] = (result[input.id] || 0) + inputBuildings;
-                    if (!result._metadata[input.id]) {
-                        result._metadata[input.id] = input;
+                    if (!result['_metadata'][input.id]) {
+                        result['_metadata'][input.id] = input;
                     }
                     continue;
                 }
 
                 if (Array.isArray(input.input)) {
                     this.collectAllBuildings(input, requiredInputPerMinute, result, depth + 1);
-                } else if (input.recipe) {
-                    this.collectAllBuildings(input.recipe, requiredInputPerMinute, result, depth + 1);
                 }
             }
         }
@@ -89,8 +97,8 @@ export class ProductionCalculator {
         return result;
     }
 
-    calculateStartOfChainBuildings(input, requiredInputPerMinute, consumingBuildings, parentProduction) {
-        const parentNeedsCharcoal = parentProduction?.fuel?.some((fuel) => fuel.id === 'charcoal') || parentProduction?.needs_fuel;
+    private calculateStartOfChainBuildings(input: Goods, requiredInputPerMinute: number, consumingBuildings: number, parentProduction: Goods): number {
+        const parentNeedsCharcoal = (parentProduction as any).fuel?.some((fuel: { id: string }) => fuel.id === 'charcoal') || parentProduction.needs_fuel;
 
         if (input.id === 'charcoal' && parentNeedsCharcoal) {
             const charcoalConsumptionPerBuildingPerMinute = SECONDS_PER_MINUTE / 120;
@@ -109,7 +117,7 @@ export class ProductionCalculator {
             : 0;
     }
 
-    collectBaseInputs(productionData, baseInputs = new Map()) {
+    collectBaseInputs(productionData: Goods, baseInputs: Map<string, Goods> = new Map()): Map<string, Goods> {
         if (!productionData || !Array.isArray(productionData.input)) {
             return baseInputs;
         }
@@ -123,45 +131,43 @@ export class ProductionCalculator {
             }
             if (Array.isArray(input.input)) {
                 this.collectBaseInputs(input, baseInputs);
-            } else if (input.recipe) {
-                this.collectBaseInputs(input.recipe, baseInputs);
             }
         }
         return baseInputs;
     }
 
-    calculateFuelBuildings(productionData, allBuildings) {
-        let fuelList = productionData?.fuel || [];
-        if (productionData?.needs_fuel && !fuelList.length) {
-            fuelList = [{ id: 'charcoal', burning_time: 120 }];
-        }
-        
+    calculateFuelBuildings(productionData: Goods, allBuildings: BuildingsMap): Array<{ id: string; count: number }> {
+        const fuelList: Array<{ id: string; burning_time?: number }> =
+            (productionData as any).fuel?.length
+                ? (productionData as any).fuel
+                : productionData.needs_fuel
+                    ? [{ id: 'charcoal', burning_time: 120 }]
+                    : [];
+
         if (!fuelList.length) return [];
         const consumingBuildings = productionData.id ? (allBuildings[productionData.id] || 0) : 0;
 
         return fuelList.map((fuel) => {
             const burningTime = fuel.burning_time || 120;
             const fuelBuildingDuration = 30;
-
             const fuelPerBuildingPerMinute = burningTime > 0 ? SECONDS_PER_MINUTE / burningTime : 0;
             const totalFuelNeededPerMinute = consumingBuildings * fuelPerBuildingPerMinute;
             const fuelProductionPerBuilding = fuelBuildingDuration > 0 ? SECONDS_PER_MINUTE / fuelBuildingDuration : 0;
             const fuelBuildingsNeeded = fuelProductionPerBuilding > 0
                 ? totalFuelNeededPerMinute / fuelProductionPerBuilding
                 : 0;
-
             return { id: fuel.id, count: fuelBuildingsNeeded };
         });
     }
 
-    findRecommendedRate(productionData) {
+    findRecommendedRate(productionData: Goods): number {
         const cycleTimes = this.collectCycleTimes(productionData);
         if (!cycleTimes.length) return 1;
 
         const lcmTime = cycleTimes.reduce((acc, time) => this.lcm(acc, time), 1);
         const baseIncrement = SECONDS_PER_MINUTE / lcmTime;
 
-        for (let multiplier = 1; multiplier <= 100; multiplier += 1) {
+        for (let multiplier = 1; multiplier <= 100; multiplier++) {
             const candidateRate = baseIncrement * multiplier;
             if (this.allBuildingsAreWholeNumbers(productionData, candidateRate)) {
                 return candidateRate;
@@ -170,7 +176,7 @@ export class ProductionCalculator {
         return 1;
     }
 
-    collectCycleTimes(productionData, bucket = []) {
+    private collectCycleTimes(productionData: Goods, bucket: number[] = []): number[] {
         if (!productionData) return bucket;
         bucket.push(productionData.time || 60);
 
@@ -178,8 +184,6 @@ export class ProductionCalculator {
             for (const input of productionData.input) {
                 if (Array.isArray(input.input)) {
                     this.collectCycleTimes(input, bucket);
-                } else if (input.recipe) {
-                    this.collectCycleTimes(input.recipe, bucket);
                 } else if (input.time) {
                     bucket.push(input.time);
                 }
@@ -188,11 +192,12 @@ export class ProductionCalculator {
         return bucket;
     }
 
-    allBuildingsAreWholeNumbers(productionData, rate) {
+    private allBuildingsAreWholeNumbers(productionData: Goods, rate: number): boolean {
         const allBuildings = this.collectAllBuildings(this.cloneRecipe(productionData), rate, {});
         for (const [key, value] of Object.entries(allBuildings)) {
             if (key === '_metadata') continue;
-            const fraction = Math.abs(value - Math.round(value));
+            const num = value as number;
+            const fraction = Math.abs(num - Math.round(num));
             if (fraction > 0.05 && fraction < 0.95) {
                 return false;
             }
@@ -200,20 +205,20 @@ export class ProductionCalculator {
         return true;
     }
 
-    calculateTotals(allBuildings) {
+    calculateTotals(allBuildings: BuildingsMap): { buildingCost: Record<string, number>; maintenance: Record<string, number> } {
         const totals = {
-            buildingCost: {},
-            maintenance: {}
+            buildingCost: {} as Record<string, number>,
+            maintenance: {} as Record<string, number>,
         };
-        if (!allBuildings || !allBuildings._metadata) {
+        if (!allBuildings || !allBuildings['_metadata']) {
             return totals;
         }
 
         for (const [goodId, count] of Object.entries(allBuildings)) {
             if (goodId === '_metadata') continue;
-            const metadata = allBuildings._metadata[goodId];
+            const metadata = allBuildings['_metadata'][goodId] as Goods | undefined;
             if (!metadata) continue;
-            const ceiled = Math.ceil(count);
+            const ceiled = Math.ceil(count as number);
 
             if (metadata.building_cost) {
                 this.accumulateCosts(totals.buildingCost, metadata.building_cost, ceiled);
@@ -225,7 +230,7 @@ export class ProductionCalculator {
         return totals;
     }
 
-    accumulateCosts(target, costs, multiplier) {
+    private accumulateCosts(target: Record<string, number>, costs: Record<string, number>, multiplier: number): void {
         for (const [resource, amount] of Object.entries(costs)) {
             const total = amount * multiplier;
             if (total <= 0) continue;
@@ -233,19 +238,16 @@ export class ProductionCalculator {
         }
     }
 
-    lcm(a, b) {
+    private lcm(a: number, b: number): number {
         return (a * b) / this.gcd(a, b);
     }
 
-    gcd(a, b) {
+    private gcd(a: number, b: number): number {
         if (!b) return a;
         return this.gcd(b, a % b);
     }
 
-    cloneRecipe(recipe) {
-        if (typeof structuredClone === 'function') {
-            return structuredClone(recipe);
-        }
-        return JSON.parse(JSON.stringify(recipe));
+    cloneRecipe(recipe: Goods): Goods {
+        return structuredClone(recipe);
     }
 }

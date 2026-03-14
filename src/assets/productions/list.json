@@ -1,6 +1,6 @@
 {
   "README": "This file contains all productions from Anno 117: Pax Romana.",
-  "generated": "2026-03-14T08:33:03.945Z",
+  "generated": "2026-03-14T11:07:23.920Z",
   "count": 48,
   "goods": [
     {
@@ -56,12 +56,12 @@
       "id": "bread",
       "icon": "bread",
       "regions": [
-        "Celtic",
-        "Roman"
+        "Roman",
+        "Celtic"
       ],
       "files": {
-        "celtic": "bread_albion",
-        "roman": "bread"
+        "roman": "bread",
+        "celtic": "bread_albion"
       }
     },
     {
@@ -361,12 +361,12 @@
       "id": "sails",
       "icon": "sails",
       "regions": [
-        "Celtic",
-        "Roman"
+        "Roman",
+        "Celtic"
       ],
       "files": {
-        "celtic": "sails_albion",
-        "roman": "sails"
+        "roman": "sails",
+        "celtic": "sails_albion"
       }
     },
     {
@@ -429,12 +429,12 @@
       "id": "tiles",
       "icon": "tiles",
       "regions": [
-        "Celtic",
-        "Roman"
+        "Roman",
+        "Celtic"
       ],
       "files": {
-        "celtic": "tiles_albion",
-        "roman": "tiles"
+        "roman": "tiles",
+        "celtic": "tiles_albion"
       }
     },
     {
@@ -536,12 +536,12 @@
       "id": "wine",
       "icon": "wine",
       "regions": [
-        "Celtic",
-        "Roman"
+        "Roman",
+        "Celtic"
       ],
       "files": {
-        "celtic": "wine_albion",
-        "roman": "wine"
+        "roman": "wine",
+        "celtic": "wine_albion"
       }
     },
     {

@@ -2,6 +2,7 @@ import { serve } from "bun";
 import { parseArgs } from "util";
 import homepage from "./src/index.html";
 import generateGoodsList from "./tools/generate-goods-list";
+import fs from "fs/promises";
 
 const logo = () => {
     console.log(Bun.color("#d4b89b", "ansi-16m"));
@@ -18,7 +19,7 @@ const logo = () => {
     console.log(`\n ${Bun.color("#e7cfb6", "ansi")}=== Anno 117: Calculator === `);
 };
 
-const { values, positionals } = parseArgs({
+const { values } = parseArgs({
     args: Bun.argv,
     options: {
         build: {
@@ -48,10 +49,10 @@ if (values.commit) {
 console.clear();
 
 logo();
-await generateGoodsList({showList: false, devmode: !values.build});
+await generateGoodsList({ showList: false, devmode: !values.build });
 
 
-if(values.build) {
+if (values.build) {
     console.log(`\n${Bun.color("#acf3ff", "ansi-16m") + "[Developer Server] " + Bun.color("#1394bf", "ansi-16m")}Building for production ...`);
     await Bun.$`mkdir ./docs/`.text().catch(() => { /* ignore if already exists */ });
     await Bun.$`rm -rf ./docs/*`.text().catch(() => { /* ignore if already exists */ });
@@ -63,7 +64,7 @@ if(values.build) {
     });
 
     await Bun.$`xcopy src\\assets docs\\assets /s /i`.text().catch(() => { /* ignore if already exists */ });
-    
+
     console.log(`\n${Bun.color("#acf3ff", "ansi-16m") + "[Developer Server] " + Bun.color("#1394bf", "ansi-16m")}Build completed! Output in ./docs/`);
 }
 
@@ -74,12 +75,34 @@ if (values.dev) {
         },
         async fetch(req) {
             // Serve static asset dir
-            if (req.url.startsWith("/assets/")) {
-                const assetPath = `./src${req.url}`;
+            let url = new URL(req.url);
+
+            if (url.pathname.startsWith("/assets")) {
+                // strip the trailing slash if it exists
+                if (url.pathname.endsWith("/")) {
+                    url.pathname = url.pathname.slice(0, -1);
+                }
+                const assetPath = `./src${url.pathname}`;
                 if (await Bun.file(assetPath).exists()) {
                     return new Response(Bun.file(assetPath));
-                } else {
-                    return new Response("Not found", { status: 404 });
+                }
+                // check if it an dir exists and list the content if it does (use fs.readdir)
+                else {
+                    try {
+                        const files = await fs.readdir(assetPath);
+                        const css = `<style>
+                        body { font-family: Arial, sans-serif; padding: 20px; display: flex; flex-direction: column; }
+                        h1 { color: #333; } 
+                        a { display: block; margin: 5px 0; color: #007acc; text-decoration: none; }
+                        a:hover { text-decoration: underline; }
+                        </style>`;
+                        const header = `<h1>Index of ${url.pathname}</h1><hr>`;
+                        const goback = `<a href="${url.pathname}/.." style="color: #00ccbb; text-decoration: underline;">Go Back</a>`;
+                        const fileLinks = files.map(file => `<a href="${url.pathname}/${file}">${file}</a>`);
+                        return new Response(`${css}${header}${goback}${fileLinks.join("\n")}`, { status: 200, headers: { "Content-Type": "text/html" } });
+                    } catch (e) {
+                        return new Response("Error: " + e, { status: 404 });
+                    }
                 }
             }
             return new Response("Not found", { status: 404 });
