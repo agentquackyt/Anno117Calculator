@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "bun run devserver.ts --dev",
     "build": "bun run devserver.ts --build",
+    "commit": "bun run devserver.ts --build --commit",
     "list": "bun run devserver.ts"
   },
-  "pre-commit": ["build"],
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^25.5.0"

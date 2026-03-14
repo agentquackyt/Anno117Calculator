@@ -25,6 +25,10 @@ const { values, positionals } = parseArgs({
             type: "boolean",
             default: false,
         },
+        commit: {
+            type: "boolean",
+            default: false,
+        },
         dev: {
             type: "boolean",
             default: false
@@ -33,6 +37,13 @@ const { values, positionals } = parseArgs({
     strict: true,
     allowPositionals: true,
 });
+
+if (values.commit) {
+    // check env variable
+    if (!process.env.CHECK_PRECOMMIT || process.env.CHECK_PRECOMMIT === "false") {
+        process.exit(0);
+    }
+}
 
 console.clear();
 
