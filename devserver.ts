@@ -37,7 +37,7 @@ const { values, positionals } = parseArgs({
 console.clear();
 
 logo();
-await generateGoodsList(false);
+await generateGoodsList({showList: false, devmode: !values.build});
 
 
 if(values.build) {

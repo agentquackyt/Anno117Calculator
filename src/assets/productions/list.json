@@ -1,1232 +1,558 @@
 {
-  "README": "This file contains all goods from Anno 117 production chains",
-  "generated": "2026-03-13T18:41:26.205Z",
-  "count": 109,
+  "README": "This file contains all productions from Anno 117: Pax Romana.",
+  "generated": "2026-03-14T08:22:09.253Z",
+  "count": 48,
   "goods": [
     {
       "displayName": "Amphorae",
       "id": "amphorae",
       "icon": "amphorae",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "amphorae": [
-          "Roman"
-        ],
-        "amphorae_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "amphorae",
+        "celtic": "amphorae_albion"
       }
     },
     {
       "displayName": "Armour",
       "id": "armour",
       "icon": "armour",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "armour": [
-          "Roman"
-        ],
-        "armour_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "armour",
+        "celtic": "armour_albion"
       }
-    },
-    {
-      "displayName": "Barley",
-      "id": "barley",
-      "icon": "barley",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Beavers",
-      "id": "beavers",
-      "icon": "beavers",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Beer",
       "id": "beer",
       "icon": "beer",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "beer_albion": [
-          "Celtic"
-        ]
+        "celtic": "beer_albion"
       }
-    },
-    {
-      "displayName": "Bird Tongues",
-      "id": "bird_tongues",
-      "icon": "bird_tongues",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Bird Tongues in Aspic",
       "id": "bird_tongues_in_aspic",
       "icon": "bird_tongues_in_aspic",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "bird_tongues_in_aspic": [
-          "Roman"
-        ]
+        "roman": "bird_tongues_in_aspic"
       }
     },
     {
       "displayName": "Bread",
       "id": "bread",
       "icon": "bread",
-      "startOfChain": false,
       "regions": [
-        "Roman",
-        "Celtic"
+        "Celtic",
+        "Roman"
       ],
       "files": {
-        "bread": [
-          "Roman"
-        ],
-        "bread_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "bread_albion",
+        "roman": "bread"
       }
-    },
-    {
-      "displayName": "Bronze",
-      "id": "bronze",
-      "icon": "bronze",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Brooches",
       "id": "brooches",
       "icon": "brooches",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "brooches": [
-          "Roman"
-        ]
+        "roman": "brooches"
       }
-    },
-    {
-      "displayName": "Caviar",
-      "id": "caviar",
-      "icon": "caviar",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Celtic Green",
-      "id": "celtic_green",
-      "icon": "celtic_green",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Chariots",
       "id": "chariots",
       "icon": "chariots",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "chariots": [
-          "Roman"
-        ]
+        "roman": "chariots"
       }
-    },
-    {
-      "displayName": "Chassis",
-      "id": "chassis",
-      "icon": "chassis",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Cheese",
       "id": "cheese",
       "icon": "cheese",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "cheese": [
-          "Roman"
-        ]
+        "roman": "cheese"
       }
     },
     {
       "displayName": "Clan Shields",
       "id": "clan_shields",
       "icon": "clan_shields",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "clan_shields_albion": [
-          "Celtic"
-        ]
+        "celtic": "clan_shields_albion"
       }
-    },
-    {
-      "displayName": "Clay",
-      "id": "clay",
-      "icon": "clay",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Cloaks",
       "id": "cloaks",
       "icon": "cloaks",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "cloaks": [
-          "Roman"
-        ]
+        "roman": "cloaks"
       }
-    },
-    {
-      "displayName": "Cloth",
-      "id": "cloth",
-      "icon": "cloth",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Cockles",
       "id": "cockles",
       "icon": "cockles",
-      "startOfChain": false,
       "regions": [
-        "Roman",
         "Celtic"
       ],
       "files": {
-        "cockles_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "cockles_albion"
       }
     },
     {
       "displayName": "Concrete",
       "id": "concrete",
       "icon": "concrete",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "concrete": [
-          "Roman"
-        ],
-        "concrete_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "concrete",
+        "celtic": "concrete_albion"
       }
-    },
-    {
-      "displayName": "Copper Ore",
-      "id": "copper_ore",
-      "icon": "copper_ore",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Cushions",
-      "id": "cushions",
-      "icon": "cushions",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Drinking Horns",
       "id": "drinking_horns",
       "icon": "drinking_horns",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "drinking_horns_albion": [
-          "Celtic"
-        ]
+        "celtic": "drinking_horns_albion"
       }
-    },
-    {
-      "displayName": "Dye Plants",
-      "id": "dye_plants",
-      "icon": "dye_plants",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Eels",
       "id": "eels",
       "icon": "eels",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "eels_albion": [
-          "Celtic"
-        ]
+        "celtic": "eels_albion"
       }
     },
     {
       "displayName": "Fine Glass",
       "id": "fine_glass",
       "icon": "fine_glass",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "fine_glass": [
-          "Roman"
-        ]
+        "roman": "fine_glass"
       }
-    },
-    {
-      "displayName": "Flax",
-      "id": "flax",
-      "icon": "flax",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Flour",
-      "id": "flour",
-      "icon": "flour",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Fur Hats",
       "id": "fur_hats",
       "icon": "fur_hats",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "fur_hats_albion": [
-          "Celtic"
-        ]
+        "celtic": "fur_hats_albion"
       }
     },
     {
       "displayName": "Garum",
       "id": "garum",
       "icon": "garum",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "garum": [
-          "Roman"
-        ]
+        "roman": "garum"
       }
-    },
-    {
-      "displayName": "Glass",
-      "id": "glass",
-      "icon": "glass",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Gold",
-      "id": "gold",
-      "icon": "gold",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Gold Ore",
-      "id": "gold_ore",
-      "icon": "gold_ore",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Granite",
       "id": "granite",
       "icon": "granite",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "granite_albion": [
-          "Celtic"
-        ]
+        "celtic": "granite_albion"
       }
-    },
-    {
-      "displayName": "Granite Block",
-      "id": "granite_block",
-      "icon": "granite_block",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Grapes",
-      "id": "grapes",
-      "icon": "grapes",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Handmirrors",
       "id": "handmirrors",
       "icon": "handmirrors",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "handmirrors": [
-          "Roman"
-        ]
+        "roman": "handmirrors"
       }
-    },
-    {
-      "displayName": "Head Piece",
-      "id": "head_piece",
-      "icon": "head_piece",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Hemp",
-      "id": "hemp",
-      "icon": "hemp",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Herbs",
-      "id": "herbs",
-      "icon": "herbs",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Honeycombs",
-      "id": "honeycombs",
-      "icon": "honeycombs",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Horses",
       "id": "horses",
       "icon": "horses",
-      "startOfChain": true,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "horses": [
-          "Roman"
-        ],
-        "horses_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "horses",
+        "celtic": "horses_albion"
       }
-    },
-    {
-      "displayName": "Iron",
-      "id": "iron",
-      "icon": "iron",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Iron Ore",
-      "id": "iron_ore",
-      "icon": "iron_ore",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Lard",
-      "id": "lard",
-      "icon": "lard",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Lavender",
-      "id": "lavender",
-      "icon": "lavender",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Leather",
-      "id": "leather",
-      "icon": "leather",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Limestone",
-      "id": "limestone",
-      "icon": "limestone",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Loungers",
       "id": "loungers",
       "icon": "loungers",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "loungers": [
-          "Roman"
-        ]
+        "roman": "loungers"
       }
-    },
-    {
-      "displayName": "Mackerel",
-      "id": "mackerel",
-      "icon": "mackerel",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Malt",
-      "id": "malt",
-      "icon": "malt",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Marble",
       "id": "marble",
       "icon": "marble",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "marble": [
-          "Roman"
-        ]
+        "roman": "marble"
       }
-    },
-    {
-      "displayName": "Minerals",
-      "id": "minerals",
-      "icon": "minerals",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Mosaics",
       "id": "mosaics",
       "icon": "mosaics",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "mosaics": [
-          "Roman"
-        ]
+        "roman": "mosaics"
       }
-    },
-    {
-      "displayName": "Mud",
-      "id": "mud",
-      "icon": "mud",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Murex Snails",
-      "id": "murex_snails",
-      "icon": "murex_snails",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Necklaces",
       "id": "necklaces",
       "icon": "necklaces",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "necklaces": [
-          "Roman"
-        ]
+        "roman": "necklaces"
       }
-    },
-    {
-      "displayName": "Oats",
-      "id": "oats",
-      "icon": "oats",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Ochs",
-      "id": "ochs",
-      "icon": "ochs",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Olive Oil",
       "id": "olive_oil",
       "icon": "olive_oil",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "olive_oil": [
-          "Roman"
-        ]
+        "roman": "olive_oil"
       }
-    },
-    {
-      "displayName": "Olives",
-      "id": "olives",
-      "icon": "olives",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Ornate Wood",
-      "id": "ornate_wood",
-      "icon": "ornate_wood",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Oysters",
-      "id": "oysters",
-      "icon": "oysters",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Oysters with Caviar",
       "id": "oysters_with_caviar",
       "icon": "oysters_with_caviar",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "oysters_with_caviar": [
-          "Roman"
-        ]
+        "roman": "oysters_with_caviar"
       }
-    },
-    {
-      "displayName": "Pigments",
-      "id": "pigments",
-      "icon": "pigments",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Pigs",
-      "id": "pigs",
-      "icon": "pigs",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Pileus",
       "id": "pileus",
       "icon": "pileus",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "pileus": [
-          "Roman"
-        ]
+        "roman": "pileus"
       }
-    },
-    {
-      "displayName": "Ponies",
-      "id": "ponies",
-      "icon": "ponies",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Porridge",
       "id": "porridge",
       "icon": "porridge",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "porridge": [
-          "Roman"
-        ]
+        "roman": "porridge"
       }
     },
     {
       "displayName": "Reed Shoes",
       "id": "reed_shoes",
       "icon": "reed_shoes",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "reed_shoes_albion": [
-          "Celtic"
-        ]
+        "celtic": "reed_shoes_albion"
       }
-    },
-    {
-      "displayName": "Reeds",
-      "id": "reeds",
-      "icon": "reeds",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Resin",
-      "id": "resin",
-      "icon": "resin",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Roast Beef",
       "id": "roast_beef",
       "icon": "roast_beef",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "roast_beef_albion": [
-          "Celtic"
-        ]
+        "celtic": "roast_beef_albion"
       }
     },
     {
       "displayName": "Rope",
       "id": "rope",
       "icon": "rope",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "rope": [
-          "Roman"
-        ],
-        "rope_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "rope",
+        "celtic": "rope_albion"
       }
     },
     {
       "displayName": "Sails",
       "id": "sails",
       "icon": "sails",
-      "startOfChain": false,
       "regions": [
-        "Roman",
-        "Celtic"
+        "Celtic",
+        "Roman"
       ],
       "files": {
-        "sails": [
-          "Roman"
-        ],
-        "sails_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "sails_albion",
+        "roman": "sails"
       }
-    },
-    {
-      "displayName": "Salt",
-      "id": "salt",
-      "icon": "salt",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Saltwash",
-      "id": "saltwash",
-      "icon": "saltwash",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Saltwort",
-      "id": "saltwort",
-      "icon": "saltwort",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Sandals",
       "id": "sandals",
       "icon": "sandals",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "sandals": [
-          "Roman"
-        ]
+        "roman": "sandals"
       }
-    },
-    {
-      "displayName": "Sandarac Wood",
-      "id": "sandarac_wood",
-      "icon": "sandarac_wood",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Sardines",
       "id": "sardines",
       "icon": "sardines",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "sardines": [
-          "Roman"
-        ]
+        "roman": "sardines"
       }
     },
     {
       "displayName": "Sausages",
       "id": "sausages",
       "icon": "sausages",
-      "startOfChain": false,
       "regions": [
-        "Roman",
         "Celtic"
       ],
       "files": {
-        "sausages_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "sausages_albion"
       }
-    },
-    {
-      "displayName": "Seashells",
-      "id": "seashells",
-      "icon": "seashells",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Sheep",
-      "id": "sheep",
-      "icon": "sheep",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Silica",
-      "id": "silica",
-      "icon": "silica",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Silver",
-      "id": "silver",
-      "icon": "silver",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Silver Ore",
-      "id": "silver_ore",
-      "icon": "silver_ore",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Small Birds",
-      "id": "small_birds",
-      "icon": "small_birds",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Soap",
       "id": "soap",
       "icon": "soap",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "soap": [
-          "Roman"
-        ]
+        "roman": "soap"
       }
     },
     {
       "displayName": "Standing Lyres",
       "id": "standing_lyres",
       "icon": "standing_lyres",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "standing_lyres": [
-          "Roman"
-        ]
+        "roman": "standing_lyres"
       }
-    },
-    {
-      "displayName": "String",
-      "id": "string",
-      "icon": "string",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Sturgeon",
-      "id": "sturgeon",
-      "icon": "sturgeon",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Tiles",
       "id": "tiles",
       "icon": "tiles",
-      "startOfChain": false,
       "regions": [
-        "Roman",
-        "Celtic"
+        "Celtic",
+        "Roman"
       ],
       "files": {
-        "tiles": [
-          "Roman"
-        ],
-        "tiles_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "tiles_albion",
+        "roman": "tiles"
       }
     },
     {
       "displayName": "Timber",
       "id": "timber",
       "icon": "timber",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "timber": [
-          "Roman"
-        ],
-        "timber_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "timber",
+        "celtic": "timber_albion"
       }
-    },
-    {
-      "displayName": "Tin Ore",
-      "id": "tin_ore",
-      "icon": "tin_ore",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Togas",
       "id": "togas",
       "icon": "togas",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "togas": [
-          "Roman"
-        ]
+        "roman": "togas"
       }
     },
     {
       "displayName": "Torcs",
       "id": "torcs",
       "icon": "torcs",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "torcs_albion": [
-          "Celtic"
-        ]
+        "celtic": "torcs_albion"
       }
     },
     {
       "displayName": "Trousers",
       "id": "trousers",
       "icon": "trousers",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "trousers_albion": [
-          "Celtic"
-        ]
+        "celtic": "trousers_albion"
       }
     },
     {
       "displayName": "Tunics",
       "id": "tunics",
       "icon": "tunics",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "tunics": [
-          "Roman"
-        ],
-        "tunics_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "tunics",
+        "celtic": "tunics_albion"
       }
-    },
-    {
-      "displayName": "Tyrian Purple",
-      "id": "tyrian_purple",
-      "icon": "tyrian_purple",
-      "startOfChain": false,
-      "regions": [],
-      "files": {}
-    },
-    {
-      "displayName": "Uncut Marble",
-      "id": "uncut_marble",
-      "icon": "uncut_marble",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Wattle & Daub",
       "id": "wattle_&_daub",
       "icon": "wattle_&_daub",
-      "startOfChain": false,
       "regions": [
         "Celtic"
       ],
       "files": {
-        "wattle_&_daub_albion": [
-          "Celtic"
-        ]
+        "celtic": "wattle_&_daub_albion"
       }
     },
     {
       "displayName": "Weapons",
       "id": "weapons",
       "icon": "weapons",
-      "startOfChain": false,
       "regions": [
         "Roman",
         "Celtic"
       ],
       "files": {
-        "weapons": [
-          "Roman"
-        ],
-        "weapons_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "roman": "weapons",
+        "celtic": "weapons_albion"
       }
-    },
-    {
-      "displayName": "Wheat",
-      "id": "wheat",
-      "icon": "wheat",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Wigs",
       "id": "wigs",
       "icon": "wigs",
-      "startOfChain": false,
       "regions": [
-        "Roman",
         "Celtic"
       ],
       "files": {
-        "wigs_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "wigs_albion"
       }
     },
     {
       "displayName": "Wine",
       "id": "wine",
       "icon": "wine",
-      "startOfChain": false,
       "regions": [
-        "Roman",
-        "Celtic"
+        "Celtic",
+        "Roman"
       ],
       "files": {
-        "wine": [
-          "Roman"
-        ],
-        "wine_albion": [
-          "Roman",
-          "Celtic"
-        ]
+        "celtic": "wine_albion",
+        "roman": "wine"
       }
-    },
-    {
-      "displayName": "Wood",
-      "id": "wood",
-      "icon": "wood",
-      "startOfChain": true,
-      "regions": [],
-      "files": {}
     },
     {
       "displayName": "Writing Tablets",
       "id": "writing_tablets",
       "icon": "writing_tablets",
-      "startOfChain": false,
       "regions": [
         "Roman"
       ],
       "files": {
-        "writing_tablets": [
-          "Roman"
-        ]
+        "roman": "writing_tablets"
       }
     }
   ]
