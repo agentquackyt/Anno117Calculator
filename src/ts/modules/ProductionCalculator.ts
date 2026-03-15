@@ -1,5 +1,5 @@
 import type { Goods } from '../types/Goods';
-import { Aqueduct } from './modifier/Aqueduct';
+import { ModifierRegistry } from './ModifierRegistry';
 import type { AbstractProductionModifier } from './ProductionModifier';
 import { SettingsManager } from './SettingsManager';
 
@@ -26,14 +26,12 @@ export class ProductionCalculator {
     }
 
     private constructor() {
-        // Register production modifiers here — loadConfig() seeds state from URL params
-        const aqueduct = new Aqueduct();
-        aqueduct.loadConfig();
-        this.productionModifiers.push(aqueduct);
+        this.productionModifiers = ModifierRegistry.getInstance().getModifiers();
+        this.productionModifiers.forEach((modifier) => modifier.loadConfig());
 
-        // Keep modifier configs in sync when the settings panel changes
+        // Keep modifier configs in sync when settings change.
         SettingsManager.getInstance().onChange((config) => {
-            aqueduct.applySettings(config);
+            this.productionModifiers.forEach((modifier) => modifier.applySettings(config));
         });
     }
 
@@ -45,10 +43,6 @@ export class ProductionCalculator {
             if (!icon) return [];
             return m.getProductivity(goodsLike).isAffected ? [icon] : [];
         });
-    }
-
-    private get config() {
-        return SettingsManager.getInstance().getConfig();
     }
 
     getProductivity(node: Goods): number {

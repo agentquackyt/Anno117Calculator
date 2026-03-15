@@ -63,10 +63,12 @@ if (values.build) {
         minify: true,
     });
 
-    await Bun.$`xcopy src\\assets docs\\assets /s /i`.text().catch(() => { /* ignore if already exists */ });
+    // Cross-platform asset copy (works on macOS/Linux/Windows shell environments).
+    await Bun.$`mkdir -p ./docs/assets`.text().catch(() => { /* ignore if already exists */ });
+    await Bun.$`cp -R ./src/assets/. ./docs/assets/`.text();
 
     // SW must be at the root so its scope covers the entire origin.
-    await Bun.write('./docs/sw.js', Bun.file('./docs/assets/data/sw.js'));
+    await Bun.write('./docs/sw.js', Bun.file('./src/assets/data/sw.js'));
 
     console.log(`\n${Bun.color("#acf3ff", "ansi-16m") + "[Developer Server] " + Bun.color("#1394bf", "ansi-16m")}Build completed! Output in ./docs/`);
 }

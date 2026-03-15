@@ -356,18 +356,20 @@ export class GraphRenderer {
 
     addCornerImage(group: SVGGElement, x: number, y: number, size: number, href: string, filled: boolean = false): void {
         const icon = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-        const iconSize = 32;
+        const iconSize = Math.round(size * 0.56);
+        const cornerX = x + size / 2 - iconSize + 6;
+        const cornerY = y + size / 2 - iconSize + 6;
         icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
-        icon.setAttribute('x', String(x + 37 - size / 2));
-        icon.setAttribute('y', String(y + 37 - size / 2));
+        icon.setAttribute('x', String(cornerX));
+        icon.setAttribute('y', String(cornerY));
         icon.setAttribute('width', String(iconSize));
         icon.setAttribute('height', String(iconSize));
 
         if (filled) {
             // square with rounded corners as background for better visibility
             const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            bg.setAttribute('x', String(x + 37 - size / 2));
-            bg.setAttribute('y', String(y + 37 - size / 2));
+            bg.setAttribute('x', String(cornerX));
+            bg.setAttribute('y', String(cornerY));
             bg.setAttribute('width', String(iconSize));
             bg.setAttribute('height', String(iconSize));
             bg.setAttribute('rx', '5');
@@ -486,7 +488,9 @@ export class GraphRenderer {
 
         this.svgElement.addEventListener('touchstart', (e: TouchEvent) => {
             if (e.touches.length > 0) e.preventDefault();
-            for (const touch of e.changedTouches) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches.item(i);
+                if (!touch) continue;
                 activeTouches.set(touch.identifier, this.clientToSvgPoint(touch));
             }
             if (activeTouches.size === 1) {
@@ -507,7 +511,9 @@ export class GraphRenderer {
 
         this.svgElement.addEventListener('touchmove', (e: TouchEvent) => {
             if (e.touches.length > 0) e.preventDefault();
-            for (const touch of e.changedTouches) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches.item(i);
+                if (!touch) continue;
                 activeTouches.set(touch.identifier, this.clientToSvgPoint(touch));
             }
             if (activeTouches.size === 1 && isDragging) {
@@ -548,7 +554,9 @@ export class GraphRenderer {
         };
 
         this.svgElement.addEventListener('touchend', (e: TouchEvent) => {
-            for (const touch of e.changedTouches) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                const touch = e.changedTouches.item(i);
+                if (!touch) continue;
                 activeTouches.delete(touch.identifier);
             }
             if (activeTouches.size < 2) {

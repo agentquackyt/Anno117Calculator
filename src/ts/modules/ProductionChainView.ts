@@ -1,6 +1,9 @@
 import type { RecipeListItem } from '../types/RecipeList';
 import type { Goods } from '../types/Goods';
 import { GoodsRepository } from './GoodRepository';
+import { ModifierRegistry } from './ModifierRegistry';
+import { SettingsManager } from './SettingsManager';
+import { formatDuration } from './Utils';
 
 interface GoodsListViewConfig {
     container: HTMLElement;
@@ -19,7 +22,7 @@ interface ProductionChainViewConfig {
         calculateTotals(allBuildings: Record<string, number>): { buildingCost: Record<string, number>; maintenance: Record<string, number> };
     };
     graphRenderer: {
-        attach(container: HTMLElement): Promise<void>;
+        attach(container: HTMLElement, selectedGoodId?: string): Promise<void>;
         render(productionData: Goods, allBuildings: Record<string, number>): void;
     };
 }
@@ -143,6 +146,8 @@ class GoodsListView {
 class ProductionChainView {
     container: HTMLElement;
     goodsRepository: GoodsRepository;
+    settingsManager: SettingsManager;
+    modifierRegistry: ModifierRegistry;
     calculator: ProductionChainViewConfig['calculator'];
     graphRenderer: ProductionChainViewConfig['graphRenderer'];
     currentGood: RecipeListItem | null;
@@ -160,6 +165,8 @@ class ProductionChainView {
         const { container, calculator, graphRenderer } = config;
         this.container = container;
         this.goodsRepository = GoodsRepository.getInstance()!;
+        this.settingsManager = SettingsManager.getInstance();
+        this.modifierRegistry = ModifierRegistry.getInstance();
         this.calculator = calculator;
         this.graphRenderer = graphRenderer;
         this.currentGood = null;
@@ -254,48 +261,89 @@ class ProductionChainView {
             }
             this.updateCalculations(recipe);
         });
+
+        this.container.querySelectorAll('[data-setting-key]').forEach((node) => {
+            node.addEventListener('click', () => {
+                const button = node as HTMLButtonElement;
+                const key = button.dataset.settingKey;
+                const requires = button.dataset.settingRequires;
+                if (!key) return;
+                if (requires && !this.settingsManager.getSetting(requires)) return;
+                this.settingsManager.toggleSetting(key);
+            });
+        });
+
+        this.container.querySelectorAll('[data-setting-num-key]').forEach((node) => {
+            node.addEventListener('input', () => {
+                const input = node as HTMLInputElement;
+                const key = input.dataset.settingNumKey;
+                const requires = input.dataset.settingRequires;
+                if (!key) return;
+                if (requires && !this.settingsManager.getSetting(requires)) return;
+                const val = parseFloat(input.value);
+                if (Number.isFinite(val)) this.settingsManager.setSettingValue(key, val);
+            });
+        });
+
+        this.container.querySelectorAll('[data-setting-select-key]').forEach((node) => {
+            node.addEventListener('change', () => {
+                const select = node as HTMLSelectElement;
+                const key = select.dataset.settingSelectKey;
+                const requires = select.dataset.settingRequires;
+                if (!key) return;
+                if (requires && !this.settingsManager.getSetting(requires)) return;
+                this.settingsManager.setSettingValue(key, select.value);
+            });
+        });
     }
 
     buildMarkup(good: RecipeListItem, recipe: Goods, baseInputs: Map<string, Goods>): string {
         const outputIcon = good.icon;
         const baseCards = this.buildBaseInputCards(baseInputs);
 
-        let fuelList: FuelInfo[] = [];
-        if (recipe.needs_fuel) {
-            fuelList = [{ id: 'charcoal', burning_time: 120 }];
-        }
+        const fuelList: FuelInfo[] = ((recipe as any).fuel?.length
+            ? (recipe as any).fuel
+            : recipe.needs_fuel
+                ? [{ id: 'charcoal', burning_time: 120 }]
+                : []) as FuelInfo[];
 
         const fuelCards = this.buildFuelCards(fuelList);
         const outputTime = this.buildTimeBadge(recipe);
+        const modifierToolbar = this.buildModifierToolbar();
 
         return `
             <div class="calculator-header">
                 <button class="back-button" type="button" data-action="back" aria-label="Back to list">&larr;</button>
                 <h3>Production Chain: ${good.displayName}</h3>
             </div>
-            <div class="production-controls">
-                <label for="target-rate">Target output per minute:</label>
-                <input id="target-rate" type="number" min="0" step="0.5" value="${this.currentRate ?? 1}" />
-                <button id="recommend-ratio-btn" type="button" class="recommend-button">Recommended Ratio</button>
-            </div>
             <div class="calculator-content two-column">
                 <div class="production-column">
-                    <div class="production-info">
-                        <h4>Output</h4>
-                        <div class="production-grid">
-                            <div class="production-card">
-                                <div class="production-card-icon">
-                                    <img src="./assets/icons/${outputIcon}.png" alt="${good.displayName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                    <div class="icon-placeholder" style="display:none;">${outputIcon.substring(0, 2).toUpperCase()}</div>
+                    <div class="production-command-deck">
+                        <div class="production-rate-inline">
+                            <label for="target-rate">Output / min</label>
+                            <input id="target-rate" type="number" min="0" step="0.5" value="${this.currentRate ?? 1}" />
+                            <button id="recommend-ratio-btn" type="button" class="recommend-button">Auto Ratio</button>
+                        </div>
+                        ${modifierToolbar}
+                    </div>
+                    <div class="production-flow-grid">
+                        <div class="production-info production-info-compact">
+                            <h4>Output</h4>
+                            <div class="production-grid compact-grid">
+                                <div class="production-card">
+                                    <div class="production-card-icon">
+                                        <img src="./assets/icons/${outputIcon}.png" alt="${good.displayName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                        <div class="icon-placeholder" style="display:none;">${outputIcon.substring(0, 2).toUpperCase()}</div>
+                                    </div>
+                                    <div class="production-card-name">${good.displayName}</div>
+                                    ${outputTime}
+                                    <div class="production-card-count" data-building-count="${recipe.id}">0.00x</div>
                                 </div>
-                                <div class="production-card-name">${good.displayName}</div>
-                                ${outputTime}
-                                <div class="production-card-count" data-building-count="${recipe.id}">0.00x</div>
                             </div>
                         </div>
+                        ${baseCards}
+                        ${fuelCards}
                     </div>
-                    ${baseCards}
-                    ${fuelCards}
                 </div>
                 <div class="graph-column">
                     <div class="production-graph">
@@ -318,9 +366,6 @@ class ProductionChainView {
     }
 
     buildBaseInputCards(baseInputs: Map<string, Goods> = new Map()): string {
-        if (!baseInputs.size) {
-            return '';
-        }
         const cards: string[] = [];
         const goodsList = this.goodsRepository.getGoodsList();
 
@@ -341,27 +386,29 @@ class ProductionChainView {
                 </div>
             `);
         });
+
+        const content = cards.length
+            ? cards.join('')
+            : '<p class="production-empty-note">No direct base input required.</p>';
+
         return `
-            <div class="production-info">
-                <h4>Base Inputs</h4>
-                <div class="production-grid">
-                    ${cards.join('')}
+            <div class="production-info production-info-compact">
+                <h4>Inputs</h4>
+                <div class="production-grid compact-grid">
+                    ${content}
                 </div>
             </div>
         `;
     }
 
     buildFuelCards(fuelList: FuelInfo[] = []): string {
-        if (!fuelList?.length) {
-            return '';
-        }
         const goodsList = this.goodsRepository.getGoodsList();
 
         const cards = fuelList.map((fuel) => {
             const goodsListEntry = goodsList.find((g: RecipeListItem) => g.id === fuel.id);
             const displayName = goodsListEntry?.displayName || fuel.id;
             const icon = goodsListEntry?.icon || fuel.id;
-            const burnLabel = fuel.burning_time ? `<div class="production-card-time">${this.formatDuration(fuel.burning_time)} min</div>` : '';
+            const burnLabel = fuel.burning_time ? `<div class="production-card-time">${formatDuration(fuel.burning_time)}</div>` : '';
             return `
                 <div class="production-card">
                     <div class="production-card-icon">
@@ -374,11 +421,16 @@ class ProductionChainView {
                 </div>
             `;
         });
+
+        const content = cards.length
+            ? cards.join('')
+            : '<p class="production-empty-note">No fuel dependency.</p>';
+
         return `
-            <div class="production-info">
+            <div class="production-info production-info-compact">
                 <h4>Fuel</h4>
-                <div class="production-grid">
-                    ${cards.join('')}
+                <div class="production-grid compact-grid">
+                    ${content}
                 </div>
             </div>
         `;
@@ -393,17 +445,121 @@ class ProductionChainView {
         const adjusted = (node as Goods).time ? this.calculator.getAdjustedTime(node as Goods) : baseTime;
         const boosted = Math.abs(adjusted - baseTime) > 0.01;
         return `
-            <div class="production-card-time">
-                ${this.formatDuration(adjusted)}${boosted ? ` (${this.formatDuration(baseTime)})` : ''} min
+            <div class="production-card-time" title="${boosted ? `Base ${formatDuration(baseTime)}` : 'No active boost'}">
+                ${formatDuration(adjusted)}
                 ${boosted ? '<div class="boosted-indicator">Boosted</div>' : ''}
             </div>
         `;
     }
 
-    formatDuration(seconds: number): string {
-        const minutes = seconds / 60;
-        if (minutes < 1) return `${(seconds).toFixed(0)}s`;
-        return `${minutes.toFixed(2)}m`;
+    buildModifierToolbar(): string {
+        const cards: string[] = [];
+
+        this.modifierRegistry.getDefinitions().forEach((modifier) => {
+            const toggles = (modifier.toggles ?? []).map((toggle) => {
+                const active = this.settingsManager.getSetting(toggle.key);
+                const requiredKey = toggle.requires || '';
+                const unlocked = !requiredKey || this.settingsManager.getSetting(requiredKey);
+                const classes = [
+                    'modifier-toggle-btn',
+                    active ? 'active' : '',
+                    unlocked ? '' : 'locked',
+                ].filter(Boolean).join(' ');
+                return `
+                    <button
+                        type="button"
+                        class="${classes}"
+                        data-setting-key="${toggle.key}"
+                        data-setting-requires="${requiredKey}"
+                        aria-label="${toggle.label}"
+                        aria-pressed="${active}"
+                        data-tooltip="${toggle.label}: ${toggle.description}">
+                        <img src="./assets/icons/${toggle.icon}" alt="" aria-hidden="true" />
+                        <span>${toggle.label}</span>
+                    </button>
+                `;
+            }).join('');
+
+            const numInputs = (modifier.numInputs ?? []).map((numInput) => {
+                const requiredKey = numInput.requires || '';
+                const unlocked = !requiredKey || this.settingsManager.getSetting(requiredKey);
+                const currentVal = this.settingsManager.getSettingRaw(numInput.key) ?? numInput.defaultValue ?? 0;
+                const minAttr = numInput.min !== undefined ? `min="${numInput.min}"` : '';
+                const maxAttr = numInput.max !== undefined ? `max="${numInput.max}"` : '';
+                const stepAttr = numInput.step !== undefined ? `step="${numInput.step}"` : '';
+                return `
+                    <label class="modifier-num-input-label ${unlocked ? '' : 'locked'}"
+                           data-tooltip="${numInput.label}: ${numInput.description}">
+                        <img src="./assets/icons/${numInput.icon}" alt="" aria-hidden="true" />
+                        <span>${numInput.label}</span>
+                        <input type="number" class="modifier-num-input"
+                               ${minAttr} ${maxAttr} ${stepAttr}
+                               value="${currentVal}"
+                               data-setting-num-key="${numInput.key}"
+                               data-setting-requires="${requiredKey}"
+                               ${unlocked ? '' : 'disabled'} />
+                    </label>
+                `;
+            }).join('');
+
+            const selects = (modifier.selects ?? []).map((select) => {
+                const requiredKey = select.requires || '';
+                const unlocked = !requiredKey || this.settingsManager.getSetting(requiredKey);
+                const currentVal = this.settingsManager.getSettingRaw(select.key) ?? select.defaultValue ?? '';
+                const options = select.options.map((opt) =>
+                    `<option value="${opt.value}" ${currentVal === opt.value ? 'selected' : ''}>${opt.label}</option>`
+                ).join('');
+                return `
+                    <label class="modifier-select-label ${unlocked ? '' : 'locked'}"
+                           data-tooltip="${select.label}: ${select.description}">
+                        <img src="./assets/icons/${select.icon}" alt="" aria-hidden="true" />
+                        <span>${select.label}</span>
+                        <select class="modifier-select"
+                                data-setting-select-key="${select.key}"
+                                data-setting-requires="${requiredKey}"
+                                ${unlocked ? '' : 'disabled'}>
+                            ${options}
+                        </select>
+                    </label>
+                `;
+            }).join('');
+
+            const hasControls = toggles || numInputs || selects;
+            if (!hasControls) return;
+
+            cards.push(`
+                <div class="modifier-toolbar-group compact">
+                    <span class="modifier-toolbar-label">${modifier.label} Settings</span>
+                    <div class="modifier-toggle-row">
+                        ${toggles}
+                        ${numInputs}
+                        ${selects}
+                    </div>
+                </div>
+            `);
+        });
+
+        if (!cards.length) {
+            return `
+                <section class="aqueduct-settings-panel">
+                    <h4>Modifier Settings</h4>
+                    <p>Apply productivity boosts directly from the production column.</p>
+                    <div class="modifier-toolbar-empty">
+                        No modifier settings registered.
+                    </div>
+                </section>
+            `;
+        }
+
+        return `
+            <section class="aqueduct-settings-panel">
+                <h4>Modifier Settings</h4>
+                <p>Apply productivity boosts directly from the production column.</p>
+                <div class="production-modifier-inline">
+                    ${cards.join('')}
+                </div>
+            </section>
+        `;
     }
 
     updateCalculations(recipe: Goods): void {
