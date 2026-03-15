@@ -227,7 +227,7 @@ class ProductionChainView {
         this.bindBackButton();
         this.bindControls(recipe);
         if (this.graphHost) {
-            await this.graphRenderer.attach(this.graphHost);
+            await this.graphRenderer.attach(this.graphHost, this.currentGood.id);
         }
         this.updateCalculations(recipe);
     }

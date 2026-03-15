@@ -83,13 +83,14 @@
             </svg>
             <span class="button-text">About</span>
         </button>
-        <button id="settings-toggle" class="settings-button" aria-label="Toggle Settings">
+        <button id="saved-store-toggle" class="saved-store-button" aria-label="Open Storage">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                 stroke="currentColor" fill="currentColor">
                 <path
-                    d="M433-80q-27 0-46.5-18T363-142l-9-66q-13-5-24.5-12T307-235l-62 26q-25 11-50 2t-39-32l-47-82q-14-23-8-49t27-43l53-40q-1-7-1-13.5v-27q0-6.5 1-13.5l-53-40q-21-17-27-43t8-49l47-82q14-23 39-32t50 2l62 26q11-8 23-15t24-12l9-66q4-26 23.5-44t46.5-18h94q27 0 46.5 18t23.5 44l9 66q13 5 24.5 12t22.5 15l62-26q25-11 50-2t39 32l47 82q14 23 8 49t-27 43l-53 40q1 7 1 13.5v27q0 6.5-2 13.5l53 40q21 17 27 43t-8 49l-48 82q-14 23-39 32t-50-2l-60-26q-11 8-23 15t-24 12l-9 66q-4 26-23.5 44T527-80h-94Zm7-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+                    d="M200-160q-33 0-56.5-23.5T120-240v-560q0-33 23.5-56.5T200-880h560q33 0 56.5 23.5T840-800v284q-10-2-19.5-3t-20.5-1h-40v-280H200v560h124q4 22 10.5 42t17.5 38H200Zm0-120v40-560 520Zm80-40h44q8-49 35-90.5t69-69.5H280v160Zm0-240h160v-160H280v160Zm280 440q-66 0-113-47t-47-113q0-66 47-113t113-47h80v80h-80q-33 0-56.5 23.5T480-280q0 33 23.5 56.5T560-200h80v80h-80Zm-40-440h160v-160H520v160Zm40 320v-80h240v80H560Zm160 120v-80h80q33 0 56.5-23.5T880-280q0-33-23.5-56.5T800-360h-80v-80h80q66 0 113 46.5T960-280q0 66-47 113t-113 47h-80Z" />
             </svg>
-            <span class="button-text">Settings</span>
+
+            <span class="button-text">Storage</span>
         </button>
     </header>
     <main>
@@ -102,16 +103,16 @@
                     <p class="info-note">Select a good from the table to view its production chain details.</p>
                 </div>
             </div>
-            <div id="settings-panel" class="settings-panel hidden">
-                <div class="settings-header">
-                    <h2>Settings</h2>
-                    <button id="settings-close" class="settings-close" aria-label="Close Settings">×</button>
+            <div id="saved-store-panel" class="saved-store-panel hidden">
+                <div class="saved-store-header">
+                    <h2>Storage</h2>
+                    <button id="saved-store-close" class="saved-store-close" aria-label="Close Storage">×</button>
                 </div>
-                <div class="settings-content">
-                    <div class="settings-section">
+                <div class="saved-store-content">
+                    <div class="saved-store-section">
                         <h3>Aqueducts</h3>
-                        <div class="setting-group">
-                            <div class="setting-item">
+                        <div class="saved-store-group">
+                            <div class="saved-store-item">
                                 <label class="setting-label">
                                     <input type="checkbox" id="settings-use-aqueducts" checked>
                                     <span class="setting-title">Enable Aqueducts</span>
@@ -120,16 +121,17 @@
                                     farms and plantations</p>
                             </div>
 
-                            <div class="setting-item sub-setting">
+                            <div class="saved-store-item sub-setting">
                                 <label class="setting-label">
-                                    <img src="./assets/icons/skill-aqua-arborica.png" class="setting-icon" alt="Aqua Arborica">
+                                    <img src="./assets/icons/skill-aqua-arborica.png" class="setting-icon"
+                                        alt="Aqua Arborica">
                                     <input type="checkbox" id="settings-aqua-arborica" checked>
                                     <span class="setting-title">Aqua Arborica (Plantations +50%)</span>
                                 </label>
                                 <p class="setting-description">Reduces plantation production time by 50%</p>
                             </div>
 
-                            <div class="setting-item sub-setting">
+                            <div class="saved-store-item sub-setting">
                                 <label class="setting-label">
                                     <img src="./assets/icons/skill-feldbewaesserung.png" class="setting-icon"
                                         alt="Field Irrigation">
@@ -139,7 +141,7 @@
                                 <p class="setting-description">Reduces farm production time by 50%</p>
                             </div>
 
-                            <div class="setting-item sub-setting">
+                            <div class="saved-store-item sub-setting">
                                 <label class="setting-label">
                                     <img src="./assets/icons/skill-hydraulischer-bergbau.png" class="setting-icon"
                                         alt="Hushing">

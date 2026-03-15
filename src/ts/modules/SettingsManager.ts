@@ -78,9 +78,9 @@ export class SettingsManager {
     }
 
     private cacheDom(): void {
-        this.settingsPanel = document.getElementById('settings-panel');
-        this.settingsToggle = document.getElementById('settings-toggle');
-        this.settingsClose = document.getElementById('settings-close');
+        this.settingsPanel = document.getElementById('saved-store-panel');
+        this.settingsToggle = document.getElementById('saved-store-toggle');
+        this.settingsClose = document.getElementById('saved-store-close');
         this.infoToggle = document.getElementById('info-toggle');
         this.infoClose = document.getElementById('info-close');
         this.infoModal = document.getElementById('info-modal');

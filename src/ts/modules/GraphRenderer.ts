@@ -70,6 +70,8 @@ export class GraphRenderer {
     svgMarkup: string | null;
     svgElement: SVGSVGElement | null;
     interactionsBound: boolean;
+    private viewBoxes: Map<string, ViewBox> = new Map();
+    private currentGoodId: string | null = null;
 
     private constructor(config: GraphRendererConfig = {}) {
         const { templatePath = 'svg/dependency-graph.svg' } = config;
@@ -81,13 +83,24 @@ export class GraphRenderer {
         this.displayInfoMenue = this.displayInfoMenue.bind(this);
     }
 
-    async attach(container: HTMLElement | null): Promise<void> {
+    async attach(container: HTMLElement | null, goodId?: string): Promise<void> {
         if (!container) return;
+
+        if (this.svgElement && this.currentGoodId) {
+            this.viewBoxes.set(this.currentGoodId, this.parseViewBox());
+        }
+
+        this.currentGoodId = goodId ?? null;
+        const savedViewBox = goodId ? this.viewBoxes.get(goodId) : undefined;
+        const viewBoxAttr = savedViewBox
+            ? `${savedViewBox.x} ${savedViewBox.y} ${savedViewBox.width} ${savedViewBox.height}`
+            : '0 0 400 400';
+
         const svgElement = document.createElement('svg');
         svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         svgElement.setAttribute('id', 'dependency-graph');
         svgElement.setAttribute('class', 'dependency-graph');
-        svgElement.setAttribute('viewBox', '0 0 400 400');
+        svgElement.setAttribute('viewBox', viewBoxAttr);
         this.svgMarkup = svgElement.outerHTML;
         container.innerHTML = this.svgMarkup;
         this.svgElement = container.querySelector('#dependency-graph') as SVGSVGElement | null;
@@ -572,6 +585,9 @@ export class GraphRenderer {
 
     updateViewBox(viewBox: ViewBox): void {
         this.svgElement?.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+        if (this.currentGoodId) {
+            this.viewBoxes.set(this.currentGoodId, { ...viewBox });
+        }
     }
 
     clientToSvgPoint(touch: Touch): Point {
