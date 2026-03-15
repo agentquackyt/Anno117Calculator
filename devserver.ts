@@ -67,7 +67,7 @@ if (values.build) {
 
     // Cross-platform asset copy (works on macOS/Linux/Windows shell environments).
     await Bun.$`mkdir -p ./docs/assets`.text().catch(() => { /* ignore if already exists */ });
-    await Bun.$`cp -R ./src/assets/. ./docs/assets/`.text();
+    await Bun.$`cp -R ./src/assets/. ./docs/`.text();
 
     // SW must be at the root so its scope covers the entire origin.
     await Bun.write('./docs/sw.js', Bun.file('./src/assets/data/sw.js'));
