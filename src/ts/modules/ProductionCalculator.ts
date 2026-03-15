@@ -4,6 +4,9 @@ import type { AbstractProductionModifier } from './ProductionModifier';
 import { SettingsManager } from './SettingsManager';
 
 const SECONDS_PER_MINUTE = 60;
+const RECOMMENDED_RATE_STEP = 0.1;
+const MAX_RECOMMENDED_RATE = 25;
+const ACCEPTABLE_BUILDING_ERROR = 0.05;
 
 // The buildings map stores counts (numbers) plus a special '_metadata' key for production data.
 // We use 'any' here since we need to mix counts and metadata in the same Record
@@ -42,6 +45,15 @@ export class ProductionCalculator {
             const icon = m.getVisualModifier();
             if (!icon) return [];
             return m.getProductivity(goodsLike).isAffected ? [icon] : [];
+        });
+    }
+
+    /** Returns icon filenames for all modifiers that visually affect a specific production node. */
+    getActiveVisualModifiersForNode(node: Goods): string[] {
+        return this.productionModifiers.flatMap(m => {
+            const icon = m.getVisualModifierForNode(node);
+            if (!icon) return [];
+            return m.getProductivity(node).isAffected ? [icon] : [];
         });
     }
 
@@ -175,19 +187,52 @@ export class ProductionCalculator {
     }
 
     findRecommendedRate(productionData: Goods): number {
-        const cycleTimes = this.collectCycleTimes(productionData);
-        if (!cycleTimes.length) return 1;
+        const minRateForMainBuilding = this.getMinimumRateForMainBuilding(productionData);
+        if (minRateForMainBuilding > MAX_RECOMMENDED_RATE) {
+            return this.roundRate(minRateForMainBuilding);
+        }
 
-        const lcmTime = cycleTimes.reduce((acc, time) => this.lcm(acc, time), 1);
-        const baseIncrement = SECONDS_PER_MINUTE / lcmTime;
+        let bestCandidateRate = minRateForMainBuilding;
+        let bestCandidateError = Number.POSITIVE_INFINITY;
+        let bestCandidateTotalError = Number.POSITIVE_INFINITY;
 
-        for (let multiplier = 1; multiplier <= 100; multiplier++) {
-            const candidateRate = baseIncrement * multiplier;
-            if (this.allBuildingsAreWholeNumbers(productionData, candidateRate)) {
+        const minStep = Math.max(1, Math.ceil(minRateForMainBuilding / RECOMMENDED_RATE_STEP));
+        const maxSteps = Math.round(MAX_RECOMMENDED_RATE / RECOMMENDED_RATE_STEP);
+        for (let step = minStep; step <= maxSteps; step++) {
+            const candidateRate = this.roundRate(step * RECOMMENDED_RATE_STEP);
+            const { maxError, totalError } = this.measureBuildingError(productionData, candidateRate);
+
+            if (maxError <= ACCEPTABLE_BUILDING_ERROR) {
                 return candidateRate;
             }
+
+            const isBetterCandidate =
+                maxError < bestCandidateError - 0.0001 ||
+                (Math.abs(maxError - bestCandidateError) <= 0.0001 && totalError < bestCandidateTotalError - 0.0001) ||
+                (
+                    Math.abs(maxError - bestCandidateError) <= 0.0001 &&
+                    Math.abs(totalError - bestCandidateTotalError) <= 0.0001 &&
+                    candidateRate < bestCandidateRate
+                );
+
+            if (isBetterCandidate) {
+                bestCandidateRate = candidateRate;
+                bestCandidateError = maxError;
+                bestCandidateTotalError = totalError;
+            }
         }
-        return 1;
+        console.debug(`[ProductionCalculator] No perfect rate found. Best candidate: ${bestCandidateRate} with max error ${bestCandidateError.toFixed(4)} and total error ${bestCandidateTotalError.toFixed(4)}`);
+        return this.roundRate(bestCandidateRate);
+    }
+
+    private getMinimumRateForMainBuilding(productionData: Goods): number {
+        const adjustedDuration = this.getAdjustedTime(productionData);
+        if (adjustedDuration <= 0) {
+            return 1;
+        }
+
+        const minRate = SECONDS_PER_MINUTE / adjustedDuration;
+        return Math.max(this.roundRate(minRate), RECOMMENDED_RATE_STEP);
     }
 
     private collectCycleTimes(productionData: Goods, bucket: number[] = []): number[] {
@@ -217,6 +262,32 @@ export class ProductionCalculator {
             }
         }
         return true;
+    }
+
+    private measureBuildingError(productionData: Goods, rate: number): { maxError: number; totalError: number } {
+        const allBuildings = this.collectAllBuildings(this.cloneRecipe(productionData), rate, {});
+        let maxError = 0;
+        let totalError = 0;
+
+        for (const [key, value] of Object.entries(allBuildings)) {
+            if (key === '_metadata') continue;
+            const num = value as number;
+            const error = Math.abs(num - Math.round(num));
+            if (error > maxError) {
+                maxError = error;
+            }
+            totalError += error;
+        }
+
+        for (const fuel of this.calculateFuelBuildings(productionData, allBuildings)) {
+            const error = Math.abs(fuel.count - Math.round(fuel.count));
+            if (error > maxError) {
+                maxError = error;
+            }
+            totalError += error;
+        }
+
+        return { maxError, totalError };
     }
 
     calculateTotals(allBuildings: BuildingsMap): { buildingCost: Record<string, number>; maintenance: Record<string, number> } {
@@ -259,6 +330,10 @@ export class ProductionCalculator {
     private gcd(a: number, b: number): number {
         if (!b) return a;
         return this.gcd(b, a % b);
+    }
+
+    private roundRate(rate: number): number {
+        return Math.ceil(rate * 10) / 10;
     }
 
     cloneRecipe(recipe: Goods): Goods {

@@ -1,0 +1,43 @@
+{
+    "id": "torcs",
+    "name": "Torcs",
+    "type": "artisanal_studio",
+    "guid": "5606",
+    "time": 90,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "wattle_&_daub": 3,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 10,
+        "smith": 3
+    },
+    "input": [
+        {
+            "id": "copper_ore",
+            "name": "Copper Ore",
+            "type": "mine",
+            "guid": "5290",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 2,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "smith": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

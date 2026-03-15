@@ -1,0 +1,57 @@
+{
+  "displayName": "The Bifurcator",
+  "guid": "44087",
+  "description": "Under his watchful eye, few are willing to make unforgivable breeches.",
+  "iconFilename": "44087.png",
+  "rarity": "Rare",
+  "niche": "Finance",
+  "targets": [
+    {
+      "GUID": "50575",
+      "Type": "AssetPoolNamed",
+      "displayName": "Trousers Chain",
+      "internalName": "Asset Pool Trousers Chain",
+      "producedGoods": [
+        {
+          "guid": "2158",
+          "name": "Trousers"
+        },
+        {
+          "guid": "2073",
+          "name": "Sheep"
+        },
+        {
+          "guid": "2094",
+          "name": "Dye Plants"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 20.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "displayName": "Prefect of Ochsen",
+  "guid": "44081",
+  "description": "This retired camp prefect discovered cattle are better listeners than any centurion.",
+  "iconFilename": "44081.png",
+  "rarity": "Rare",
+  "niche": "Economy",
+  "targets": [
+    {
+      "GUID": "50570",
+      "Type": "AssetPoolNamed",
+      "displayName": "Roast Beef Chain",
+      "internalName": "Asset Pool Beef Chain",
+      "producedGoods": [
+        {
+          "guid": "31768",
+          "name": "Roast Beef"
+        },
+        {
+          "guid": "2105",
+          "name": "Ochs"
+        },
+        {
+          "guid": "7985",
+          "name": "Saltwort"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 20.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

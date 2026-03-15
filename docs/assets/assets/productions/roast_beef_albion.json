@@ -1,0 +1,63 @@
+{
+    "id": "roast_beef",
+    "name": "Roast Beef",
+    "type": "kitchen",
+    "guid": "31767",
+    "time": 120,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "wattle_&_daub": 2,
+        "granite": 1
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "alderman": 8
+    },
+    "input": [
+        {
+            "id": "saltwort",
+            "name": "Saltwort",
+            "type": "gatherer",
+            "guid": "2796",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "wattle_&_daub": 1,
+                "granite": 1
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "ochs",
+            "name": "Ochs",
+            "type": "livestock_farm",
+            "guid": "5847",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "wattle_&_daub": 2,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

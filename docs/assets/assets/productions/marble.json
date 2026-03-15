@@ -1,0 +1,47 @@
+{
+    "id": "marble",
+    "name": "Marble",
+    "type": "refinery",
+    "guid": "3138",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 3,
+        "concrete": 2,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 24,
+        "equites": 10
+    },
+    "input": [
+        {
+            "id": "uncut_marble",
+            "name": "Uncut Marble",
+            "type": "quarry",
+            "guid": "2954",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 1,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 16,
+                "plebeian": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

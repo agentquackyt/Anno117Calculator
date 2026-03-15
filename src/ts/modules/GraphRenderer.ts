@@ -36,6 +36,7 @@ interface NodeData {
     textAlign: 'left' | 'right';
     hasFuel: boolean;
     buildingType: string;
+    prodNode: Goods;
     depth: number;
     maxDepth: number;
     isLeaf: boolean;
@@ -161,6 +162,7 @@ export class GraphRenderer {
             textAlign,
             hasFuel,
             buildingType,
+            prodNode: prodData,
             depth,
             maxDepth,
             isLeaf,
@@ -222,6 +224,7 @@ export class GraphRenderer {
                     textAlign: align,
                     hasFuel: false,
                     buildingType: input.type || '',
+                    prodNode: input,
                     depth: depth + 1,
                     maxDepth,
                     isLeaf: true,
@@ -237,7 +240,7 @@ export class GraphRenderer {
 
     addNode(nodeData: NodeData): void {
         if (!this.svgElement) return;
-        const { x, y, good, buildings, textAlign, hasFuel, buildingType, depth, maxDepth, isLeaf, startOfChain, buildingCost, maintenanceCost, productivity } = nodeData;
+        const { x, y, good, buildings, textAlign, hasFuel, buildingType, prodNode, depth, maxDepth, isLeaf, startOfChain, buildingCost, maintenanceCost, productivity } = nodeData;
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -265,7 +268,7 @@ export class GraphRenderer {
         if (hasFuel) {
             this.addCornerImage(group, x, y, size, './assets/icons/charcoal.png');
         } else {
-            for (const icon of ProductionCalculator.getInstance().getActiveVisualModifiers(buildingType)) {
+            for (const icon of ProductionCalculator.getInstance().getActiveVisualModifiersForNode(prodNode)) {
                 this.addCornerImage(group, x, y, size, `./assets/icons/${icon}`, true);
             }
         }

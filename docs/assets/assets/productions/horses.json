@@ -1,0 +1,25 @@
+{
+    "id": "horses",
+    "name": "Horses",
+    "type": "livestock_farm",
+    "guid": "2794",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 3,
+        "concrete": 2,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "equites": 6
+    },
+    "input": [],
+    "start_of_chain": true,
+    "region": [
+        "Roman"
+    ]
+}

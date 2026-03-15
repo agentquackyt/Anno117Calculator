@@ -1,0 +1,43 @@
+{
+    "id": "reed_shoes",
+    "name": "Reed Shoes",
+    "type": "clothier",
+    "guid": "5609",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 3,
+        "wattle_&_daub": 0,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 8,
+        "wader": 2
+    },
+    "input": [
+        {
+            "id": "reeds",
+            "name": "Reeds",
+            "type": "gatherer",
+            "guid": "5849",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 0,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 2,
+                "wader": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

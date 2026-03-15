@@ -1,0 +1,61 @@
+{
+  "displayName": "Maxima Cottius, Upholsterer of Atlas",
+  "guid": "44149",
+  "description": "Heracles himself would be proud to lay his head on a cushion of Cottius' make.",
+  "iconFilename": "44149.png",
+  "rarity": "Epic",
+  "niche": "Culture",
+  "targets": [
+    {
+      "GUID": "50599",
+      "Type": "AssetPoolNamed",
+      "displayName": "Loungers Chain",
+      "internalName": "Asset Pool Loungers Chain",
+      "producedGoods": [
+        {
+          "guid": "2147",
+          "name": "Loungers"
+        },
+        {
+          "guid": "8561",
+          "name": "Sandarac Wood"
+        },
+        {
+          "guid": "8562",
+          "name": "Cushions"
+        },
+        {
+          "guid": "2073",
+          "name": "Sheep"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 35.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

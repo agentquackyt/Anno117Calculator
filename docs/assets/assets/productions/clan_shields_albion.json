@@ -1,0 +1,103 @@
+{
+    "id": "clan_shields",
+    "name": "Clan Shields",
+    "type": "workshop",
+    "guid": "31773",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "wattle_&_daub": 3,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 14,
+        "smith": 4
+    },
+    "input": [
+        {
+            "id": "dye_plants",
+            "name": "Dye Plants",
+            "type": "plantation",
+            "guid": "2800",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "wattle_&_daub": 1,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "bronze",
+            "name": "Bronze",
+            "type": "smelter",
+            "guid": "5470",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "wattle_&_daub": 2,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "smith": 3
+            },
+            "input": [
+                {
+                    "id": "tin_ore",
+                    "name": "Tin Ore",
+                    "type": "mine",
+                    "guid": "5291",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "wattle_&_daub": 2,
+                        "granite": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 4,
+                        "smith": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                },
+                {
+                    "id": "copper_ore",
+                    "name": "Copper Ore",
+                    "type": "mine",
+                    "guid": "5290",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "wattle_&_daub": 2,
+                        "granite": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 4,
+                        "smith": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

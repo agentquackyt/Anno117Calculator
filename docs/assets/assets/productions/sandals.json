@@ -1,0 +1,91 @@
+{
+    "id": "sandals",
+    "name": "Sandals",
+    "type": "clothier",
+    "guid": "3190",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 2,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 12,
+        "plebeian": 3
+    },
+    "input": [
+        {
+            "id": "leather",
+            "name": "Leather",
+            "type": "upholsterer",
+            "guid": "2994",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 10,
+                "plebeian": 3
+            },
+            "input": [
+                {
+                    "id": "pigs",
+                    "name": "Pigs",
+                    "type": "livestock_farm",
+                    "guid": "2793",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 1,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 6,
+                        "libertus": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                },
+                {
+                    "id": "salt",
+                    "name": "Salt",
+                    "type": "extractor",
+                    "guid": "2957",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 8,
+                        "plebeian": 4
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

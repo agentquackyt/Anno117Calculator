@@ -1,0 +1,53 @@
+{
+  "displayName": "Seamster",
+  "guid": "44083",
+  "description": "Stitches strands into shirts.",
+  "iconFilename": "44083.png",
+  "rarity": "Common",
+  "niche": "Finance",
+  "targets": [
+    {
+      "GUID": "50572",
+      "Type": "AssetPoolNamed",
+      "displayName": "Tunics Chain",
+      "internalName": "Asset Pool Tunics Chain",
+      "producedGoods": [
+        {
+          "guid": "2141",
+          "name": "Tunics"
+        },
+        {
+          "guid": "31694",
+          "name": "Hemp"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 10.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import type { RecipeListItem } from '../types/RecipeList';
 import type { Goods } from '../types/Goods';
 import { GoodsRepository } from './GoodRepository';
 import { ModifierRegistry } from './ModifierRegistry';
+import { Item } from './modifier/Item';
 import { SettingsManager } from './SettingsManager';
 import { formatDuration } from './Utils';
 
@@ -222,10 +223,11 @@ class ProductionChainView {
         if (!options.preserveRate) {
             this.currentRate = 1;
         }
+        Item.setActiveChain(this.currentGood.id);
         const recipe = this.calculator.cloneRecipe(this.sourceRecipe);
         this.baseInputs = this.calculator.collectBaseInputs(recipe);
         this.container.classList.remove('hidden');
-        this.container.innerHTML = this.buildMarkup(this.currentGood, recipe, this.baseInputs);
+        this.container.innerHTML = this.buildMarkup(this.currentGood);
         this.graphHost = this.container.querySelector('[data-role="graph-host"]') as HTMLElement | null;
         this.targetInput = this.container.querySelector('#target-rate') as HTMLInputElement | null;
         this.recommendButton = this.container.querySelector('#recommend-ratio-btn') as HTMLElement | null;
@@ -237,6 +239,15 @@ class ProductionChainView {
             await this.graphRenderer.attach(this.graphHost, this.currentGood.id);
         }
         this.updateCalculations(recipe);
+    }
+
+    applySettingsToCurrentView(): void {
+        if (!this.sourceRecipe || !this.currentGood) return;
+        this.syncModifierControlState();
+        const recipe = this.calculator.cloneRecipe(this.sourceRecipe);
+        this.baseInputs = this.calculator.collectBaseInputs(recipe);
+        this.updateCalculations(recipe);
+        this.updateTimeBadges(recipe);
     }
 
     bindBackButton(): void {
@@ -297,18 +308,7 @@ class ProductionChainView {
         });
     }
 
-    buildMarkup(good: RecipeListItem, recipe: Goods, baseInputs: Map<string, Goods>): string {
-        const outputIcon = good.icon;
-        const baseCards = this.buildBaseInputCards(baseInputs);
-
-        const fuelList: FuelInfo[] = ((recipe as any).fuel?.length
-            ? (recipe as any).fuel
-            : recipe.needs_fuel
-                ? [{ id: 'charcoal', burning_time: 120 }]
-                : []) as FuelInfo[];
-
-        const fuelCards = this.buildFuelCards(fuelList);
-        const outputTime = this.buildTimeBadge(recipe);
+    buildMarkup(good: RecipeListItem): string {
         const modifierToolbar = this.buildModifierToolbar();
 
         return `
@@ -325,24 +325,6 @@ class ProductionChainView {
                             <button id="recommend-ratio-btn" type="button" class="recommend-button">Auto Ratio</button>
                         </div>
                         ${modifierToolbar}
-                    </div>
-                    <div class="production-flow-grid">
-                        <div class="production-info production-info-compact">
-                            <h4>Output</h4>
-                            <div class="production-grid compact-grid">
-                                <div class="production-card">
-                                    <div class="production-card-icon">
-                                        <img src="./assets/icons/${outputIcon}.png" alt="${good.displayName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                        <div class="icon-placeholder" style="display:none;">${outputIcon.substring(0, 2).toUpperCase()}</div>
-                                    </div>
-                                    <div class="production-card-name">${good.displayName}</div>
-                                    ${outputTime}
-                                    <div class="production-card-count" data-building-count="${recipe.id}">0.00x</div>
-                                </div>
-                            </div>
-                        </div>
-                        ${baseCards}
-                        ${fuelCards}
                     </div>
                 </div>
                 <div class="graph-column">
@@ -373,7 +355,7 @@ class ProductionChainView {
             const goodsListEntry = goodsList.find((g: RecipeListItem) => g.id === id);
             const displayName = goodsListEntry?.displayName || input.name || id;
             const icon = goodsListEntry?.icon || input.id || id;
-            const time = this.buildTimeBadge(input);
+            const time = this.buildTimeBadge(input, id);
             cards.push(`
                 <div class="production-card" data-input-id="${id}">
                     <div class="production-card-icon">
@@ -436,7 +418,7 @@ class ProductionChainView {
         `;
     }
 
-    buildTimeBadge(node: Goods | BaseBuildingInfo | { time?: number }): string {
+    buildTimeBadge(node: Goods | BaseBuildingInfo | { time?: number }, nodeId?: string): string {
         const time = (node as any).time;
         if (!time) {
             return '';
@@ -444,8 +426,9 @@ class ProductionChainView {
         const baseTime = time;
         const adjusted = (node as Goods).time ? this.calculator.getAdjustedTime(node as Goods) : baseTime;
         const boosted = Math.abs(adjusted - baseTime) > 0.01;
+        const dataNode = nodeId ? ` data-time-node-id="${nodeId}"` : '';
         return `
-            <div class="production-card-time" title="${boosted ? `Base ${formatDuration(baseTime)}` : 'No active boost'}">
+            <div class="production-card-time"${dataNode} title="${boosted ? `Base ${formatDuration(baseTime)}` : 'No active boost'}">
                 ${formatDuration(adjusted)}
                 ${boosted ? '<div class="boosted-indicator">Boosted</div>' : ''}
             </div>
@@ -543,7 +526,7 @@ class ProductionChainView {
             return `
                 <section class="aqueduct-settings-panel">
                     <h4>Modifier Settings</h4>
-                    <p>Apply productivity boosts directly from the production column.</p>
+                    <p>Apply productivity boosts to improve efficiency.</p>
                     <div class="modifier-toolbar-empty">
                         No modifier settings registered.
                     </div>
@@ -554,7 +537,7 @@ class ProductionChainView {
         return `
             <section class="aqueduct-settings-panel">
                 <h4>Modifier Settings</h4>
-                <p>Apply productivity boosts directly from the production column.</p>
+                <p>Apply productivity boosts to improve efficiency.</p>
                 <div class="production-modifier-inline">
                     ${cards.join('')}
                 </div>
@@ -568,7 +551,6 @@ class ProductionChainView {
         const workingRecipe = this.calculator.cloneRecipe(recipe);
         const allBuildings = this.calculator.collectAllBuildings(workingRecipe, rate, {});
         this.updateBuildingCounts(allBuildings);
-        this.updateFuelBuildings(recipe, allBuildings);
         this.updateCostSummary(allBuildings);
         this.graphRenderer.render(recipe, allBuildings);
     }
@@ -583,29 +565,93 @@ class ProductionChainView {
         });
     }
 
-    updateFuelBuildings(recipe: Goods, allBuildings: Record<string, number>): void {
-        const fuelCounts = this.calculator.calculateFuelBuildings(recipe, allBuildings);
-        const updated = new Set<string>();
-        fuelCounts.forEach(({ id, count }) => {
-            const target = this.container.querySelector(`[data-fuel-building-count="${id}"]`) as HTMLElement | null;
-            if (target) {
-                target.textContent = `${(count || 0).toFixed(2)}x`;
-                updated.add(id);
-            }
-        });
-        this.container.querySelectorAll('[data-fuel-building-count]').forEach((node) => {
-            const element = node as HTMLElement & { dataset: { fuelBuildingCount?: string } };
-            if (!updated.has(element.dataset.fuelBuildingCount || '')) {
-                element.textContent = '0.00x';
-            }
-        });
-    }
-
     updateCostSummary(allBuildings: Record<string, number>): void {
         if (!this.buildingCostElement || !this.maintenanceElement) return;
         const totals = this.calculator.calculateTotals(allBuildings);
         this.buildingCostElement.replaceChildren(...this.buildCostElements(totals.buildingCost));
-        this.maintenanceElement.replaceChildren(...this.buildCostElements(totals.maintenance));
+
+        const maintenanceElements = this.buildCostElements(totals.maintenance);
+        const metadata = (allBuildings as Record<string, unknown>)['_metadata'] as Record<string, Goods> | undefined;
+        const charcoalFuelBuildings = metadata
+            ? Object.values(metadata).reduce((sum, node) => {
+                if (!node?.id) return sum;
+                const nodeCharcoal = this.calculator
+                    .calculateFuelBuildings(node, allBuildings)
+                    .filter((fuel) => fuel.id === 'charcoal')
+                    .reduce((nodeSum, fuel) => nodeSum + fuel.count, 0);
+                return sum + nodeCharcoal;
+            }, 0)
+            : 0;
+
+        if (charcoalFuelBuildings > 0) {
+            maintenanceElements.push(this.buildCostElement('charcoal', `${charcoalFuelBuildings.toFixed(2)}x`, 'Coal'));
+        }
+
+        this.maintenanceElement.replaceChildren(...maintenanceElements);
+    }
+
+    private syncModifierControlState(): void {
+        this.container.querySelectorAll('[data-setting-key]').forEach((node) => {
+            const button = node as HTMLButtonElement;
+            const key = button.dataset.settingKey;
+            const requires = button.dataset.settingRequires;
+            if (!key) return;
+            const active = this.settingsManager.getSetting(key);
+            const unlocked = !requires || this.settingsManager.getSetting(requires);
+            button.classList.toggle('active', active);
+            button.classList.toggle('locked', !unlocked);
+            button.setAttribute('aria-pressed', String(active));
+        });
+
+        this.container.querySelectorAll('[data-setting-num-key]').forEach((node) => {
+            const input = node as HTMLInputElement;
+            const key = input.dataset.settingNumKey;
+            const requires = input.dataset.settingRequires;
+            if (!key) return;
+
+            const unlocked = !requires || this.settingsManager.getSetting(requires);
+            const currentVal = this.settingsManager.getSettingRaw(key);
+            if (typeof currentVal === 'number' || typeof currentVal === 'string') {
+                input.value = String(currentVal);
+            }
+            input.disabled = !unlocked;
+            input.closest('.modifier-num-input-label')?.classList.toggle('locked', !unlocked);
+        });
+
+        this.container.querySelectorAll('[data-setting-select-key]').forEach((node) => {
+            const select = node as HTMLSelectElement;
+            const key = select.dataset.settingSelectKey;
+            const requires = select.dataset.settingRequires;
+            if (!key) return;
+
+            const unlocked = !requires || this.settingsManager.getSetting(requires);
+            const currentVal = this.settingsManager.getSettingRaw(key);
+            if (typeof currentVal === 'string') {
+                select.value = currentVal;
+            }
+            select.disabled = !unlocked;
+            select.closest('.modifier-select-label')?.classList.toggle('locked', !unlocked);
+        });
+    }
+
+    private updateTimeBadges(recipe: Goods): void {
+        this.container.querySelectorAll<HTMLElement>('.production-card-time[data-time-node-id]').forEach((badge) => {
+            const nodeId = badge.dataset.timeNodeId;
+            if (!nodeId) return;
+
+            const node = (recipe.id === nodeId ? recipe : this.baseInputs.get(nodeId)) as Goods | undefined;
+            if (!node?.time) return;
+
+            const baseTime = node.time;
+            const adjusted = this.calculator.getAdjustedTime(node);
+            const boosted = Math.abs(adjusted - baseTime) > 0.01;
+
+            badge.title = boosted ? `Base ${formatDuration(baseTime)}` : 'No active boost';
+            badge.innerHTML = `
+                ${formatDuration(adjusted)}
+                ${boosted ? '<div class="boosted-indicator">Boosted</div>' : ''}
+            `;
+        });
     }
 
     buildCostElements(costs: Record<string, number> = {}): HTMLElement[] {
@@ -617,28 +663,32 @@ class ProductionChainView {
             return [none];
         }
         return entries.map(([resource, amount]) => {
-            const item = document.createElement('span');
-            item.className = 'cost-resource';
             const label = resource.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            item.innerHTML = `<img src="./assets/icons/${resource}.png" alt="${label}" class="cost-icon" onerror="this.style.display='none';"/><span class="cost-amount">${amount}</span>`;
-
-            item.addEventListener('mouseenter', () => {
-                const tip = document.createElement('div');
-                tip.className = 'cost-tooltip';
-                tip.textContent = label;
-                document.body.appendChild(tip);
-                const rect = item.getBoundingClientRect();
-                const tipRect = tip.getBoundingClientRect();
-                tip.style.left = `${rect.left + rect.width / 2 - tipRect.width / 2}px`;
-                tip.style.top = `${rect.top - tipRect.height - 4}px`;
-            });
-
-            item.addEventListener('mouseleave', () => {
-                document.querySelectorAll('.cost-tooltip').forEach(el => el.remove());
-            });
-
-            return item;
+            return this.buildCostElement(resource, String(amount), label);
         });
+    }
+
+    private buildCostElement(resource: string, amountText: string, label: string): HTMLElement {
+        const item = document.createElement('span');
+        item.className = 'cost-resource';
+        item.innerHTML = `<img src="./assets/icons/${resource}.png" alt="${label}" class="cost-icon" onerror="this.style.display='none';"/><span class="cost-amount">${amountText}</span>`;
+
+        item.addEventListener('mouseenter', () => {
+            const tip = document.createElement('div');
+            tip.className = 'cost-tooltip';
+            tip.textContent = label;
+            document.body.appendChild(tip);
+            const rect = item.getBoundingClientRect();
+            const tipRect = tip.getBoundingClientRect();
+            tip.style.left = `${rect.left + rect.width / 2 - tipRect.width / 2}px`;
+            tip.style.top = `${rect.top - tipRect.height - 4}px`;
+        });
+
+        item.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.cost-tooltip').forEach(el => el.remove());
+        });
+
+        return item;
     }
 
     showBasicInfo(good: RecipeListItem): void {

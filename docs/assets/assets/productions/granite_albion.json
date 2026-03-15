@@ -1,0 +1,43 @@
+{
+    "id": "granite",
+    "name": "Granite",
+    "type": "refinery",
+    "guid": "41811",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 5,
+        "wattle_&_daub": 3,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "alderman": 12
+    },
+    "input": [
+        {
+            "id": "granite_block",
+            "name": "Granite Block",
+            "type": "quarry",
+            "guid": "5295",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 2,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "smith": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

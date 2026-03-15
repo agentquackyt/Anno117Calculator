@@ -252,11 +252,7 @@ main {
 }
 
 .production-command-deck {
-  background: linear-gradient(140deg, rgba(95, 3, 46, 0.94), rgba(133, 6, 66, 0.88));
   border-radius: 0.85rem;
-  border: 1px solid rgba(25, 1, 12, 0.45);
-  padding: 0.75rem;
-  box-shadow: 0 8px 24px rgba(25, 1, 12, 0.2);
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -270,7 +266,7 @@ main {
 }
 
 .production-rate-inline label {
-  color: var(--background-accent);
+  color: var(--theme-color-dark);
   font-weight: 700;
   font-size: 0.9rem;
 }
@@ -283,6 +279,7 @@ main {
   background-color: rgba(255, 233, 222, 0.95);
   font-family: var(--font-family);
   font-size: 0.95rem;
+  outline: none;
 }
 
 .production-modifier-inline {
@@ -293,53 +290,39 @@ main {
   width: 100%;
 }
 
-.aqueduct-settings-panel {
-  background: rgba(95, 3, 46, 0.08);
-  border: 1px solid rgba(95, 3, 46, 0.28);
-  border-radius: 0.75rem;
-  padding: 0.65rem;
-}
-
 .aqueduct-settings-panel h4 {
-  color: var(--theme-color-dark);
-  font-size: 0.8rem;
+  color: var(--theme-color);
+  font-size: 1.1rem;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   margin-bottom: 0.2rem;
+
 }
 
 .aqueduct-settings-panel p {
-  color: var(--theme-color);
+  color: var(--theme-color-dark);
   font-size: 0.68rem;
   margin-bottom: 0.5rem;
 }
 
 .recommend-button {
-  padding: 0.45rem 0.8rem;
-  background-color: var(--background-accent);
-  color: var(--theme-color-dark);
-  border: 1px solid rgba(255, 233, 222, 0.65);
+  padding: 0.55rem 0.9rem;
+  background-color: var(--theme-color);
+  color: var(--background-accent);
   border-radius: 0.4rem;
   font-family: var(--font-family);
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: none;
+  transition: background-color 0.25s ease;
 }
 
 .recommend-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(25, 1, 12, 0.25);
+  background-color: var(--theme-color-hover);
 }
 
 .recommend-button:active {
   transform: translateY(0);
-}
-
-.production-flow-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
 }
 
 .production-info {
@@ -355,7 +338,6 @@ main {
   margin-bottom: 0.45rem;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .production-grid {
@@ -463,11 +445,10 @@ main {
 }
 
 .modifier-toolbar-label {
-  color: var(--background-accent);
+  color: var(--theme-color);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.03em;
-  text-transform: uppercase;
 }
 
 .modifier-toggle-row {
@@ -477,44 +458,53 @@ main {
 }
 
 .modifier-toggle-btn {
-  min-width: 108px;
-  height: 36px;
+  width: 120px;
   border-radius: 0.45rem;
-  border: 1px solid rgba(255, 233, 222, 0.45);
-  background: rgba(255, 233, 222, 0.18);
-  display: inline-flex;
+  border: 1px solid rgba(255, 233, 222, 0.298);
+  background: rgba(255, 233, 222, 0.108);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 0.35rem;
-  padding: 0 0.4rem;
+  padding: .5rem;
   cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.2s ease;
-  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .modifier-toggle-btn img {
-  width: 20px;
-  height: 20px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.85;
+  filter: grayscale(.5);
   object-fit: contain;
 }
 
 .modifier-toggle-btn span {
-  color: var(--background-accent);
+  color: var(--theme-color-dark);
   font-size: 0.62rem;
   font-weight: 700;
   text-align: left;
   line-height: 1.1;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 
 .modifier-toggle-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(95, 3, 46, 0.2);
+  box-shadow: 0 8px 16px rgba(191, 191, 191, 0.108);
 }
+
+.modifier-toggle-btn.active img {
+  opacity: 1;
+  filter: none;
+}
+
 
 .modifier-toggle-btn.active {
   background: rgba(255, 233, 222, 0.96);
-  border-color: rgba(255, 233, 222, 0.95);
-  box-shadow: 0 0 0 1px rgba(95, 3, 46, 0.8) inset;
+  border: 1px solid rgba(255, 233, 222, 0.96);
 }
 
 .modifier-toggle-btn.active span {
@@ -524,6 +514,10 @@ main {
 .modifier-toggle-btn.locked {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.modifier-toggle-btn.locked img {
+  filter: grayscale(100%) brightness(80%);
 }
 
 .modifier-toggle-btn::after {
@@ -1182,10 +1176,6 @@ main {
     text-align: center;
   }
 
-  .production-flow-grid {
-    grid-template-columns: 1fr;
-  }
-
   .modifier-toggle-row {
     justify-content: flex-start;
   }
@@ -1349,7 +1339,6 @@ footer {
 .metadata-section h5 {
   margin: 0 0 0.5rem 0;
   font-size: 0.8rem;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--theme-color);
   opacity: 0.8;
@@ -1381,8 +1370,8 @@ footer {
   align-items: center;
   gap: 0.5rem;
   background-color: var(--background-accent);
-  border: 1px solid var(--theme-color);
   border-radius: 0.25rem;
+  border: none;
   padding: 0.25rem 0.75rem;
   cursor: pointer;
   font-family: var(--font-family);
@@ -1395,7 +1384,7 @@ footer {
 
 .region-toggle-btn:hover {
   background-color: var(--background);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .region-icon {

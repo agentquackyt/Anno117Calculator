@@ -1,0 +1,63 @@
+{
+    "id": "beer",
+    "name": "Beer",
+    "type": "victualler",
+    "guid": "5570",
+    "time": 60,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "wattle_&_daub": 2,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 10,
+        "smith": 3
+    },
+    "input": [
+        {
+            "id": "malt",
+            "name": "Malt",
+            "type": "victualler",
+            "guid": "5474",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "wattle_&_daub": 1,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "smith": 4
+            },
+            "input": [
+                {
+                    "id": "barley",
+                    "name": "Barley",
+                    "type": "arable_farm",
+                    "guid": "2799",
+                    "time": 60,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "wattle_&_daub": 1,
+                        "granite": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 4,
+                        "wader": 3
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

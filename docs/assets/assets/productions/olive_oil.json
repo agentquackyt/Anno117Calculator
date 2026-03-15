@@ -1,0 +1,47 @@
+{
+    "id": "olive_oil",
+    "name": "Olive Oil",
+    "type": "victualler",
+    "guid": "4831",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 3,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "plebeian": 5
+    },
+    "input": [
+        {
+            "id": "olives",
+            "name": "Olives",
+            "type": "plantation",
+            "guid": "2699",
+            "time": 120,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 3,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 6,
+                "libertus": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

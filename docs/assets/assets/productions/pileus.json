@@ -1,0 +1,47 @@
+{
+    "id": "pileus",
+    "name": "Pileus",
+    "type": "artisanal_studio",
+    "guid": "3188",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 0,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 8,
+        "libertus": 3
+    },
+    "input": [
+        {
+            "id": "sheep",
+            "name": "Sheep",
+            "type": "livestock_farm",
+            "guid": "2786",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

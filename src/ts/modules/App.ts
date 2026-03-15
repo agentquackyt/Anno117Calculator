@@ -3,6 +3,7 @@ import { SettingsManager } from './SettingsManager';
 import { ProductionCalculator } from './ProductionCalculator';
 import { GraphRenderer } from './GraphRenderer';
 import { GoodsListView, ProductionChainView } from './ProductionChainView';
+import { Item } from './modifier/Item';
 import type { RecipeListItem } from '../types/RecipeList';
 import type { Goods } from '../types/Goods';
 
@@ -13,21 +14,29 @@ import type { Goods } from '../types/Goods';
 interface AppUrlState {
     good?: string;
     region?: string;
+    items?: string[];
 }
 
 class ParameterParser {
     static readonly PARAMS = {
         GOOD: 'good',
         REGION: 'region',
+        ITEMS: 'items',
     } as const;
 
     private static readonly RESERVED = Object.values(ParameterParser.PARAMS);
 
     /** Extract app state from the current URL. */
     static parse(url: URL): AppUrlState {
+        const itemsRaw = url.searchParams.get(ParameterParser.PARAMS.ITEMS) ?? '';
+        const items = itemsRaw
+            .split('~')
+            .map((entry) => entry.trim())
+            .filter(Boolean);
         return {
             good:   url.searchParams.get(ParameterParser.PARAMS.GOOD)   ?? undefined,
             region: url.searchParams.get(ParameterParser.PARAMS.REGION) ?? undefined,
+            items,
         };
     }
 
@@ -45,6 +54,12 @@ class ParameterParser {
             url.searchParams.set(ParameterParser.PARAMS.GOOD, state.good);
         } else {
             url.searchParams.delete(ParameterParser.PARAMS.GOOD);
+        }
+
+        if (state.items && state.items.length) {
+            url.searchParams.set(ParameterParser.PARAMS.ITEMS, state.items.join('~'));
+        } else {
+            url.searchParams.delete(ParameterParser.PARAMS.ITEMS);
         }
 
         return url;
@@ -169,6 +184,12 @@ export class App {
     private async loadGoodsList(): Promise<void> {
         try {
             this.allGoods = await this.goodsRepository.loadGoodsList();
+            try {
+                await this.goodsRepository.loadItemCompatibility();
+                await this.goodsRepository.preloadItemProductivity();
+            } catch (error) {
+                console.warn('[App] Failed to preload item modifier data', error);
+            }
             this.updateGoodsList();
         } catch (error) {
             console.error('Error loading goods list:', error);
@@ -191,6 +212,7 @@ export class App {
 
     private async handleGoodSelection(good: RecipeListItem): Promise<void> {
         this.currentGood = good;
+        Item.setActiveChain(good.id);
         this.pushUrl();
         this.goodsListView.highlight(good.id);
         this.selectionContainer.classList.add('hidden');
@@ -211,6 +233,7 @@ export class App {
 
     private showSelectionView(): void {
         this.currentGood = null;
+        Item.setActiveChain(null);
         this.pushUrl();
         this.calculatorContainer.classList.add('hidden');
         this.selectionContainer.classList.remove('hidden');
@@ -222,8 +245,9 @@ export class App {
 
     private handleSettingsChange(): void {
         if (this.productionView.hasSelection()) {
-            this.productionView.refresh();
+            this.productionView.applySettingsToCurrentView();
         }
+        this.pushUrl();
     }
 
     // -----------------------------------------------------------------------
@@ -233,7 +257,6 @@ export class App {
     private restoreFromUrl(): void {
         const url = new URL(window.location.href);
         const state = ParameterParser.parse(url);
-        const settings = ParameterParser.parseExtras(url);
 
         if (state.region) {
             const region = state.region.charAt(0).toUpperCase() + state.region.slice(1).toLowerCase();
@@ -249,19 +272,42 @@ export class App {
 
         if (state.good) {
             const good = this.goodsRepository.getGoodsList().find((item) => item.id === state.good);
-            if (good) this.handleGoodSelection(good);
+            if (good) {
+                this.applyItemsFromUrl(good.id, state.items ?? []);
+                this.handleGoodSelection(good);
+            }
         }
     }
 
     private pushUrl(): void {
+        const activeItems = this.getActiveItemsForCurrentChain();
         const url = ParameterParser.create({
             good:   this.currentGood?.id,
             region: this.currentRegion.toLowerCase(),
+            items: activeItems,
         });
         window.history.pushState(
             { good: this.currentGood?.id, region: this.currentRegion },
             '',
             url,
         );
+    }
+
+    private applyItemsFromUrl(chainId: string, guids: string[]): void {
+        if (!guids.length) return;
+
+        const urlGuids = new Set(guids);
+        const compatibleItems = this.goodsRepository.getCompatibleItems(chainId);
+
+        for (const item of compatibleItems) {
+            const key = Item.getItemSettingKey(chainId, item.guid);
+            this.settingsManager.setSettingValue(key, urlGuids.has(item.guid));
+        }
+    }
+
+    private getActiveItemsForCurrentChain(): string[] {
+        if (!this.currentGood) return [];
+        const settings = this.settingsManager.getConfig();
+        return Item.getActiveGuidsForChain(settings, this.currentGood.id);
     }
 }

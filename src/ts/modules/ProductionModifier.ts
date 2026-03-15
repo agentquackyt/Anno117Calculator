@@ -64,6 +64,14 @@ abstract class AbstractProductionModifier {
     abstract getVisualModifier(): string | null;
     abstract getType(): ProductionModifierType;    
     abstract getValue(good: Goods): number;
+
+    /**
+     * Returns the icon path to display on a specific graph node, or null if this modifier
+     * does not visually affect the given good. Default delegates to getVisualModifier().
+     */
+    getVisualModifierForNode(good: Goods): string | null {
+        return this.getVisualModifier();
+    }
     getProductivity(good: Goods): ProductionModifier {
         const value = this.getValue(good);
         return {

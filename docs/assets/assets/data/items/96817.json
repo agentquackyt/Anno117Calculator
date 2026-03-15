@@ -1,0 +1,73 @@
+{
+  "displayName": "Apion Mochthos Apicius, of Apeiron Appetite",
+  "guid": "96817",
+  "description": "Apicius was born to sample every delicacy in the Empire. His palate is refined; his recipes are even better.",
+  "iconFilename": "96817.png",
+  "rarity": "Epic",
+  "niche": "Culture",
+  "targets": [
+    {
+      "GUID": "50610",
+      "Type": "AssetPoolNamed",
+      "displayName": "Kitchens",
+      "internalName": "Asset Pool Production All Cookhouses",
+      "producedGoods": [
+        {
+          "guid": "31768",
+          "name": "Roast Beef"
+        },
+        {
+          "guid": "2153",
+          "name": "Cheese"
+        },
+        {
+          "guid": "2140",
+          "name": "Oysters with Caviar"
+        },
+        {
+          "guid": "2137",
+          "name": "Bread"
+        },
+        {
+          "guid": "8405",
+          "name": "Sausages"
+        },
+        {
+          "guid": "2136",
+          "name": "Porridge"
+        },
+        {
+          "guid": "2155",
+          "name": "Bird Tongues in Aspic"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 25.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

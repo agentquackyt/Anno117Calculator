@@ -1,0 +1,64 @@
+{
+    "id": "wine",
+    "name": "Wine",
+    "type": "victualler",
+    "guid": "23753",
+    "time": 45,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 4,
+        "concrete": 2
+    },
+    "maintanance_cost": {
+        "money": 30,
+        "nobles": 14
+    },
+    "input": [
+        {
+            "id": "grapes",
+            "name": "Grapes",
+            "type": "plantation",
+            "guid": "23723",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 3,
+                "concrete": 1
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "honeycombs",
+            "name": "Honeycombs",
+            "type": "gatherer",
+            "guid": "8427",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 2
+            },
+            "maintanance_cost": {
+                "money": 14,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

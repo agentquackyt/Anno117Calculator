@@ -5,6 +5,45 @@
 import type { Goods } from '../types/Goods';
 import type { RecipeListItem } from '../types/RecipeList';
 
+interface CompatibleItem {
+    guid: string;
+    displayName: string;
+    iconFilename: string;
+}
+
+interface CompatibilityChain {
+    id: string;
+    displayName: string;
+    icon: string;
+    items: CompatibleItem[];
+}
+
+interface CompatibilityPayload {
+    chains?: CompatibilityChain[];
+}
+
+interface ItemBuffFactoryUpgrade {
+    ProductivityUpgrade?: number;
+}
+
+interface ItemBuff {
+    FactoryUpgrade?: ItemBuffFactoryUpgrade;
+}
+
+interface ItemProducedGood {
+    name?: string;
+    guid?: string;
+}
+
+interface ItemTarget {
+    producedGoods?: ItemProducedGood[];
+}
+
+interface ItemPayload {
+    buffs?: ItemBuff[];
+    targets?: ItemTarget[];
+}
+
 /**
  * Singleton repository for goods and production data.
  */
@@ -15,6 +54,9 @@ class GoodsRepository {
     private goods: RecipeListItem[] = [];
     private goodsMap: Map<string, RecipeListItem> = new Map();
     private productionCache: Map<string, Goods> = new Map();
+    private compatibilityByChain: Map<string, CompatibilityChain> = new Map();
+    private itemProductivityByGuid: Map<string, number> = new Map();
+    private itemTargetsByGuid: Map<string, Set<string>> = new Map();
 
     private constructor(goodsUrl = './assets/productions/list.json', productionBaseUrl = './assets/productions') {
         this.goodsUrl = goodsUrl;
@@ -51,6 +93,59 @@ class GoodsRepository {
 
     public getGoodById(id: string): RecipeListItem | undefined {
         return this.goodsMap.get(id) ?? this.goods.find((g) => g.id === id);
+    }
+
+    /**
+     * Loads generated compatibility data for production chains and items.
+     */
+    public async loadItemCompatibility(): Promise<void> {
+        if (this.compatibilityByChain.size > 0) {
+            return;
+        }
+
+        const response = await fetch(`${this.productionBaseUrl}/item-compatibility.json`);
+        if (!response.ok) {
+            throw new Error(`Failed to load item compatibility (${response.status})`);
+        }
+
+        const payload = (await response.json()) as CompatibilityPayload;
+        const chains = payload.chains ?? [];
+
+        this.compatibilityByChain = new Map(
+            chains.map((chain) => [chain.id, chain]),
+        );
+    }
+
+    public getCompatibleItemChains(): CompatibilityChain[] {
+        return Array.from(this.compatibilityByChain.values());
+    }
+
+    public getCompatibleItems(chainId: string): CompatibleItem[] {
+        return this.compatibilityByChain.get(chainId)?.items ?? [];
+    }
+
+    /**
+     * Preloads productivity percentages for all known compatible items.
+     */
+    public async preloadItemProductivity(): Promise<void> {
+        await this.loadItemCompatibility();
+
+        const guids = new Set<string>();
+        this.compatibilityByChain.forEach((chain) => {
+            chain.items.forEach((item) => {
+                guids.add(item.guid);
+            });
+        });
+
+        await Promise.all(Array.from(guids).map((guid) => this.loadItemProductivity(guid)));
+    }
+
+    public getItemProductivity(guid: string): number {
+        return this.itemProductivityByGuid.get(guid) ?? 0;
+    }
+
+    public getItemTargetGoodNames(guid: string): Set<string> {
+        return this.itemTargetsByGuid.get(guid) ?? new Set();
     }
 
     /**
@@ -108,6 +203,54 @@ class GoodsRepository {
             console.error(`[GoodsRepository] Failed to fetch production data for ${goodId}`, error);
             return null;
         }
+    }
+
+    private async loadItemProductivity(guid: string): Promise<number> {
+        const cached = this.itemProductivityByGuid.get(guid);
+        if (cached !== undefined) {
+            return cached;
+        }
+
+        try {
+            const response = await fetch(`./assets/data/items/${guid}.json`);
+            if (!response.ok) {
+                this.itemProductivityByGuid.set(guid, 0);
+                return 0;
+            }
+
+            const payload = (await response.json()) as ItemPayload;
+            const value = this.extractProductivity(payload);
+            this.itemProductivityByGuid.set(guid, value);
+            this.itemTargetsByGuid.set(guid, this.extractTargetGoodNames(payload));
+            return value;
+        } catch (error) {
+            console.warn(`[GoodsRepository] Failed to load item details for ${guid}`, error);
+            this.itemProductivityByGuid.set(guid, 0);
+            return 0;
+        }
+    }
+
+    private extractTargetGoodNames(item: ItemPayload): Set<string> {
+        const names = new Set<string>();
+        for (const target of item.targets ?? []) {
+            for (const pg of target.producedGoods ?? []) {
+                if (typeof pg.name === 'string' && pg.name) {
+                    names.add(pg.name.trim().toLowerCase().replace(/[_-]/g, ' '));
+                }
+            }
+        }
+        return names;
+    }
+
+    private extractProductivity(item: ItemPayload): number {
+        const buffs = item.buffs ?? [];
+        return buffs.reduce((sum, buff) => {
+            const value = buff.FactoryUpgrade?.ProductivityUpgrade;
+            if (typeof value !== 'number' || !Number.isFinite(value)) {
+                return sum;
+            }
+            return sum + (value / 100);
+        }, 0);
     }
 
     /**

@@ -1,0 +1,47 @@
+{
+    "id": "porridge",
+    "name": "Porridge",
+    "type": "kitchen",
+    "guid": "3171",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 0,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 8,
+        "libertus": 2
+    },
+    "input": [
+        {
+            "id": "oats",
+            "name": "Oats",
+            "type": "arable_farm",
+            "guid": "2200",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}
