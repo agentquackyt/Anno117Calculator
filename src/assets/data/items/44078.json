@@ -1,0 +1,65 @@
+{
+  "displayName": "Sailer",
+  "guid": "44078",
+  "description": "Not to be confused for a sailor.",
+  "iconFilename": "44078.png",
+  "rarity": "Common",
+  "niche": "Economy",
+  "targets": [
+    {
+      "GUID": "3169",
+      "Type": "Production",
+      "displayName": "Sailmaker",
+      "internalName": "Production Military Roman Sails",
+      "producedGoods": [
+        {
+          "guid": "2172",
+          "name": "Sails"
+        }
+      ]
+    },
+    {
+      "GUID": "50567",
+      "Type": "AssetPoolNamed",
+      "displayName": "Sails Chain",
+      "internalName": "Asset Pool Sails Chain",
+      "producedGoods": [
+        {
+          "guid": "2172",
+          "name": "Sails"
+        },
+        {
+          "guid": "2073",
+          "name": "Sheep"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 10.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

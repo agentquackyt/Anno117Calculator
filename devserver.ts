@@ -2,6 +2,7 @@ import { serve } from "bun";
 import { parseArgs } from "util";
 import homepage from "./src/index.html";
 import generateGoodsList from "./tools/generate-goods-list";
+import generateItemsList from "./tools/generate-items-list";
 import fs from "fs/promises";
 
 const logo = () => {
@@ -50,6 +51,7 @@ console.clear();
 
 logo();
 await generateGoodsList({ showList: false, devmode: !values.build });
+await generateItemsList({ showList: false, devmode: !values.build });
 
 
 if (values.build) {

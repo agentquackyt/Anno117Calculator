@@ -1,0 +1,57 @@
+{
+  "displayName": "Tawer",
+  "guid": "44086",
+  "description": "Her skill at leathermaking is hard to hide.",
+  "iconFilename": "44086.png",
+  "rarity": "Common",
+  "niche": "Finance",
+  "targets": [
+    {
+      "GUID": "50574",
+      "Type": "AssetPoolNamed",
+      "displayName": "Sandals Chain",
+      "internalName": "Asset Pool Sandals Chain",
+      "producedGoods": [
+        {
+          "guid": "2144",
+          "name": "Sandals"
+        },
+        {
+          "guid": "2110",
+          "name": "Leather"
+        },
+        {
+          "guid": "2074",
+          "name": "Pigs"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 10.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

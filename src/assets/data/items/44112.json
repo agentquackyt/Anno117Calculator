@@ -1,0 +1,69 @@
+{
+  "displayName": "Vinecrusher",
+  "guid": "44112",
+  "description": "A seasoned viticulturist who gets the most must.",
+  "iconFilename": "44112.png",
+  "rarity": "Rare",
+  "niche": "Religion",
+  "targets": [
+    {
+      "GUID": "3177",
+      "Type": "Production",
+      "displayName": "Vintner",
+      "internalName": "Production Food Roman Wine",
+      "producedGoods": [
+        {
+          "guid": "2138",
+          "name": "Wine"
+        }
+      ]
+    },
+    {
+      "GUID": "50578",
+      "Type": "AssetPoolNamed",
+      "displayName": "Wine Chain",
+      "internalName": "Asset Pool Wine Chain",
+      "producedGoods": [
+        {
+          "guid": "2138",
+          "name": "Wine"
+        },
+        {
+          "guid": "2070",
+          "name": "Grapes"
+        },
+        {
+          "guid": "2076",
+          "name": "Honeycombs"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 20.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}
