@@ -1,0 +1,63 @@
+{
+    "id": "trousers",
+    "name": "Trousers",
+    "type": "clothier",
+    "guid": "5608",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "wattle_&_daub": 2,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 10,
+        "smith": 4
+    },
+    "input": [
+        {
+            "id": "sheep",
+            "name": "Sheep",
+            "type": "livestock_farm",
+            "guid": "5973",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 0,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "dye_plants",
+            "name": "Dye Plants",
+            "type": "plantation",
+            "guid": "2800",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "wattle_&_daub": 1,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

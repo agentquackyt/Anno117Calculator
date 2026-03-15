@@ -1,0 +1,44 @@
+{
+    "id": "sails",
+    "name": "Sails",
+    "type": "upholsterer",
+    "guid": "5955",
+    "time": 90,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 4,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 12,
+        "wader": 6
+    },
+    "input": [
+        {
+            "id": "sheep",
+            "name": "Sheep",
+            "type": "livestock_farm",
+            "guid": "5973",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 0,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

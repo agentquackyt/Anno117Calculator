@@ -1,0 +1,61 @@
+{
+  "displayName": "Snappy Snaremaker",
+  "guid": "44148",
+  "description": "Ensnares beavers without bother.",
+  "iconFilename": "44148.png",
+  "rarity": "Rare",
+  "niche": "Culture",
+  "targets": [
+    {
+      "GUID": "50598",
+      "Type": "AssetPoolNamed",
+      "displayName": "Fur Hats Chain",
+      "internalName": "Asset Pool PeltHats Chain",
+      "producedGoods": [
+        {
+          "guid": "31707",
+          "name": "Fur Hats"
+        },
+        {
+          "guid": "31702",
+          "name": "Beavers"
+        },
+        {
+          "guid": "31703",
+          "name": "Saltwash"
+        },
+        {
+          "guid": "7985",
+          "name": "Saltwort"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 20.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

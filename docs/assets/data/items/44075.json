@@ -1,0 +1,49 @@
+{
+  "displayName": "Netter",
+  "guid": "44075",
+  "description": "Nets you more fish.",
+  "iconFilename": "44075.png",
+  "rarity": "Common",
+  "niche": "Economy",
+  "targets": [
+    {
+      "GUID": "50564",
+      "Type": "AssetPoolNamed",
+      "displayName": "Sardines Chain",
+      "internalName": "Asset Pool Sardine Chain",
+      "producedGoods": [
+        {
+          "guid": "2088",
+          "name": "Sardines"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 10.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

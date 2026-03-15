@@ -1,0 +1,91 @@
+{
+    "id": "oysters_with_caviar",
+    "name": "Oysters with Caviar",
+    "type": "kitchen",
+    "guid": "3186",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 2,
+        "concrete": 1,
+        "marble": 2,
+        "mosaics": 1
+    },
+    "maintanance_cost": {
+        "money": 40,
+        "patrician": 12
+    },
+    "input": [
+        {
+            "id": "caviar",
+            "name": "Caviar",
+            "type": "extractor",
+            "guid": "8893",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 1,
+                "marble": 1,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 30,
+                "patrician": 6
+            },
+            "input": [
+                {
+                    "id": "sturgeon",
+                    "name": "Sturgeon",
+                    "type": "fishery",
+                    "guid": "2971",
+                    "time": 90,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 1,
+                        "marble": 0,
+                        "mosaics": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 12,
+                        "libertus": 2
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        },
+        {
+            "id": "oysters",
+            "name": "Oysters",
+            "type": "fishery",
+            "guid": "8586",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 4,
+                "tiles": 3,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 12,
+                "libertus": 5
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

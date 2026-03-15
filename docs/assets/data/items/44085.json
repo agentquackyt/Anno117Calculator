@@ -1,0 +1,57 @@
+{
+  "displayName": "Piscine Docent",
+  "guid": "44085",
+  "description": "Teaches fish how not to swim, guiding them on the path to liquefaction.",
+  "iconFilename": "44085.png",
+  "rarity": "Common",
+  "niche": "Finance",
+  "targets": [
+    {
+      "GUID": "50573",
+      "Type": "AssetPoolNamed",
+      "displayName": "Garum Chain",
+      "internalName": "Asset Pool Garum Chain",
+      "producedGoods": [
+        {
+          "guid": "2139",
+          "name": "Garum"
+        },
+        {
+          "guid": "2089",
+          "name": "Mackerel"
+        },
+        {
+          "guid": "2090",
+          "name": "Salt"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 10.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

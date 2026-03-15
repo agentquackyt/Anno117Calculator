@@ -1,0 +1,64 @@
+{
+    "id": "weapons",
+    "name": "Weapons",
+    "type": "armoury",
+    "guid": "5954",
+    "time": 90,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 1,
+        "tiles": 3,
+        "concrete": 0
+    },
+    "maintanance_cost": {
+        "money": 16,
+        "wader": 5
+    },
+    "input": [
+        {
+            "id": "iron",
+            "name": "Iron",
+            "type": "smelter",
+            "guid": "5969",
+            "time": 60,
+            "needs_fuel": true,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 4,
+                "concrete": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "wader": 3
+            },
+            "input": [
+                {
+                    "id": "iron_ore",
+                    "name": "Iron Ore",
+                    "type": "mine",
+                    "guid": "5982",
+                    "time": 30,
+                    "needs_fuel": false,
+                    "building_cost": {
+                        "money": 0,
+                        "timber": 2,
+                        "tiles": 2,
+                        "concrete": 0
+                    },
+                    "maintanance_cost": {
+                        "money": 10,
+                        "wader": 5
+                    },
+                    "input": [],
+                    "start_of_chain": true
+                }
+            ]
+        }
+    ],
+    "region": [
+        "Roman",
+        "Celtic"
+    ]
+}

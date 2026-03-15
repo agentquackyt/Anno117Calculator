@@ -1,0 +1,61 @@
+{
+  "displayName": "Marix, Who Knows The Merrows ",
+  "guid": "44116",
+  "description": "Marix's skill at shellfinding, they say, comes from an accord with the dwellers of the deep.",
+  "iconFilename": "44116.png",
+  "rarity": "Epic",
+  "niche": "Research",
+  "targets": [
+    {
+      "GUID": "50582",
+      "Type": "AssetPoolNamed",
+      "displayName": "Mirrors Chain",
+      "internalName": "Asset Pool Mirrors Chain",
+      "producedGoods": [
+        {
+          "guid": "2162",
+          "name": "Handmirrors"
+        },
+        {
+          "guid": "8420",
+          "name": "Seashells"
+        },
+        {
+          "guid": "2129",
+          "name": "Silver"
+        },
+        {
+          "guid": "2079",
+          "name": "Silver Ore"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 35.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "displayName": "Lamellary Armourer",
+  "guid": "50291",
+  "description": "A man with layers.",
+  "iconFilename": "50291.png",
+  "rarity": "Rare",
+  "niche": "Military",
+  "targets": [
+    {
+      "GUID": "50621",
+      "Type": "AssetPoolNamed",
+      "displayName": "Armour Chain",
+      "internalName": "Asset Pool Armor Chain",
+      "producedGoods": [
+        {
+          "guid": "2080",
+          "name": "Iron Ore"
+        },
+        {
+          "guid": "2115",
+          "name": "Iron"
+        },
+        {
+          "guid": "2085",
+          "name": "Charcoal"
+        },
+        {
+          "guid": "13810",
+          "name": "Armour"
+        },
+        {
+          "guid": "2074",
+          "name": "Pigs"
+        },
+        {
+          "guid": "2110",
+          "name": "Leather"
+        },
+        {
+          "guid": "2090",
+          "name": "Salt"
+        }
+      ]
+    }
+  ],
+  "buffs": [
+    {
+      "FactoryUpgrade": {
+        "ProductivityUpgrade": 20.0,
+        "AddedFertility": 0,
+        "FertilityPercent": 100,
+        "AdditionalOutput": [],
+        "InputAmountUpgrade": [],
+        "ReplaceInputs": [],
+        "NeededAreaUpgrade": 0,
+        "CanUseMarsh": false,
+        "CanUseForest": false,
+        "CanUseMeadow": false,
+        "FuelDurationPercent": 0.0,
+        "InfluenceRadiusUpgrade": 0.0
+      },
+      "MaintenanceUpgrade": {
+        "MaintenanceFactorUpgrade": 0.0,
+        "WorkforceMaintenanceFactorUpgrade": 0.0,
+        "ReplaceWorkforce": {
+          "OldWorkforce": 0,
+          "NewWorkforce": 0
+        },
+        "EncampedUnitScalingFactorUpgrade": 0.0
+      }
+    }
+  ]
+}

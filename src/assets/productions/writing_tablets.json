@@ -1,0 +1,69 @@
+{
+    "id": "writing_tablets",
+    "name": "Writing Tablets",
+    "type": "workshop",
+    "guid": "3201",
+    "time": 120,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 3,
+        "concrete": 1,
+        "marble": 1,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 22,
+        "equites": 10
+    },
+    "input": [
+        {
+            "id": "sandarac_wood",
+            "name": "Sandarac Wood",
+            "type": "forest_camp",
+            "guid": "8579",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 3,
+                "concrete": 1,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "honeycombs",
+            "name": "Honeycombs",
+            "type": "gatherer",
+            "guid": "2795",
+            "time": 45,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 1,
+                "tiles": 2,
+                "concrete": 2,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 14,
+                "libertus": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}

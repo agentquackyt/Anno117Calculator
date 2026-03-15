@@ -1,0 +1,63 @@
+{
+    "id": "wattle_&_daub",
+    "name": "Wattle & Daub",
+    "type": "refinery",
+    "guid": "5935",
+    "time": 60,
+    "needs_fuel": false,
+    "building_cost": {
+        "money": 0,
+        "timber": 5,
+        "wattle_&_daub": 0,
+        "granite": 0
+    },
+    "maintanance_cost": {
+        "money": 10,
+        "smith": 5
+    },
+    "input": [
+        {
+            "id": "reeds",
+            "name": "Reeds",
+            "type": "gatherer",
+            "guid": "5849",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "wattle_&_daub": 0,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 2,
+                "wader": 4
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "mud",
+            "name": "Mud",
+            "type": "pit",
+            "guid": "5848",
+            "time": 90,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 3,
+                "wattle_&_daub": 0,
+                "granite": 0
+            },
+            "maintanance_cost": {
+                "money": 4,
+                "wader": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Celtic"
+    ]
+}

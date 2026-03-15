@@ -1,0 +1,69 @@
+{
+    "id": "amphorae",
+    "name": "Amphorae",
+    "type": "victualler",
+    "guid": "3199",
+    "time": 60,
+    "needs_fuel": true,
+    "building_cost": {
+        "money": 0,
+        "timber": 2,
+        "tiles": 2,
+        "concrete": 0,
+        "marble": 0,
+        "mosaics": 0
+    },
+    "maintanance_cost": {
+        "money": 14,
+        "plebeian": 4
+    },
+    "input": [
+        {
+            "id": "clay",
+            "name": "Clay",
+            "type": "pit",
+            "guid": "2970",
+            "time": 30,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 0,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        },
+        {
+            "id": "resin",
+            "name": "Resin",
+            "type": "forest_camp",
+            "guid": "31752",
+            "time": 60,
+            "needs_fuel": false,
+            "building_cost": {
+                "money": 0,
+                "timber": 2,
+                "tiles": 2,
+                "concrete": 0,
+                "marble": 0,
+                "mosaics": 0
+            },
+            "maintanance_cost": {
+                "money": 8,
+                "plebeian": 3
+            },
+            "input": [],
+            "start_of_chain": true
+        }
+    ],
+    "region": [
+        "Roman"
+    ]
+}
